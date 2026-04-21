@@ -1,0 +1,453 @@
+{
+  "examen": {
+    "titulo": "Examen: Administración y Soporte a Computadoras Portátiles",
+    "institucion": "CTP Las Palmitas",
+    "nivel": "Undécimo Nivel",
+    "año": 2026,
+    "especialidad": "Configuración y Soporte a Redes",
+    "total_preguntas": 40,
+    "instrucciones": "Selecciona la respuesta correcta. Solo una opción es verdadera por pregunta.",
+    "preguntas": [
+      {
+        "numero": 1,
+        "tema": "Componentes Internos",
+        "pregunta": "¿Cuál es la principal función de la tarjeta madre en una laptop?",
+        "opciones": {
+          "a": "Almacenar permanentemente todos los datos del usuario",
+          "b": "Interconectar todos los demás componentes del sistema",
+          "c": "Generar la energía necesaria para que funcione el equipo"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 2,
+        "tema": "Componentes Internos",
+        "pregunta": "¿Cuál es la diferencia principal entre un HDD y un SSD?",
+        "opciones": {
+          "a": "El HDD es más rápido y el SSD usa partes moviles",
+          "b": "El SSD no tiene partes móviles y es más rápido que el HDD",
+          "c": "El HDD es mejor para juegos y el SSD solo para documentos"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 3,
+        "tema": "Componentes Internos",
+        "pregunta": "¿Qué tipo de almacenamiento es más común encontrar en laptops económicas?",
+        "opciones": {
+          "a": "SSD M.2 NVMe",
+          "b": "eMMC soldada a la tarjeta madre",
+          "c": "Disco duro de 3.5 pulgadas"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 4,
+        "tema": "Componentes Internos",
+        "pregunta": "¿Cuál es la función de la GPU integrada (iGPU)?",
+        "opciones": {
+          "a": "Procesar la salida gráfica usando memoria RAM del sistema",
+          "b": "Almacenar archivos de video en la laptop",
+          "c": "Controlar el ventilador de enfriamiento"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 5,
+        "tema": "Componentes Internos",
+        "pregunta": "¿Cuántas celdas típicamente tiene una batería de laptop?",
+        "opciones": {
+          "a": "1 a 2 celdas",
+          "b": "3 a 8 celdas",
+          "c": "10 a 15 celdas"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 6,
+        "tema": "Componentes Internos",
+        "pregunta": "¿Qué formato de memoria RAM se usa en las laptops modernas?",
+        "opciones": {
+          "a": "DIMM (como en computadoras de escritorio)",
+          "b": "SODIMM (más pequeño que DIMM)",
+          "c": "RDIMM (memoria registrada)"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 7,
+        "tema": "Diagnóstico",
+        "pregunta": "¿Cuál es el primer paso en el diagnóstico de una laptop?",
+        "opciones": {
+          "a": "Instalar software de diagnóstico en el disco duro",
+          "b": "Realizar una inspección visual y funcional",
+          "c": "Actualizar los controladores de todos los componentes"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 8,
+        "tema": "Diagnóstico",
+        "pregunta": "¿Qué herramienta de Windows muestra todos los dispositivos instalados y sus errores?",
+        "opciones": {
+          "a": "Administrador de tareas",
+          "b": "Monitor de recursos",
+          "c": "Administrador de dispositivos"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 9,
+        "tema": "Diagnóstico",
+        "pregunta": "¿Cuál es la función de la herramienta MemTest86?",
+        "opciones": {
+          "a": "Diagnosticar errores en la memoria RAM",
+          "b": "Probar la velocidad del disco duro",
+          "c": "Verificar la temperatura de la CPU"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 10,
+        "tema": "Diagnóstico",
+        "pregunta": "¿Qué indica una temperatura de CPU mayor a 90°C?",
+        "opciones": {
+          "a": "El equipo está funcionando normalmente",
+          "b": "Pasta térmica agotada o ventilador obstruido",
+          "c": "La batería necesita reemplazo"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 11,
+        "tema": "Diagnóstico",
+        "pregunta": "¿Cuál es la herramienta especializada para verificar el estado SMART del disco?",
+        "opciones": {
+          "a": "Prime95",
+          "b": "CrystalDiskInfo",
+          "c": "GPU-Z"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 12,
+        "tema": "Diagnóstico",
+        "pregunta": "¿Qué significa BSOD en el diagnóstico de computadoras?",
+        "opciones": {
+          "a": "Pantalla azul de muerte (Pantalla Azul de Error Crítico)",
+          "b": "Batería sin disponible de datos",
+          "c": "Bloque de sistema sin datos"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 13,
+        "tema": "Instalación",
+        "pregunta": "¿Cuál es la precaución más importante antes de manipular componentes internos?",
+        "opciones": {
+          "a": "Encender la laptop para verificar funcionamiento",
+          "b": "Desconectar el cargador, apagar el equipo y retirar la batería",
+          "c": "Aplicar pasta térmica en todos los componentes"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 14,
+        "tema": "Instalación",
+        "pregunta": "¿Para qué sirve una pulsera antiestática?",
+        "opciones": {
+          "a": "Proteger los ojos durante la reparación",
+          "b": "Prevenir descargas electrostáticas que dañen componentes",
+          "c": "Mantener caliente la pasta térmica"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 15,
+        "tema": "Instalación",
+        "pregunta": "¿Cuál es la tecla de acceso al BIOS en laptops Dell?",
+        "opciones": {
+          "a": "F1",
+          "b": "F2 o F12",
+          "c": "DEL"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 16,
+        "tema": "Instalación",
+        "pregunta": "¿En qué tipo de memoria funciona el procesador para acceder a datos rápidamente?",
+        "opciones": {
+          "a": "Memoria caché",
+          "b": "Memoria ROM",
+          "c": "Memoria EEPROM"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 17,
+        "tema": "Instalación",
+        "pregunta": "¿Cuál es la función de la pasta térmica?",
+        "opciones": {
+          "a": "Fijar el disipador al procesador",
+          "b": "Mejorar la transferencia de calor entre el chip y el disipador",
+          "c": "Aislar eléctricamente el procesador"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 18,
+        "tema": "Instalación",
+        "pregunta": "¿Cuál es el procedimiento correcto al instalar un módulo RAM SODIMM?",
+        "opciones": {
+          "a": "Insertar horizontalmente y presionar hacia abajo directamente",
+          "b": "Insertar en ángulo de 30 grados, alinear la muesca y presionar hasta que las palancas cierren",
+          "c": "Forzar el módulo hacia adentro en línea recta"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 19,
+        "tema": "Instalación",
+        "pregunta": "¿Cuál es la diferencia entre un conector ZIF y LIF?",
+        "opciones": {
+          "a": "ZIF requiere levantar una pestaña; LIF no tiene pestaña",
+          "b": "ZIF es más antiguo que LIF",
+          "c": "No hay diferencia, son nombres iguales"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 20,
+        "tema": "Instalación",
+        "pregunta": "¿Cuáles son los tipos de RAM más comunes en laptops actuales?",
+        "opciones": {
+          "a": "DDR3 y DDR4",
+          "b": "DDR4 y DDR5",
+          "c": "DDR5 y DDR6"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 21,
+        "tema": "Reparación",
+        "pregunta": "¿Cuáles son las herramientas especializadas necesarias para abrir laptops?",
+        "opciones": {
+          "a": "Destornilladores grandes y martillo",
+          "b": "Destornilladores de precisión, palanca de plástico y pinzas",
+          "c": "Solo un cuchillo de mantequilla"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 22,
+        "tema": "Reparación",
+        "pregunta": "¿Qué tipo de pantalla ofrece excelentes colores y ángulos de visión?",
+        "opciones": {
+          "a": "TN (Twisted Nematic)",
+          "b": "IPS (In-Plane Switching)",
+          "c": "VA (Vertical Alignment)"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 23,
+        "tema": "Reparación",
+        "pregunta": "¿Cuál es la causa más probable de una pantalla negra con luz de fondo?",
+        "opciones": {
+          "a": "Batería descargada",
+          "b": "Cable flex dañado o suelto",
+          "c": "Falta de RAM"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 24,
+        "tema": "Reparación",
+        "pregunta": "¿Qué NO se debe usar para limpiar una pantalla LCD?",
+        "opciones": {
+          "a": "Paño de microfibra seco",
+          "b": "Alcohol etílico y acetona",
+          "c": "Agua destilada con paño de microfibra húmedo"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 25,
+        "tema": "Reparación",
+        "pregunta": "¿Cuál es el problema si una tecla de la laptop no responde?",
+        "opciones": {
+          "a": "Siempre es un problema de software",
+          "b": "Suciedad bajo la tecla o membrana dañada",
+          "c": "La tarjeta madre está defectuosa"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 26,
+        "tema": "Reparación",
+        "pregunta": "¿Qué se debe hacer INMEDIATAMENTE si cae agua en una laptop?",
+        "opciones": {
+          "a": "Encender el equipo para evaporar el agua",
+          "b": "Apagar inmediatamente, retirar batería y dejar secar 48 horas",
+          "c": "Cubrir con un paño para evaporar el agua"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 27,
+        "tema": "Reparación",
+        "pregunta": "¿Cuál es el indicador más claro de que una batería está dañada?",
+        "opciones": {
+          "a": "La laptop se apaga cada hora",
+          "b": "Se descarga muy rápidamente o no carga más allá de un porcentaje bajo",
+          "c": "El cargador se calienta un poco"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 28,
+        "tema": "Reparación",
+        "pregunta": "¿Qué es una batería inflada y cuál es el riesgo?",
+        "opciones": {
+          "a": "Es una batería con mucha carga; no presenta riesgo",
+          "b": "Batería hinchada por gas interno; puede causar incendio",
+          "c": "Batería con voltaje alto; solo requiere descarga"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 29,
+        "tema": "Reparación",
+        "pregunta": "¿Cuáles son los pasos para reemplazar la pasta térmica?",
+        "opciones": {
+          "a": "Destapar, aplicar pasta nueva directamente sobre la antigua",
+          "b": "Desconectar, limpiar con alcohol, aplicar nueva pasta en forma de guisante",
+          "c": "Solo limpiar con agua y secar"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 30,
+        "tema": "Reparación",
+        "pregunta": "¿Cuál es la función principal del Embedded Controller (EC)?",
+        "opciones": {
+          "a": "Almacenar datos del usuario",
+          "b": "Manejar teclado, touchpad, batería y ventilador",
+          "c": "Procesar video y gráficos"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 31,
+        "tema": "Componentes Internos",
+        "pregunta": "¿Cuál es la velocidad aproximada de un SSD M.2 NVMe?",
+        "opciones": {
+          "a": "Hasta 200 MB/s",
+          "b": "Hasta 1000 MB/s",
+          "c": "Hasta 7000 MB/s"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 32,
+        "tema": "Diagnóstico",
+        "pregunta": "¿Qué información contiene un inventario del sistema?",
+        "opciones": {
+          "a": "Solo la marca y modelo de la laptop",
+          "b": "Hardware, software, BIOS, controladores y estado de batería",
+          "c": "Solamente los programas instalados"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 33,
+        "tema": "Instalación",
+        "pregunta": "¿Cuál es la diferencia entre un SSD SATA y un SSD M.2 NVMe?",
+        "opciones": {
+          "a": "El SATA es más rápido que el NVMe",
+          "b": "El NVMe usa protocolo PCIe y es mucho más rápido",
+          "c": "No hay diferencia en velocidad"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 34,
+        "tema": "Reparación",
+        "pregunta": "¿Cuál es el problema si una laptop no enciende completamente (No POST)?",
+        "opciones": {
+          "a": "Siempre es un problema de software",
+          "b": "Podría ser RAM, disco duro o tarjeta madre dañados",
+          "c": "Siempre es un problema de batería"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 35,
+        "tema": "Instalación",
+        "pregunta": "¿Qué precaución especial se debe tomar al manejar cables flex?",
+        "opciones": {
+          "a": "Doblarlos en ángulos agudos para compactarlos",
+          "b": "No doblarlos en ángulos agudos; los cables dañados se reemplazan",
+          "c": "Aplicarles silicona para fortalecerlos"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 36,
+        "tema": "Diagnóstico",
+        "pregunta": "¿Cuál es la función del software CPU-Z?",
+        "opciones": {
+          "a": "Probar la estabilidad de la CPU bajo estrés",
+          "b": "Proporcionar información detallada de CPU, tarjeta madre, RAM y GPU",
+          "c": "Limpiar archivos temporales del sistema"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 37,
+        "tema": "Reparación",
+        "pregunta": "¿Cuál es el procedimiento correcto para localizar tornillos en una laptop?",
+        "opciones": {
+          "a": "Fotografiar el interior antes de desmontar para recordar posiciones",
+          "b": "Usar un organizador de tornillos para mantenerlos separados por tamaño",
+          "c": "Ambas opciones anteriores son correctas"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 38,
+        "tema": "Componentes Internos",
+        "pregunta": "¿Cuál es la principal característica de un socket BGA en el procesador?",
+        "opciones": {
+          "a": "Es intercambiable y fácil de reemplazar",
+          "b": "El procesador está soldado y no puede reemplazarse fácilmente",
+          "c": "Permite insertar el procesador en cualquier orientación"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 39,
+        "tema": "Reparación",
+        "pregunta": "¿Cuáles son los datos mínimos que debe contener una bitácora de mantenimiento?",
+        "opciones": {
+          "a": "Solo la fecha de reparación",
+          "b": "Fecha, cliente, problema, diagnóstico, partes reemplazadas y resultado",
+          "c": "Solo el costo de la reparación"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 40,
+        "tema": "Diagnóstico",
+        "pregunta": "¿Cuál es el propósito de crear un USB booteable?",
+        "opciones": {
+          "a": "Aumentar la velocidad de la laptop",
+          "b": "Iniciar un sistema operativo alternativo o para recuperación cuando el disco falla",
+          "c": "Almacenar copias de seguridad de archivos"
+        },
+        "respuesta_correcta": "b"
+      }
+    ]
+  }
+}
