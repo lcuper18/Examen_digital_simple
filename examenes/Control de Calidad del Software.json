@@ -1,0 +1,454 @@
+{
+  "examen": {
+    "titulo": "Control de Calidad del Software",
+    "institucion": "CTP Las Palmitas",
+    "especialidad": "Control de Calidad del Software",
+    "nivel": "Undécimo",
+    "curso_lectivo": 2026,
+    "profesor": "Luis Cuper Fallas Rivas",
+    "instrucciones": "Selecciona la respuesta correcta para cada pregunta. El examen cubre 5 temas: Metodologías, Mejora de Procesos, Calidad QA, Comunicación y Tecnología y Clima.",
+    "total_preguntas": 40,
+    "preguntas": [
+      {
+        "numero": 1,
+        "tema": "Metodologías",
+        "pregunta": "¿En qué año fue desarrollada la metodología Seis Sigma por Motorola?",
+        "opciones": {
+          "a": "1986",
+          "b": "1995",
+          "c": "1978"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 2,
+        "tema": "Metodologías",
+        "pregunta": "¿Qué representa 'Seis Sigma' en términos de eficiencia?",
+        "opciones": {
+          "a": "Un 90% de eficiencia",
+          "b": "Un 99.99966% de eficiencia (3.4 DPMO)",
+          "c": "Un 100% de eficiencia"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 3,
+        "tema": "Metodologías",
+        "pregunta": "¿Cuál es el nivel más alto de certificación en Seis Sigma?",
+        "opciones": {
+          "a": "Green Belt",
+          "b": "Black Belt",
+          "c": "Master Black Belt"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 4,
+        "tema": "Metodologías",
+        "pregunta": "¿Qué significa DMAIC en la metodología Seis Sigma?",
+        "opciones": {
+          "a": "Definir, Medir, Analizar, Implementar, Controlar",
+          "b": "Diseñar, Modelar, Adaptar, Innovar, Crear",
+          "c": "Desarrollar, Mantener, Activar, Inspeccionar, Concluir"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 5,
+        "tema": "Metodologías",
+        "pregunta": "¿Cuál es la filosofía principal de Lean Software Development?",
+        "opciones": {
+          "a": "Aumentar la cantidad de código producido",
+          "b": "Maximizar el valor para el cliente eliminando desperdicios",
+          "c": "Crear la mayor cantidad de documentación posible"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 6,
+        "tema": "Metodologías",
+        "pregunta": "¿Cuántos desperdicios (mudas) identifica la metodología Lean en software?",
+        "opciones": {
+          "a": "5 desperdicios",
+          "b": "7 desperdicios",
+          "c": "10 desperdicios"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 7,
+        "tema": "Metodologías",
+        "pregunta": "¿Qué es 'Heijunka' en la metodología Lean?",
+        "opciones": {
+          "a": "Una herramienta de análisis estadístico",
+          "b": "El trabajo nivelado que distribuye tareas uniformemente",
+          "c": "Un tipo de prueba de software"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 8,
+        "tema": "Metodologías",
+        "pregunta": "¿Qué significa JIT (Just in Time) en Lean?",
+        "opciones": {
+          "a": "Producir más de lo necesario para tener inventario",
+          "b": "Producir exactamente lo que se necesita, cuando se necesita, en la cantidad exacta",
+          "c": "Retrasar todas las entregas al máximo"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 9,
+        "tema": "Metodologías",
+        "pregunta": "¿Cuáles son los 3 roles principales en Scrum?",
+        "opciones": {
+          "a": "Gerente, Supervisor, Desarrollador",
+          "b": "Product Owner, Scrum Master, Development Team",
+          "c": "Analista, Programador, Tester"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 10,
+        "tema": "Metodologías",
+        "pregunta": "¿Cuántas personas debe tener idealmente el Development Team en Scrum?",
+        "opciones": {
+          "a": "1 a 3 personas",
+          "b": "3 a 9 personas",
+          "c": "10 a 15 personas"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 11,
+        "tema": "Metodologías",
+        "pregunta": "¿Cuál es la duración típica de un Sprint en Scrum?",
+        "opciones": {
+          "a": "1 a 2 días",
+          "b": "1 a 4 semanas",
+          "c": "1 a 3 meses"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 12,
+        "tema": "Mejora de Procesos",
+        "pregunta": "¿Cuál es la forma de un símbolo de 'decisión' en un diagrama de flujo?",
+        "opciones": {
+          "a": "Óvalo",
+          "b": "Rectángulo",
+          "c": "Rombo o Diamante"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 13,
+        "tema": "Mejora de Procesos",
+        "pregunta": "¿Qué herramienta se usa en la fase 'Definir' del DMAIC?",
+        "opciones": {
+          "a": "Diagrama de Pareto",
+          "b": "Project Charter y VOC",
+          "c": "Gráfica de control"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 14,
+        "tema": "Mejora de Procesos",
+        "pregunta": "¿Cuál es el propósito del diagrama de Ishikawa (causa-efecto)?",
+        "opciones": {
+          "a": "Mostrar el flujo de datos en el sistema",
+          "b": "Identificar las causas raíz de los defectos o problemas",
+          "c": "Representar la secuencia de pruebas"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 15,
+        "tema": "Mejora de Procesos",
+        "pregunta": "¿Qué afirma el diagrama de Pareto en el contexto de calidad?",
+        "opciones": {
+          "a": "El 50% de los defectos proviene del 50% de las causas",
+          "b": "El 80% de los defectos proviene del 20% de las causas",
+          "c": "Todos los defectos tienen igual importancia"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 16,
+        "tema": "Mejora de Procesos",
+        "pregunta": "¿Qué es BDD (Behavior-Driven Development)?",
+        "opciones": {
+          "a": "Una metodología que solo se enfoca en el código",
+          "b": "Una metodología que extiende TDD enfocándose en el comportamiento esperado del sistema",
+          "c": "Un proceso de eliminar defectos del software"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 17,
+        "tema": "Mejora de Procesos",
+        "pregunta": "¿Cuál es el formato estándar de BDD para escribir especificaciones?",
+        "opciones": {
+          "a": "Act-Arrange-Assert",
+          "b": "Setup-Execute-Verify",
+          "c": "Given-When-Then (Gherkin)"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 18,
+        "tema": "Mejora de Procesos",
+        "pregunta": "¿Qué es Poka-Yoke?",
+        "opciones": {
+          "a": "Un tipo de defecto en el software",
+          "b": "Una técnica Lean que diseña mecanismos para prevenir errores",
+          "c": "Una reunión de retrospectiva"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 19,
+        "tema": "Mejora de Procesos",
+        "pregunta": "¿Cuáles son los 3 tipos de Poka-Yoke?",
+        "opciones": {
+          "a": "Análisis, Síntesis, Evaluación",
+          "b": "Prevención, Detección, Mitigación",
+          "c": "Identificación, Clasificación, Resolución"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 20,
+        "tema": "Calidad QA",
+        "pregunta": "¿Cuántas características de calidad define el modelo ISO/IEC 25010?",
+        "opciones": {
+          "a": "6 características",
+          "b": "8 características",
+          "c": "10 características"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 21,
+        "tema": "Calidad QA",
+        "pregunta": "¿Cuál característica de calidad se refiere a la facilidad de uso del software?",
+        "opciones": {
+          "a": "Funcionalidad",
+          "b": "Rendimiento",
+          "c": "Usabilidad"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 22,
+        "tema": "Calidad QA",
+        "pregunta": "¿Qué mide la métrica DPMO?",
+        "opciones": {
+          "a": "Defectos por millón de operaciones",
+          "b": "Defectos por millón de oportunidades",
+          "c": "Densidad de problemas en módulos"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 23,
+        "tema": "Calidad QA",
+        "pregunta": "¿Qué es SonarQube?",
+        "opciones": {
+          "a": "Una herramienta de gestión de proyectos",
+          "b": "Una herramienta de análisis estático de código",
+          "c": "Una plataforma de videoconferencias"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 24,
+        "tema": "Calidad QA",
+        "pregunta": "¿Cuál es la recomendación de cobertura de pruebas en software?",
+        "opciones": {
+          "a": ">50%",
+          "b": ">80%",
+          "c": ">95%"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 25,
+        "tema": "Calidad QA",
+        "pregunta": "¿Qué herramienta se utiliza para pruebas de APIs REST?",
+        "opciones": {
+          "a": "Selenium",
+          "b": "JMeter",
+          "c": "Postman"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 26,
+        "tema": "Calidad QA",
+        "pregunta": "¿Cuál es la técnica ágil de estimación que usa naipes numerados?",
+        "opciones": {
+          "a": "T-Shirt Sizing",
+          "b": "Planning Poker",
+          "c": "Fibonacci Estimation"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 27,
+        "tema": "Calidad QA",
+        "pregunta": "¿Qué es un Burndown Chart en Scrum?",
+        "opciones": {
+          "a": "Un gráfico que muestra errores por módulo",
+          "b": "Un gráfico que muestra el trabajo restante vs el tiempo disponible",
+          "c": "Un reporte de ausencias del equipo"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 28,
+        "tema": "Calidad QA",
+        "pregunta": "¿Qué es la Técnica Pomodoro?",
+        "opciones": {
+          "a": "Una metodología de testing",
+          "b": "División del trabajo en bloques de 25 minutos con descansos",
+          "c": "Una herramienta de documentación"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 29,
+        "tema": "Comunicación",
+        "pregunta": "¿Qué porcentaje del mensaje en comunicación cara a cara proviene del lenguaje corporal?",
+        "opciones": {
+          "a": "40%",
+          "b": "55%",
+          "c": "70%"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 30,
+        "tema": "Comunicación",
+        "pregunta": "¿Cuáles son las 4 C's de la comunicación escrita empresarial?",
+        "opciones": {
+          "a": "Código, Cantidad, Costo, Calidad",
+          "b": "Claridad, Concisión, Corrección, Cortesía",
+          "c": "Completo, Coherente, Consistente, Concreto"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 31,
+        "tema": "Comunicación",
+        "pregunta": "¿Cuál es la recomendación para la longitud del asunto en un correo profesional?",
+        "opciones": {
+          "a": "Máximo 20 caracteres",
+          "b": "Máximo 50-60 caracteres",
+          "c": "Máximo 80 caracteres"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 32,
+        "tema": "Comunicación",
+        "pregunta": "¿Qué es Microsoft Teams en el contexto empresarial?",
+        "opciones": {
+          "a": "Una herramienta de análisis de datos",
+          "b": "Un software de contabilidad",
+          "c": "Una plataforma de colaboración y comunicación empresarial"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 33,
+        "tema": "Comunicación",
+        "pregunta": "¿Cuál es una buena práctica en reuniones virtuales con Zoom o Teams?",
+        "opciones": {
+          "a": "Dejar el micrófono siempre encendido",
+          "b": "Compartir el enlace en canales públicos no seguros",
+          "c": "Silenciar el micrófono cuando no se está hablando"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 34,
+        "tema": "Comunicación",
+        "pregunta": "¿Qué elemento define la estructura de un correo profesional?",
+        "opciones": {
+          "a": "Solo el cuerpo del mensaje",
+          "b": "Asunto, Saludo, Cuerpo, Cierre, Firma",
+          "c": "Solo la firma"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 35,
+        "tema": "Tecnología y Clima",
+        "pregunta": "¿Cuánto ha aumentado la temperatura global desde la era preindustrial?",
+        "opciones": {
+          "a": "0.5°C",
+          "b": "1.2°C",
+          "c": "2.0°C"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 36,
+        "tema": "Tecnología y Clima",
+        "pregunta": "¿Cuál es la meta de Costa Rica respecto a la carbono neutralidad?",
+        "opciones": {
+          "a": "2030",
+          "b": "2040",
+          "c": "2050"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 37,
+        "tema": "Tecnología y Clima",
+        "pregunta": "¿Qué porcentaje de la electricidad de Costa Rica proviene de fuentes renovables?",
+        "opciones": {
+          "a": "Más del 75%",
+          "b": "Más del 99%",
+          "c": "100%"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 38,
+        "tema": "Tecnología y Clima",
+        "pregunta": "¿Cuántas toneladas de e-waste (basura electrónica) se generaron en 2022?",
+        "opciones": {
+          "a": "30 millones de toneladas",
+          "b": "59 millones de toneladas",
+          "c": "100 millones de toneladas"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 39,
+        "tema": "Tecnología y Clima",
+        "pregunta": "¿Qué porcentaje de emisiones globales podrían reducir las TI para 2030 según GeSI?",
+        "opciones": {
+          "a": "10%",
+          "b": "20%",
+          "c": "30%"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 40,
+        "tema": "Tecnología y Clima",
+        "pregunta": "¿Cuál es un ejemplo de solución tecnológica sostenible para mitigar el cambio climático?",
+        "opciones": {
+          "a": "Smart Grids que optimizan energía renovable",
+          "b": "Aumentar el consumo de energía",
+          "c": "Deforestar para expandir centros de datos"
+        },
+        "respuesta_correcta": "a"
+      }
+    ]
+  }
+}
