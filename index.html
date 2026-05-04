@@ -96,6 +96,29 @@
       color: var(--text-secondary);
     }
 
+    .exam-professor {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      font-weight: 500;
+    }
+
+    .exam-instructions {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      text-align: left;
+    }
+
+    .exam-instructions strong {
+      color: var(--text-primary);
+    }
+
     /* Stats Bar */
     .stats-bar {
       display: grid;
@@ -853,6 +876,8 @@
       </div>
       <h1 class="exam-title">Configuración y Soporte a Redes</h1>
       <p class="exam-subtitle">CTP Las Palmitas · Undécimo Nivel · 30 preguntas</p>
+      <p class="exam-professor" id="exam-professor"></p>
+      <div class="exam-instructions" id="exam-instructions"></div>
     </header>
 
     <div class="stats-bar">
@@ -1102,8 +1127,20 @@
     // Actualización de metadatos
     function updateExamMetadata() {
       document.querySelector('.exam-title').textContent = examData.titulo;
-      document.querySelector('.exam-subtitle').textContent = 
+      document.querySelector('.exam-subtitle').textContent =
         `${examData.institucion} · ${examData.nivel} · ${questions.length} preguntas`;
+
+      // Mostrar profesor si existe
+      if (examData.profesor) {
+        document.getElementById('exam-professor').textContent = `Profesor: ${examData.profesor}`;
+      }
+
+      // Mostrar instrucciones si existen
+      if (examData.instrucciones) {
+        document.getElementById('exam-instructions').innerHTML =
+          `<strong>Instrucciones:</strong> ${examData.instrucciones}`;
+      }
+
       document.getElementById('pending-count').textContent = questions.length;
       document.getElementById('progress-text').textContent = `0 / ${questions.length}`;
       document.getElementById('results-total').textContent = questions.length;

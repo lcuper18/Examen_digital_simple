@@ -1,453 +1,453 @@
 {
   "examen": {
-    "titulo": "Emprendimiento e Innovación - Periodo01 Examen01",
+    "titulo": "Control de Calidad del Software - Periodo01 Examen01",
     "institucion": "CTP Las Palmitas",
-    "especialidad": "Configuración y Soporte a Redes de Comunicación y Sistemas Operativos",
+    "especialidad": "Control de Calidad del Software | Pruebas de SQA",
     "nivel": "Undécimo",
     "curso_lectivo": 2026,
     "profesor": "Luis Cuper Fallas Rivas",
-    "instrucciones": "Selecciona la respuesta correcta para cada pregunta. El examen cubre 4 temas: Emprendimiento, Mercado, Ideas de Negocio, Creatividad e Innovación.",
+    "instrucciones": "Selecciona la respuesta correcta para cada pregunta. El examen cubre 5 temas: Fundamentos QA, Casos de Prueba, Gestión de Defectos, Autocontrol e Inteligencia Emocional, TIC y Problemas Globales.",
     "total_preguntas": 40,
     "preguntas": [
       {
         "numero": 1,
-        "tema": "Emprendimiento",
-        "pregunta": "¿Qué es el emprendimiento?",
+        "tema": "Fundamentos QA",
+        "pregunta": "¿Qué significa QA (Quality Assurance) en el desarrollo de software?",
         "opciones": {
-          "a": "Copiar un negocio que ya existe sin hacerle cambios",
-          "b": "Identificar una oportunidad y crear un proyecto que genere valor, asumiendo riesgos",
-          "c": "Trabajar para una empresa grande toda la vida"
+          "a": "Probar el producto terminado para encontrar errores antes de entregarlo",
+          "b": "Garantizar que los procesos y métodos se sigan correctamente para prevenir defectos",
+          "c": "Revisar solamente el diseño visual de la aplicación"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 2,
-        "tema": "Emprendimiento",
-        "pregunta": "Un emprendedor exitoso generalmente:",
+        "tema": "Fundamentos QA",
+        "pregunta": "¿Cuál es la diferencia principal entre QC (Control de Calidad) y QA (Aseguramiento de Calidad)?",
         "opciones": {
-          "a": "Evita cualquier tipo de riesgo sin importar la oportunidad",
-          "b": "Toma riesgos calculados después de analizar bien la situación",
-          "c": "Espera a que otros tomen decisiones por él"
+          "a": "QC revisa el proceso, QA revisa el producto terminado",
+          "b": "QC es reactivo (encuentra defectos después), QA es proactivo (previene defectos durante el desarrollo)",
+          "c": "QC lo hace el programador, QA lo hace el cliente"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 3,
-        "tema": "Emprendimiento",
-        "pregunta": "Si estudias Informática y quieres emprender, ¿qué habilidad técnica te sería más útil?",
+        "tema": "Fundamentos QA",
+        "pregunta": "El ciclo de Deming (PDCA) para mejora continua tiene 4 fases. ¿Cuál es el orden correcto?",
         "opciones": {
-          "a": "Saber cocinar platillos gourmet",
-          "b": "Configurar redes LAN y dar soporte técnico a computadoras",
-          "c": "Dominar técnicas de agricultura hidropónica"
+          "a": "Planificar - Hacer - Verificar - Actuar",
+          "b": "Hacer - Planificar - Actuar - Verificar",
+          "c": "Actuar - Verificar - Planificar - Hacer"
         },
-        "respuesta_correcta": "b"
+        "respuesta_correcta": "a"
       },
       {
         "numero": 4,
-        "tema": "Emprendimiento",
-        "pregunta": "Antes de iniciar un negocio de soporte técnico, la 'justificación' de tu proyecto debe responder:",
+        "tema": "Fundamentos QA",
+        "pregunta": "¿Cuál es la diferencia entre Validación y Verificación en pruebas de software?",
         "opciones": {
-          "a": "¿Cómo voy a gastar las ganancias?",
-          "b": "¿Por qué este proyecto es necesario y viable en el mercado actual?",
-          "c": "¿Cuál será el color del logo de mi empresa?"
+          "a": "Validación: ¿Construimos el producto correcto? (cumple necesidades del usuario). Verificación: ¿Construimos correctamente el producto? (cumple especificaciones)",
+          "b": "Validación se hace sin ejecutar el software, Verificación se hace ejecutándolo",
+          "c": "Validación la hace el tester, Verificación la hace el desarrollador"
         },
-        "respuesta_correcta": "b"
+        "respuesta_correcta": "a"
       },
       {
         "numero": 5,
-        "tema": "Emprendimiento",
-        "pregunta": "Si quieres facturar electrónicamente en Costa Rica, debes usar el sistema:",
+        "tema": "Fundamentos QA",
+        "pregunta": "Ordena correctamente la cadena de causalidad: Error → ______ → Falla",
         "opciones": {
-          "a": "WhatsApp Business",
-          "b": "Sistema de Administración Tributaria (ATV) del Ministerio de Hacienda",
-          "c": "Facebook Marketplace"
+          "a": "Bug o Defecto",
+          "b": "Prueba",
+          "c": "Requisito"
         },
-        "respuesta_correcta": "b"
+        "respuesta_correcta": "a"
       },
       {
         "numero": 6,
-        "tema": "Emprendimiento",
-        "pregunta": "¿Por qué es importante que tu emprendimiento esté alineado con tu proyecto de vida?",
+        "tema": "Fundamentos QA",
+        "pregunta": "Un tester ejecuta una prueba de 'Caja Negra' (Black Box). ¿Qué significa esto?",
         "opciones": {
-          "a": "Porque así el gobierno te da financiamiento gratis",
-          "b": "Porque te permite combinar lo que te gusta con lo que haces, siendo más sostenible a largo plazo",
-          "c": "Porque evita que tengas que trabajar"
+          "a": "El tester conoce el código interno y prueba cada línea",
+          "b": "El tester NO conoce el código interno, solo prueba entradas y salidas según los requisitos",
+          "c": "El tester solo prueba la interfaz gráfica sin funcionalidad"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 7,
-        "tema": "Mercado",
-        "pregunta": "En un emprendimiento de reparación de computadoras, el 'mercado' está formado por:",
+        "tema": "Fundamentos QA",
+        "pregunta": "¿Qué tipo de prueba se realiza de forma rápida al inicio para verificar que las funciones principales del sistema funcionan antes de pruebas más profundas?",
         "opciones": {
-          "a": "Solo los profesores del colegio",
-          "b": "Todas las personas o empresas que necesitan reparar sus computadoras",
-          "c": "Únicamente los vendedores de repuestos"
+          "a": "Prueba de humo (Smoke Testing)",
+          "b": "Prueba de regresión",
+          "c": "Prueba de estrés"
         },
-        "respuesta_correcta": "b"
+        "respuesta_correcta": "a"
       },
       {
         "numero": 8,
-        "tema": "Mercado",
-        "pregunta": "Si quieres abrir un negocio de instalación de cámaras de seguridad, antes debes investigar en tu cantón:",
+        "tema": "Fundamentos QA",
+        "pregunta": "¿Cuál de las siguientes es una prueba ESTÁTICA (no se ejecuta el software)?",
         "opciones": {
-          "a": "Qué color de uniforme usan otras empresas",
-          "b": "Las regulaciones municipales y permisos necesarios (factor político-legal)",
-          "c": "El horóscopo del dueño"
+          "a": "Ejecutar casos de prueba en el sistema",
+          "b": "Revisión de requisitos y código fuente por pares",
+          "c": "Prueba de rendimiento con muchos usuarios"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 9,
-        "tema": "Mercado",
-        "pregunta": "Una oportunidad de negocio se presenta cuando:",
+        "tema": "Casos de Prueba",
+        "pregunta": "¿Qué es un caso de prueba (Test Case)?",
         "opciones": {
-          "a": "Todos los negocios son exactamente iguales",
-          "b": "Hay una necesidad del mercado que nadie está atendiendo bien",
-          "c": "El mercado está completamente saturado"
+          "a": "Un error encontrado en el software durante la ejecución",
+          "b": "Un documento con condiciones de entrada, pasos y resultados esperados para verificar una funcionalidad",
+          "c": "El plan completo de pruebas de un proyecto"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 10,
-        "tema": "Mercado",
-        "pregunta": "Si quieres saber cuántos estudiantes de tu colegio necesitan reparar su laptop, la mejor herramienta sería:",
+        "tema": "Casos de Prueba",
+        "pregunta": "Una buena característica de un caso de prueba es que sea 'repetible'. ¿Qué significa esto?",
         "opciones": {
-          "a": "Una encuesta usando Google Forms",
-          "b": "Adivinar basado en tu opinión",
-          "c": "Revisar el horario de clases"
+          "a": "Que cualquier tester pueda ejecutarlo y obtener el mismo resultado",
+          "b": "Que se pueda ejecutar solo una vez",
+          "c": "Que dependa de otros casos de prueba para funcionar"
         },
         "respuesta_correcta": "a"
       },
       {
         "numero": 11,
-        "tema": "Mercado",
-        "pregunta": "Segmentar el mercado por edad, nivel de ingresos o grado académico es una segmentación:",
+        "tema": "Casos de Prueba",
+        "pregunta": "¿Qué es la Matriz de Trazabilidad (RTM - Requirements Traceability Matrix)?",
         "opciones": {
-          "a": "Geográfica (por ubicación)",
-          "b": "Demográfica (por características de la población)",
-          "c": "Psicológica (por personalidad)"
+          "a": "Un documento que lista todos los bugs encontrados",
+          "b": "Una matriz que vincula cada requisito con los casos de prueba que lo verifican",
+          "c": "El cronograma de ejecución de pruebas"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 12,
-        "tema": "Mercado",
-        "pregunta": "En cualquier emprendimiento exitoso, el elemento más importante es:",
+        "tema": "Casos de Prueba",
+        "pregunta": "¿Qué tipo de prueba de rendimiento simula el número esperado de usuarios concurrentes para verificar el funcionamiento normal?",
         "opciones": {
-          "a": "La oficina más cara posible",
-          "b": "El cliente, entendiendo sus necesidades y problemas",
-          "c": "Tener la computadora más cara del mercado"
+          "a": "Prueba de estrés (Stress Testing)",
+          "b": "Prueba de carga (Load Testing)",
+          "c": "Prueba de pico (Spike Testing)"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 13,
-        "tema": "Ideas de Negocio",
-        "pregunta": "Una 'idea empresarial' es:",
+        "tema": "Casos de Prueba",
+        "pregunta": "¿Cuál de las siguientes es una herramienta de código abierto para pruebas de rendimiento?",
         "opciones": {
-          "a": "El nombre del negocio nada más",
-          "b": "Identificar un problema del mercado y pensar una forma de solucionarlo de manera rentable",
-          "c": "Copiar exactamente lo que hace un negocio de otro país"
+          "a": "Microsoft Word",
+          "b": "Apache JMeter",
+          "c": "Photoshop"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 14,
-        "tema": "Ideas de Negocio",
-        "pregunta": "En una sesión de lluvia de ideas (brainstorming) para generar ideas de negocio, lo más importante es:",
+        "tema": "Gestión de Defectos",
+        "pregunta": "¿Qué es un 'bug' o defecto en software?",
         "opciones": {
-          "a": "Criticar todas las ideas malas de inmediato",
-          "b": "Dejar que solo los adultos opinen",
-          "c": "Decir todas las ideas sin juzgarlas, buscando cantidad antes que calidad"
+          "a": "Una característica no documentada del sistema",
+          "b": "Una imperfección en el código que causa que el sistema se comporte diferente a lo esperado",
+          "c": "Un requisito nuevo solicitado por el cliente"
         },
-        "respuesta_correcta": "c"
+        "respuesta_correcta": "b"
       },
       {
         "numero": 15,
-        "tema": "Ideas de Negocio",
-        "pregunta": "En la técnica SCAMPER, la letra 'C' significa 'Combinar'. ¿Qué pregunta te harías?",
+        "tema": "Gestión de Defectos",
+        "pregunta": "Un defecto con severidad 'S1 - Crítico' significa que:",
         "opciones": {
-          "a": "¿Qué producto puedo copiar de otro país?",
-          "b": "¿Qué puedo unir o combinar con otro producto o servicio?",
-          "c": "¿Cómo puedo eliminar costos de mi negocio?"
+          "a": "El sistema tiene un error pequeño de ortografía",
+          "b": "El sistema se cae completamente o una funcionalidad crítica está totalmente inoperativa",
+          "c": "El error solo ocurre en un navegador específico pero hay alternativa"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 16,
-        "tema": "Ideas de Negocio",
-        "pregunta": "La primera etapa del Design Thinking (Pensamiento de Diseño) se llama 'Empatizar' y consiste en:",
+        "tema": "Gestión de Defectos",
+        "pregunta": "¿Cuál es el orden TÍPICO del ciclo de vida de un bug?",
         "opciones": {
-          "a": "Dibujar el logotipo de la empresa",
-          "b": "Comprender profundamente las necesidades y frustraciones del cliente",
-          "c": "Calcular cuánto dinero se va a ganar"
+          "a": "Cerrado → Resuelto → En progreso → Nuevo",
+          "b": "Nuevo → Asignado → En progreso → Resuelto → Verificación → Cerrado",
+          "c": "Resuelto → Nuevo → Cerrado → Asignado"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 17,
-        "tema": "Ideas de Negocio",
-        "pregunta": "Si tienes una idea para un negocio de soporte técnico, la 'viabilidad técnica' pregunta:",
+        "tema": "Gestión de Defectos",
+        "pregunta": "Cuando un tester reporta un bug, ¿qué debe incluir en el reporte para que el desarrollador pueda reproducirlo?",
         "opciones": {
-          "a": "¿Mis amigos pensarán que es buena idea?",
-          "b": "¿Tengo los conocimientos y herramientas para implementarlo?",
-          "c": "¿Cuál será el precio de venta?"
+          "a": "Solo el título del error",
+          "b": "Pasos detallados para reproducir, datos de entrada, resultado actual y resultado esperado",
+          "c": "Una opinión sobre qué desarrollador causó el error"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 18,
-        "tema": "Ideas de Negocio",
-        "pregunta": "La pregunta '¿Por qué mi solución es mejor que las que ya existen?' se refiere a:",
+        "tema": "Gestión de Defectos",
+        "pregunta": "¿Cuál es un error común al reportar un bug?",
         "opciones": {
-          "a": "La propuesta de valor o diferenciación del negocio",
-          "b": "El cálculo de los gastos mensuales",
-          "c": "La cantidad de empleados que debo contratar"
+          "a": "Incluir capturas de pantalla como evidencia",
+          "b": "Escribir un título vago como 'El sistema no funciona' sin especificar qué parte",
+          "c": "Indicar la versión del software donde se encontró el defecto"
         },
-        "respuesta_correcta": "a"
+        "respuesta_correcta": "b"
       },
       {
         "numero": 19,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "¿Cuál es la diferencia entre creatividad e innovación?",
+        "tema": "Autocontrol e Inteligencia Emocional",
+        "pregunta": "¿Qué es el autocontrol en el entorno laboral de TI?",
         "opciones": {
-          "a": "Creatividad es tener una idea; innovación es llevarla a la práctica con éxito",
-          "b": "Creatividad es para artistas; innovación solo para ingenieros",
-          "c": "Ambos términos significan exactamente lo mismo"
+          "a": "Ignorar todas las emociones y trabajar sin sentir nada",
+          "b": "La capacidad de regular las propias emociones y comportamientos bajo presión",
+          "c": "Controlar a los compañeros de trabajo"
         },
-        "respuesta_correcta": "a"
+        "respuesta_correcta": "b"
       },
       {
         "numero": 20,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "Pasar del almacenamiento en discos duros físicos a guardar todo en la nube (Google Drive, OneDrive) es un ejemplo de:",
+        "tema": "Autocontrol e Inteligencia Emocional",
+        "pregunta": "La técnica de respiración 4-7-8 (inhalar 4 segundos, sostener 7, exhalar 8) sirve para:",
         "opciones": {
-          "a": "Innovación radical (un cambio muy grande en la industria)",
-          "b": "Innovación incremental (un cambio pequeño)",
-          "c": "Falta total de innovación"
+          "a": "Mejorar la velocidad de escritura en el teclado",
+          "b": "Activar el sistema nervioso y reducir la respuesta de estrés inmediatamente",
+          "c": "Aumentar la memoria RAM del computador"
         },
-        "respuesta_correcta": "a"
+        "respuesta_correcta": "b"
       },
       {
         "numero": 21,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "En el proceso creativo, el momento '¡Eureka!' o '¡Lo encontré!' se llama etapa de:",
+        "tema": "Autocontrol e Inteligencia Emocional",
+        "pregunta": "Según el modelo ABC de Albert Ellis, la clave del autocontrol está en cambiar:",
         "opciones": {
-          "a": "Preparación (recopilar información)",
-          "b": "Iluminación (cuando surge la idea)",
-          "c": "Verificación (probar si funciona)"
+          "a": "El Evento (A) que nos ocurre",
+          "b": "Las Creencias (B) o interpretación del evento",
+          "c": "Las Consecuencias (C) emocionales"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 22,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "El 'pensamiento lateral' es la habilidad de:",
+        "tema": "Autocontrol e Inteligencia Emocional",
+        "pregunta": "Pensar 'Si el software tiene un bug, todo el proyecto es un fracaso' es un ejemplo de distorsión cognitiva llamada:",
         "opciones": {
-          "a": "Resolver problemas de matemáticas muy rápido",
-          "b": "Abordar problemas desde ángulos no convencionales, pensando 'fuera de la caja'",
-          "c": "Memorizar grandes cantidades de información"
+          "a": "Todo o nada (pensamiento dicotómico)",
+          "b": "Lectura de mente",
+          "c": "Filtraje mental"
         },
-        "respuesta_correcta": "b"
+        "respuesta_correcta": "a"
       },
       {
         "numero": 23,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "Después de generar y seleccionar la mejor idea, el siguiente paso en innovación es:",
+        "tema": "Autocontrol e Inteligencia Emocional",
+        "pregunta": "¿Cuáles son las tres dimensiones del Burnout (síndrome de agotamiento profesional)?",
         "opciones": {
-          "a": "Venderla inmediatamente aunque no esté lista",
-          "b": "Crear un prototipo o versión mínima viable (MVP) para probarla",
-          "c": "Solicitar un préstamo bancario grande"
+          "a": "Alegría, motivación y productividad",
+          "b": "Agotamiento emocional, despersonalización y reducción del logro personal",
+          "c": "Creatividad, innovación y liderazgo"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 24,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "Mejorar la velocidad de un router actualizando su software (firmware) es un ejemplo de:",
+        "tema": "Autocontrol e Inteligencia Emocional",
+        "pregunta": "Según Daniel Goleman, ¿cuántos componentes tiene la Inteligencia Emocional?",
         "opciones": {
-          "a": "Innovación incremental (pequeña mejora continua)",
-          "b": "Innovación radical (cambio total)",
-          "c": "Innovación de marketing"
+          "a": "3 componentes",
+          "b": "5 componentes (autoconciencia, autorregulación, motivación, empatía, habilidades sociales)",
+          "c": "7 componentes"
         },
-        "respuesta_correcta": "a"
+        "respuesta_correcta": "b"
       },
       {
         "numero": 25,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "En el lienzo (Canvas) de modelo de negocio, la 'propuesta de valor' responde:",
+        "tema": "TIC y Problemas Globales",
+        "pregunta": "¿Cómo ayuda la telemedicina a salvar vidas?",
         "opciones": {
-          "a": "¿Cuánto dinero voy a ganar?",
-          "b": "¿Qué beneficio único y especial le ofrezco al cliente?",
-          "c": "¿Cómo voy a gastar las ganancias?"
+          "a": "Reemplaza completamente a los médicos",
+          "b": "Permite consultas médicas remotas, dando acceso a especialistas en zonas rurales",
+          "c": "Solo sirve para recetar medicamentos sin receta"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 26,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "En lugar de vender un paquete de soporte técnico por un solo pago, ofrecerlo por suscripción mensual (ej: ₡10.000 por mes) es un cambio en:",
+        "tema": "TIC y Problemas Globales",
+        "pregunta": "¿Qué aplicación de TI ayuda a la protección de ecosistemas?",
         "opciones": {
-          "a": "El producto (lo que vendes)",
-          "b": "El modelo de negocio (cómo cobras)",
-          "c": "El color del logotipo"
+          "a": "Monitoreo satelital para detectar deforestación en tiempo real",
+          "b": "Videojuegos de realidad virtual",
+          "c": "Redes sociales para compartir fotos de comida"
         },
-        "respuesta_correcta": "b"
+        "respuesta_correcta": "a"
       },
       {
         "numero": 27,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "Para fomentar la innovación en tu equipo emprendedor, debes crear:",
+        "tema": "TIC y Problemas Globales",
+        "pregunta": "¿Cómo contribuye la IA (Inteligencia Artificial) a la eficiencia energética?",
         "opciones": {
-          "a": "Un ambiente de miedo donde nadie pueda opinar",
-          "b": "Un espacio seguro donde todos puedan proponer ideas sin miedo a equivocarse",
-          "c": "Reglas estrictas que castiguen cualquier error"
+          "a": "Aumentando el consumo eléctrico de los centros de datos",
+          "b": "Optimizando el enfriamiento de centros de datos, reduciendo hasta un 40% el consumo energético",
+          "c": "Reemplazando todos los paneles solares"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 28,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "¿Cuál de estas NO es una etapa del proceso de innovación en tecnología?",
+        "tema": "TIC y Problemas Globales",
+        "pregunta": "¿Qué son los vehículos autónomos (como Tesla Autopilot)?",
         "opciones": {
-          "a": "Identificar un problema del mercado investigando",
-          "b": "Registrar una patente internacional antes de tener la idea clara",
-          "c": "Probar el prototipo con clientes reales y mejorar según sus comentarios"
+          "a": "Autos que se manejan solos usando sensores e IA",
+          "b": "Autos que solo funcionan con gasolina",
+          "c": "Bicicletas eléctricas"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 29,
+        "tema": "Fundamentos QA",
+        "pregunta": "¿Qué significa la norma ISO 9001 en el contexto de calidad de software?",
+        "opciones": {
+          "a": "Un estándar para colores de logotipos",
+          "b": "Un sistema de gestión de calidad general aplicable a organizaciones que desarrollan software",
+          "c": "Un lenguaje de programación"
         },
         "respuesta_correcta": "b"
       },
       {
-        "numero": 29,
-        "tema": "Mercado",
-        "pregunta": "¿Cuál de estos NO es un componente básico del mercado?",
-        "opciones": {
-          "a": "Oferta (lo que vendes)",
-          "b": "Demanda (lo que la gente necesita)",
-          "c": "Publicidad en TikTok (es una herramienta, no un componente del mercado)"
-        },
-        "respuesta_correcta": "c"
-      },
-      {
         "numero": 30,
-        "tema": "Ideas de Negocio",
-        "pregunta": "El propósito principal de generar una idea de negocio es:",
+        "tema": "Casos de Prueba",
+        "pregunta": "Un caso de prueba que está 'Fallido' (Fail) significa que:",
         "opciones": {
-          "a": "Hacerse rico de la noche a la mañana sin trabajar",
-          "b": "Resolver una necesidad real del mercado y generar ingresos",
-          "c": "Competir con todos los negocios aunque no tengan sentido"
+          "a": "No se pudo ejecutar por problemas técnicos",
+          "b": "El resultado actual NO coincidió con el resultado esperado (se encontró un bug)",
+          "c": "El tester no quiso ejecutarlo"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 31,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "¿Cuál de estas afirmaciones sobre innovación es correcta?",
+        "tema": "Gestión de Defectos",
+        "pregunta": "Un bug con severidad 'S4 - Bajo (Low/Trivial)' generalmente se refiere a:",
         "opciones": {
-          "a": "Solo las empresas grandes con mucho dinero pueden innovar",
-          "b": "A veces la mejor innovación es mejorar algo que ya existe, haciéndolo más rápido, barato o fácil de usar",
-          "c": "Innovar significa crear algo totalmente nuevo desde cero siempre"
+          "a": "El sistema entero deja de funcionar",
+          "b": "Problemas cosméticos como errores de ortografía o colores incorrectos que no afectan la funcionalidad",
+          "c": "Pérdida de datos del usuario"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 32,
-        "tema": "Emprendimiento",
-        "pregunta": "Si eres estudiante de informática, ¿cuál sería una habilidad BLANDA útil para emprender?",
+        "tema": "Autocontrol e Inteligencia Emocional",
+        "pregunta": "La técnica 'Grounding 5-4-3-2-1' (nombrar 5 cosas que ves, 4 que tocas, etc.) sirve para:",
         "opciones": {
-          "a": "Saber programar en Python",
-          "b": "Tener buena comunicación y saber hablar con los clientes",
-          "c": "Configurar un servidor Windows"
+          "a": "Mejorar la conexión wifi",
+          "b": "Regresar al presente y reducir la ansiedad",
+          "c": "Aumentar la velocidad de procesamiento"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 33,
-        "tema": "Mercado",
-        "pregunta": "El 'Internet de las Cosas' (IoT) se refiere a:",
+        "tema": "TIC y Problemas Globales",
+        "pregunta": "¿Qué es la IA Generativa (como ChatGPT)?",
         "opciones": {
-          "a": "Solamente a los celulares inteligentes",
-          "b": "Dispositivos cotidianos (refrigeradoras, cámaras, bombillos) conectados a internet",
-          "c": "La red social de Facebook"
+          "a": "Un tipo de virus informático",
+          "b": "Modelos de IA que generan contenido nuevo: texto, imágenes o código",
+          "c": "Un sistema operativo"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 34,
-        "tema": "Ideas de Negocio",
-        "pregunta": "La técnica creativa que usa las palabras: Sustituir, Combinar, Adaptar, Modificar, Proponer otros usos, Eliminar y Reorganizar se llama:",
+        "tema": "Fundamentos QA",
+        "pregunta": "¿Cuál es el nivel de madurez más alto en el modelo CMMI (Capability Maturity Model Integration)?",
         "opciones": {
-          "a": "Brainstorming (lluvia de ideas)",
-          "b": "SCAMPER",
-          "c": "Mapa mental"
+          "a": "Nivel 1 - Inicial",
+          "b": "Nivel 3 - Definido",
+          "c": "Nivel 5 - Optimización"
         },
-        "respuesta_correcta": "b"
+        "respuesta_correcta": "c"
       },
       {
         "numero": 35,
-        "tema": "Emprendimiento",
-        "pregunta": "En Costa Rica, ¿qué entidad ofrece financiamiento específico para pequeñas y medianas empresas (PYMES)?",
+        "tema": "Casos de Prueba",
+        "pregunta": "¿Para qué sirve la prueba de regresión?",
         "opciones": {
-          "a": "FODEMIPYME (Fondo de Desarrollo para las PYMES)",
-          "b": "La FIFA",
-          "c": "La NASA"
-        },
-        "respuesta_correcta": "a"
-      },
-      {
-        "numero": 36,
-        "tema": "Mercado",
-        "pregunta": "Si quieres conocer a profundidad las necesidades de un cliente potencial, la mejor técnica es:",
-        "opciones": {
-          "a": "Una encuesta anónima",
-          "b": "Una entrevista personal conversando directamente con él",
-          "c": "Adivinar lo que necesita"
+          "a": "Probar solo las funciones nuevas del sistema",
+          "b": "Verificar que los cambios o correcciones no hayan afectado funcionalidades que ya funcionaban",
+          "c": "Probar el sistema con muchos usuarios simultáneos"
         },
         "respuesta_correcta": "b"
       },
       {
-        "numero": 37,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "¿Cuántas etapas tiene el proceso de la creatividad según el material de estudio?",
+        "numero": 36,
+        "tema": "Gestión de Defectos",
+        "pregunta": "¿Qué significa el estado 'Reabierto' (Reopened) en el ciclo de vida de un bug?",
         "opciones": {
-          "a": "2 etapas",
-          "b": "5 etapas (Preparación, Incubación, Iluminación, Verificación, Implementación)",
-          "c": "10 etapas"
+          "a": "El bug nunca existió",
+          "b": "El desarrollador no pudo reproducir el error",
+          "c": "El tester verificó la corrección y el bug aún sigue presente, por lo que se regresa al desarrollador"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 37,
+        "tema": "Autocontrol e Inteligencia Emocional",
+        "pregunta": "Ante una crítica en una revisión de código (Code Review), una respuesta saludable es:",
+        "opciones": {
+          "a": "Tomarlo como un ataque personal y enojarse",
+          "b": "Ver el feedback como una oportunidad de aprendizaje, no como un ataque personal",
+          "c": "Ignorar completamente la crítica"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 38,
-        "tema": "Emprendimiento",
-        "pregunta": "¿Por qué es importante el emprendimiento para un país como Costa Rica?",
+        "tema": "TIC y Problemas Globales",
+        "pregunta": "¿Qué hacen las 'Smart Grids' (Redes eléctricas inteligentes)?",
         "opciones": {
-          "a": "Porque evita que las personas trabajen",
-          "b": "Porque genera empleos, innovación y crecimiento económico",
-          "c": "Porque concentra toda la riqueza en pocas manos"
+          "a": "Solo iluminan las calles",
+          "b": "Usan sensores IoT e IA para optimizar la distribución de electricidad e integrar energías renovables",
+          "c": "Son cables de electricidad tradicionales"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 39,
-        "tema": "Ideas de Negocio",
-        "pregunta": "En Design Thinking, la etapa donde creas una versión simple y económica de tu solución para probarla se llama:",
+        "tema": "Fundamentos QA",
+        "pregunta": "Un tester QA realiza pruebas de regresión. ¿Qué está haciendo?",
         "opciones": {
-          "a": "Prototipar",
-          "b": "Idear",
-          "c": "Evaluar"
+          "a": "Probar el sistema por primera vez",
+          "b": "Volver a probar funcionalidades existentes después de un cambio para asegurar que no se rompieron",
+          "c": "Probar solo la seguridad del sistema"
         },
-        "respuesta_correcta": "a"
+        "respuesta_correcta": "b"
       },
       {
         "numero": 40,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "Si un cliente te pide un presupuesto y tú le ofreces una solución más eficiente y económica que la competencia, estás aplicando:",
+        "tema": "TIC y Problemas Globales",
+        "pregunta": "AlphaFold de DeepMind resolvió un problema científico de 50 años relacionado con:",
         "opciones": {
-          "a": "Innovación (mejorar la forma de hacer las cosas)",
-          "b": "Falta de profesionalismo",
-          "c": "Mala suerte"
+          "a": "El clima espacial",
+          "b": "El plegamiento de proteínas, con aplicaciones en medicina y biología",
+          "c": "La exploración de Marte"
         },
-        "respuesta_correcta": "a"
+        "respuesta_correcta": "b"
       }
     ]
   }
