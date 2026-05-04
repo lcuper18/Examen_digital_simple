@@ -119,6 +119,13 @@
       color: var(--text-primary);
     }
 
+    .exam-specialty {
+      font-size: 13px;
+      color: var(--accent-blue);
+      margin-top: 8px;
+      font-weight: 600;
+    }
+
     /* Stats Bar */
     .stats-bar {
       display: grid;
@@ -876,6 +883,7 @@
       </div>
       <h1 class="exam-title">Configuración y Soporte a Redes</h1>
       <p class="exam-subtitle">CTP Las Palmitas · Undécimo Nivel · 30 preguntas</p>
+      <p class="exam-specialty" id="exam-specialty"></p>
       <p class="exam-professor" id="exam-professor"></p>
       <div class="exam-instructions" id="exam-instructions"></div>
     </header>
@@ -1129,6 +1137,11 @@
       document.querySelector('.exam-title').textContent = examData.titulo;
       document.querySelector('.exam-subtitle').textContent =
         `${examData.institucion} · ${examData.nivel} · ${questions.length} preguntas`;
+
+      // Mostrar especialidad (subarea) si existe
+      if (examData.especialidad) {
+        document.getElementById('exam-specialty').textContent = examData.especialidad;
+      }
 
       // Mostrar profesor si existe
       if (examData.profesor) {
