@@ -26,3 +26,23 @@ Thumbs.db
 # Logs
 *.log
 logs/
+
+# Datos de exámenes (generados dinámicamente)
+examenes/
+
+# Node (si se usa en el futuro)
+node_modules/
+npm-debug.log*
+
+# Build artifacts
+*.cache
+*.tmp
+temp/
+
+# Respaldos locales
+*.bak
+*.backup
+
+# Archivos de sesión del servidor
+*.sock
+*.pid
