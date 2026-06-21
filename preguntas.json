@@ -1,451 +1,450 @@
 {
   "examen": {
-    "titulo": "Emprendimiento e innovación para sistemas de calidad - Periodo01 Examen01",
+    "titulo": "Examen: Introducción a las Redes",
     "institucion": "CTP Las Palmitas",
-    "especialidad": "Control de Calidad del Software",
-    "nivel": "Undécimo",
-    "curso_lectivo": 2026,
-    "profesor": "Luis Cuper Fallas Rivas",
-    "instrucciones": "Selecciona la respuesta correcta para cada pregunta. El examen cubre 4 temas: Emprendimiento, Mercado, Ideas de Negocio, Creatividad e Innovación.",
+    "nivel": "Undécimo Nivel",
+    "año": 2026,
+    "especialidad": "Configuración y Soporte a Redes",
     "total_preguntas": 40,
+    "instrucciones": "Selecciona la respuesta correcta. Solo una opción es verdadera por pregunta.",
     "preguntas": [
       {
         "numero": 1,
-        "tema": "Emprendimiento",
-        "pregunta": "¿Cuál de las siguientes NO es una característica esencial del emprendimiento?",
+        "tema": "Redes y Tendencias",
+        "pregunta": "¿Qué tipo de red conecta dispositivos en un espacio geográfico limitado como una oficina o un edificio?",
         "opciones": {
-          "a": "Innovación",
-          "b": "Riesgo calculado",
-          "c": "Dependencia total de un solo cliente"
+          "a": "WAN",
+          "b": "LAN",
+          "c": "MAN"
         },
-        "respuesta_correcta": "c"
+        "respuesta_correcta": "b"
       },
       {
         "numero": 2,
-        "tema": "Emprendimiento",
-        "pregunta": "¿Qué significa que un emprendedor tenga 'visión de futuro'?",
+        "tema": "Redes y Tendencias",
+        "pregunta": "¿Cuál de los siguientes es un dispositivo intermedio en una red?",
         "opciones": {
-          "a": "Saber exactamente qué va a pasar en los próximos 50 años",
-          "b": "Tener claridad sobre a dónde quiere llegar y cómo lograrlo, aunque el camino pueda ajustarse",
-          "c": "Invertir todo el dinero en acciones de la bolsa"
+          "a": "Impresora",
+          "b": "Switch",
+          "c": "Laptop"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 3,
-        "tema": "Emprendimiento",
-        "pregunta": "La 'cultura emprendedora' se basa en valores, actitudes y comportamientos que favorecen:",
+        "tema": "Redes y Tendencias",
+        "pregunta": "¿Qué tipo de conexión a internet ofrece la mayor velocidad y utiliza pulsos de luz?",
         "opciones": {
-          "a": "Evitar cualquier tipo de riesgo",
-          "b": "La creación de empresas y proyectos innovadores",
-          "c": "Trabajar toda la vida para la misma empresa"
+          "a": "DSL",
+          "b": "Fibra óptica",
+          "c": "Satelital"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 4,
-        "tema": "Emprendimiento",
-        "pregunta": "Un emprendedor en el área de redes informáticas necesita habilidades blandas como:",
+        "tema": "Redes y Tendencias",
+        "pregunta": "¿Qué característica de una red confiable permite que siga funcionando aunque fallen algunos componentes?",
         "opciones": {
-          "a": "Saber configurar un router",
-          "b": "Comunicación efectiva y negociación con clientes",
-          "c": "Instalar cables de red"
+          "a": "Escalabilidad",
+          "b": "Tolerancia a fallos",
+          "c": "QoS"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 5,
-        "tema": "Emprendimiento",
-        "pregunta": "Dentro de los trámites legales para iniciar un negocio en Costa Rica se incluye:",
+        "tema": "Redes y Tendencias",
+        "pregunta": "¿Qué significa BYOD en el contexto de redes empresariales?",
         "opciones": {
-          "a": "Comprar un dominio .com",
-          "b": "Inscripción en el Registro Nacional y patentes municipales",
-          "c": "Crear una cuenta de TikTok"
+          "a": "Los empleados usan sus propios dispositivos para trabajar",
+          "b": "La empresa compra todos los dispositivos",
+          "c": "Los dispositivos se conectan solo por cable"
         },
-        "respuesta_correcta": "b"
+        "respuesta_correcta": "a"
       },
       {
         "numero": 6,
-        "tema": "Emprendimiento",
-        "pregunta": "El análisis FODA (Fortalezas, Oportunidades, Debilidades, Amenazas) sirve para:",
+        "tema": "Configuración IOS",
+        "pregunta": "¿Cuál es el prompt del modo privilegiado en un switch Cisco?",
         "opciones": {
-          "a": "Calcular las ganancias del negocio",
-          "b": "Analizar la situación interna y externa del emprendimiento",
-          "c": "Diseñar el logotipo de la empresa"
+          "a": "Switch>",
+          "b": "Switch#",
+          "c": "Switch(config)#"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 7,
-        "tema": "Emprendimiento",
-        "pregunta": "¿Cuál de las siguientes es una fuente de financiamiento para emprendedores costarricenses?",
+        "tema": "Configuración IOS",
+        "pregunta": "¿Qué comando se usa para cambiar el nombre de un dispositivo Cisco?",
         "opciones": {
-          "a": "FODEMIPYME",
-          "b": "PayPal",
-          "c": "Spotify"
+          "a": "name",
+          "b": "hostname",
+          "c": "rename"
         },
-        "respuesta_correcta": "a"
+        "respuesta_correcta": "b"
       },
       {
         "numero": 8,
-        "tema": "Emprendimiento",
-        "pregunta": "¿Qué plataforma de comercio electrónico se menciona en el material como útil para vender en línea?",
+        "tema": "Configuración IOS",
+        "pregunta": "¿Qué comando guarda la configuración activa en la NVRAM?",
         "opciones": {
-          "a": "Netflix",
-          "b": "Shopify",
-          "c": "WhatsApp"
+          "a": "save running-config",
+          "b": "copy running-config startup-config",
+          "c": "backup config"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 9,
-        "tema": "Mercado",
-        "pregunta": "En el mercado, la 'oferta' se refiere a:",
+        "tema": "Configuración IOS",
+        "pregunta": "¿Cuál es la función del comando 'enable secret'?",
         "opciones": {
-          "a": "Lo que los clientes necesitan y están dispuestos a pagar",
-          "b": "Los bienes y servicios disponibles que la empresa ofrece",
-          "c": "El precio más bajo del mercado"
+          "a": "Establecer una contraseña cifrada para modo privilegiado",
+          "b": "Activar el modo de configuración global",
+          "c": "Ver las interfaces del dispositivo"
         },
-        "respuesta_correcta": "b"
+        "respuesta_correcta": "a"
       },
       {
         "numero": 10,
-        "tema": "Mercado",
-        "pregunta": "¿Qué significa 'competencia' en el contexto de mercado?",
+        "tema": "Configuración IOS",
+        "pregunta": "¿Qué comando se usa para configurar una dirección IP en un switch Cisco?",
         "opciones": {
-          "a": "Los proveedores de materia prima",
-          "b": "Otras empresas que ofrecen productos o servicios similares",
-          "c": "Los clientes potenciales"
+          "a": "interface fastEthernet 0/1",
+          "b": "interface vlan 1",
+          "c": "interface serial 0/0/0"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 11,
-        "tema": "Mercado",
-        "pregunta": "El análisis PESTEL incluye factores Políticos, Económicos, Sociales, Tecnológicos, Ecológicos y:",
+        "tema": "Protocolos y Modelos",
+        "pregunta": "¿Cuántas capas tiene el modelo OSI?",
         "opciones": {
-          "a": "Logísticos",
-          "b": "Legales",
-          "c": "Lúdicos"
+          "a": "7",
+          "b": "4",
+          "c": "5"
         },
-        "respuesta_correcta": "b"
+        "respuesta_correcta": "a"
       },
       {
         "numero": 12,
-        "tema": "Mercado",
-        "pregunta": "¿Qué herramienta de recolección de información consiste en una conversación directa con un cliente potencial para obtener información cualitativa profunda?",
+        "tema": "Protocolos y Modelos",
+        "pregunta": "¿Qué capa del modelo OSI se encarga del direccionamiento lógico y el enrutamiento?",
         "opciones": {
-          "a": "La encuesta online",
-          "b": "La entrevista personal",
-          "c": "El análisis de redes sociales"
+          "a": "Capa de Transporte",
+          "b": "Capa de Red",
+          "c": "Capa de Enlace"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 13,
-        "tema": "Mercado",
-        "pregunta": "Segmentar el mercado por 'comportamiento' significa dividir según:",
+        "tema": "Protocolos y Modelos",
+        "pregunta": "¿Qué protocolo de transporte es orientado a conexión y confiable?",
         "opciones": {
-          "a": "La edad y el género",
-          "b": "La ubicación geográfica",
-          "c": "Los hábitos de compra, uso del producto o lealtad a la marca"
+          "a": "UDP",
+          "b": "IP",
+          "c": "TCP"
         },
         "respuesta_correcta": "c"
       },
       {
         "numero": 14,
-        "tema": "Mercado",
-        "pregunta": "¿Cuál es el primer paso para detectar una oportunidad de negocio?",
+        "tema": "Protocolos y Modelos",
+        "pregunta": "¿Qué protocolo traduce nombres de dominio como google.com a direcciones IP?",
         "opciones": {
-          "a": "Crear el logotipo de la empresa",
-          "b": "Identificar una necesidad insatisfecha o un problema real en el mercado",
-          "c": "Pedir un préstamo bancario"
+          "a": "DHCP",
+          "b": "DNS",
+          "c": "HTTP"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 15,
-        "tema": "Ideas de Negocio",
-        "pregunta": "¿Cuál de las siguientes es una fuente de ideas empresariales?",
+        "tema": "Protocolos y Modelos",
+        "pregunta": "En el proceso de encapsulamiento, ¿cómo se llama la unidad de datos en la capa de Transporte?",
         "opciones": {
-          "a": "La experiencia personal resolviendo un problema tecnológico",
-          "b": "Copiar exactamente lo que hace un negocio extranjero sin adaptarlo",
-          "c": "Esperar a que alguien más tenga la idea"
+          "a": "Paquete",
+          "b": "Trama",
+          "c": "Segmento"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 16,
+        "tema": "Capa Física y Enlace",
+        "pregunta": "¿Qué tipo de cable UTP es capaz de alcanzar velocidades de hasta 1 Gbps a 100 metros?",
+        "opciones": {
+          "a": "Cat 5e",
+          "b": "Cat 3",
+          "c": "Cat 8"
         },
         "respuesta_correcta": "a"
       },
       {
-        "numero": 16,
-        "tema": "Ideas de Negocio",
-        "pregunta": "En una sesión de lluvia de ideas (brainstorming), ¿qué NO se debe hacer?",
-        "opciones": {
-          "a": "Anotar todas las ideas por más locas que parezcan",
-          "b": "Criticar o juzgar las ideas de los demás durante la generación",
-          "c": "Construir sobre ideas de otros participantes"
-        },
-        "respuesta_correcta": "b"
-      },
-      {
         "numero": 17,
-        "tema": "Ideas de Negocio",
-        "pregunta": "En la técnica SCAMPER, la letra 'S' representa 'Sustituir'. ¿Qué pregunta te harías?",
+        "tema": "Capa Física y Enlace",
+        "pregunta": "¿Qué tipo de fibra óptica se usa para distancias largas de hasta 100 km?",
         "opciones": {
-          "a": "¿Qué puedo eliminar para simplificar el servicio?",
-          "b": "¿Qué elementos del servicio puedo reemplazar por otros?",
-          "c": "¿Cómo puedo reorganizar los pasos del proceso?"
+          "a": "Multimodo (MMF)",
+          "b": "Monomodo (SMF)",
+          "c": "Cable coaxial"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 18,
-        "tema": "Ideas de Negocio",
-        "pregunta": "Un mapa mental es una herramienta visual que sirve para:",
+        "tema": "Capa Física y Enlace",
+        "pregunta": "¿Qué método de control de acceso al medio usa Ethernet cableado?",
         "opciones": {
-          "a": "Calcular impuestos",
-          "b": "Organizar ideas alrededor de un concepto central, mostrando relaciones",
-          "c": "Diseñar el plano de una oficina"
+          "a": "CSMA/CA",
+          "b": "CSMA/CD",
+          "c": "Token Passing"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 19,
-        "tema": "Ideas de Negocio",
-        "pregunta": "La etapa 'Definir' en Design Thinking consiste en:",
+        "tema": "Capa Física y Enlace",
+        "pregunta": "¿Cuál es la topología de red más usada en las LAN modernas?",
         "opciones": {
-          "a": "Crear un prototipo físico del producto",
-          "b": "Establecer claramente el problema a resolver basado en lo aprendido en empatizar",
-          "c": "Generar muchas ideas sin restricciones"
+          "a": "Bus",
+          "b": "Anillo",
+          "c": "Estrella"
         },
-        "respuesta_correcta": "b"
+        "respuesta_correcta": "c"
       },
       {
         "numero": 20,
-        "tema": "Ideas de Negocio",
-        "pregunta": "¿Qué criterio de selección de ideas evalúa si hay suficiente demanda para el producto o servicio?",
+        "tema": "Capa Física y Enlace",
+        "pregunta": "¿Cuál es la distancia máxima recomendada para un cable UTP sin repetidores?",
         "opciones": {
-          "a": "Viabilidad financiera",
-          "b": "Necesidad del mercado",
-          "c": "Impacto social"
+          "a": "50 metros",
+          "b": "100 metros",
+          "c": "200 metros"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 21,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "La creatividad es la capacidad de generar ideas nuevas, mientras que la innovación es:",
+        "tema": "Ethernet y ARP",
+        "pregunta": "¿Cuántos bytes tiene una dirección MAC?",
         "opciones": {
-          "a": "Solo para ingenieros",
-          "b": "La implementación exitosa de esas ideas generando valor",
-          "c": "Un proceso mágico que no se puede aprender"
+          "a": "4 bytes",
+          "b": "6 bytes",
+          "c": "8 bytes"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 22,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "¿Qué es la 'incubación' en el proceso creativo?",
+        "tema": "Ethernet y ARP",
+        "pregunta": "¿Qué dirección MAC se usa para enviar una trama a todos los dispositivos de la LAN?",
         "opciones": {
-          "a": "El momento en que surge la idea de repente",
-          "b": "Dejar que la mente procese inconscientemente la información recopilada",
-          "c": "Evaluar si la idea es viable"
+          "a": "00:00:00:00:00:00",
+          "b": "FF:FF:FF:FF:FF:FF",
+          "c": "AA:AA:AA:AA:AA:AA"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 23,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "La 'verificación' en el proceso creativo consiste en:",
+        "tema": "Ethernet y ARP",
+        "pregunta": "¿Qué hace un switch cuando recibe una trama y no conoce la MAC de destino?",
         "opciones": {
-          "a": "Implementar la idea en el mercado",
-          "b": "Evaluar la idea para determinar si es viable, factible y pertinente",
-          "c": "Esperar a que llegue la inspiración"
+          "a": "Descarta la trama",
+          "b": "Inunda la trama por todos los puertos excepto el de origen",
+          "c": "La envía solo al puerto de origen"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 24,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "La habilidad de 'asociación de ideas' se refiere a:",
+        "tema": "Ethernet y ARP",
+        "pregunta": "¿Cuál es la función del protocolo ARP?",
         "opciones": {
-          "a": "Memorizar grandes cantidades de información",
-          "b": "Conectar conceptos aparentemente no relacionados para generar soluciones nuevas",
-          "c": "Copiar ideas de la competencia"
+          "a": "Asignar direcciones IP automáticamente",
+          "b": "Traducir una dirección IP conocida a su dirección MAC",
+          "c": "Probar conectividad entre dispositivos"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 25,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "Crear un nuevo tipo de router inteligente con funciones nunca antes vistas es un ejemplo de:",
+        "tema": "Ethernet y ARP",
+        "pregunta": "¿Cómo se llama el proceso de seguridad donde un atacante envía respuestas ARP falsas?",
         "opciones": {
-          "a": "Innovación de producto",
-          "b": "Innovación de proceso",
-          "c": "Innovación de marketing"
+          "a": "ARP Spoofing",
+          "b": "ARP Request",
+          "c": "ARP Cache"
         },
         "respuesta_correcta": "a"
       },
       {
         "numero": 26,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "Ofrecer soporte técnico de redes a empresas agrícolas que nunca antes habían usado tecnología es un ejemplo de:",
+        "tema": "Capa de Red y Router",
+        "pregunta": "¿Qué campo del encabezado IPv4 evita que los paquetes circulen infinitamente en la red?",
         "opciones": {
-          "a": "Innovación de mercado (llegar a nuevos clientes)",
-          "b": "Innovación incremental",
-          "c": "Innovación de modelo de negocio"
-        },
-        "respuesta_correcta": "a"
-      },
-      {
-        "numero": 27,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "En el lienzo (Canvas) de modelo de negocio, el bloque 'Canales de distribución' responde:",
-        "opciones": {
-          "a": "¿Cuánto va a pagar el cliente?",
-          "b": "¿Cómo llegará la solución al cliente? (tienda física, digital, redes sociales)",
-          "c": "¿Quiénes son mis socios estratégicos?"
+          "a": "Checksum",
+          "b": "TTL",
+          "c": "Protocolo"
         },
         "respuesta_correcta": "b"
       },
       {
-        "numero": 28,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "¿Qué significa 'MVP' (Producto Mínimo Viable) en el proceso de innovación?",
+        "numero": 27,
+        "tema": "Capa de Red y Router",
+        "pregunta": "¿Qué memoria del router almacena la configuración de inicio que se conserva al apagar?",
         "opciones": {
-          "a": "El producto final completamente terminado",
-          "b": "Una versión simplificada del producto con funciones básicas para probar con clientes reales",
-          "c": "El manual de usuario del producto"
+          "a": "RAM",
+          "b": "Flash",
+          "c": "NVRAM"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 28,
+        "tema": "Capa de Red y Router",
+        "pregunta": "¿Qué código aparece en la tabla de enrutamiento para una ruta configurada manualmente?",
+        "opciones": {
+          "a": "C",
+          "b": "S",
+          "c": "O"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 29,
-        "tema": "Emprendimiento",
-        "pregunta": "¿Cuál es una ventaja de usar herramientas de productividad como Trello o Notion en un emprendimiento?",
+        "tema": "Capa de Red y Router",
+        "pregunta": "¿Qué ventaja tiene IPv6 sobre IPv4?",
         "opciones": {
-          "a": "Solo sirven para jugar",
-          "b": "Organizar tareas, proyectos y trabajo en equipo de manera eficiente",
-          "c": "Reemplazar completamente a los empleados"
+          "a": "Usa direcciones de 32 bits",
+          "b": "Tiene un espacio de direcciones mucho más grande",
+          "c": "Requiere NAT obligatoriamente"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 30,
-        "tema": "Mercado",
-        "pregunta": "La técnica de 'observación directa' para detectar necesidades del mercado consiste en:",
+        "tema": "Capa de Red y Router",
+        "pregunta": "¿Qué es la puerta de enlace predeterminada (default gateway)?",
         "opciones": {
-          "a": "Preguntar a las personas qué necesitan",
-          "b": "Analizar el comportamiento de usuarios en su entorno natural para identificar problemas que ellos no expresan",
-          "c": "Leer informes de mercado ya hechos"
+          "a": "La dirección MAC del switch",
+          "b": "La IP del router al que los dispositivos envían paquetes a otras redes",
+          "c": "El nombre del dispositivo en la red"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 31,
-        "tema": "Ideas de Negocio",
-        "pregunta": "Una idea empresarial debe responder: ¿Cómo genera ingresos? Esto se refiere a:",
+        "tema": "IPv4 e IPv6",
+        "pregunta": "¿Cuántos bits tiene una dirección IPv4?",
         "opciones": {
-          "a": "El modelo de negocio (suscripción, pago por proyecto, freemium, etc.)",
-          "b": "El logotipo de la empresa",
-          "c": "La misión y visión"
+          "a": "32 bits",
+          "b": "64 bits",
+          "c": "128 bits"
         },
         "respuesta_correcta": "a"
       },
       {
         "numero": 32,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "La 'tolerancia a la ambigüedad' como habilidad creativa significa:",
+        "tema": "IPv4 e IPv6",
+        "pregunta": "¿Cuál de las siguientes es una dirección IPv4 privada?",
         "opciones": {
-          "a": "No entender nada de lo que pasa",
-          "b": "Trabajar con comodidad en situaciones de incertidumbre o información incompleta",
-          "c": "Evitar cualquier situación nueva"
+          "a": "8.8.8.8",
+          "b": "192.168.1.10",
+          "c": "200.10.20.30"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 33,
-        "tema": "Emprendimiento",
-        "pregunta": "¿Cuál es un ejemplo de 'uso productivo de tecnologías' en un negocio?",
+        "tema": "IPv4 e IPv6",
+        "pregunta": "¿Cuál es la dirección de loopback en IPv6?",
         "opciones": {
-          "a": "Usar redes sociales solo para ver memes",
-          "b": "Implementar un sistema de facturación electrónica y marketing digital para llegar a más clientes",
-          "c": "Tener la computadora más cara sin usarla"
+          "a": "127.0.0.1",
+          "b": "::1",
+          "c": "FE80::1"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 34,
-        "tema": "Mercado",
-        "pregunta": "Un grupo focal (focus group) es una reunión de 6 a 12 personas representativas del mercado para:",
+        "tema": "IPv4 e IPv6",
+        "pregunta": "¿Qué comando se usa para probar conectividad entre dos dispositivos?",
         "opciones": {
-          "a": "Firmar contratos",
-          "b": "Discutir sobre un producto o problemática específica y obtener retroalimentación",
-          "c": "Vender productos directamente"
-        },
-        "respuesta_correcta": "b"
-      },
-      {
-        "numero": 35,
-        "tema": "Ideas de Negocio",
-        "pregunta": "En SCAMPER, la letra 'E' representa 'Eliminar'. ¿Qué pregunta te harías?",
-        "opciones": {
-          "a": "¿Qué puedo quitar para simplificar el producto o servicio?",
-          "b": "¿Qué puedo agregar para mejorarlo?",
-          "c": "¿Cómo puedo cambiar el color?"
+          "a": "ping",
+          "b": "ipconfig",
+          "c": "hostname"
         },
         "respuesta_correcta": "a"
       },
       {
-        "numero": 36,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "La innovación 'incremental' se caracteriza por:",
+        "numero": 35,
+        "tema": "IPv4 e IPv6",
+        "pregunta": "¿Qué tipo de dirección IPv6 comienza con FE80::?",
         "opciones": {
-          "a": "Cambios disruptivos que transforman toda la industria",
-          "b": "Mejoras graduales y continuas sobre productos o procesos existentes",
-          "c": "Crear algo completamente nuevo desde cero"
+          "a": "Global Unicast (GUA)",
+          "b": "Link-Local (LLA)",
+          "c": "Multicast"
         },
         "respuesta_correcta": "b"
       },
       {
-        "numero": 37,
-        "tema": "Emprendimiento",
-        "pregunta": "¿Qué elemento del proyecto analiza la demanda, competencia, precios y clientes potenciales?",
+        "numero": 36,
+        "tema": "Subnetting y VLSM",
+        "pregunta": "¿Cuántos hosts utilizables tiene una subred /30?",
         "opciones": {
-          "a": "Justificación",
-          "b": "Estudio de mercado",
-          "c": "Análisis FODA"
+          "a": "2",
+          "b": "6",
+          "c": "14"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 37,
+        "tema": "Subnetting y VLSM",
+        "pregunta": "Si tienes una red /24 y tomas 2 bits prestados, ¿cuántas subredes obtienes?",
+        "opciones": {
+          "a": "2",
+          "b": "4",
+          "c": "8"
         },
         "respuesta_correcta": "b"
       },
       {
         "numero": 38,
-        "tema": "Mercado",
-        "pregunta": "La tendencia tecnológica 'Internet de las Cosas (IoT)' se refiere a:",
+        "tema": "Subnetting y VLSM",
+        "pregunta": "¿Cuántos hosts utilizables tiene una subred /27?",
         "opciones": {
-          "a": "Solo a los teléfonos inteligentes",
-          "b": "Dispositivos cotidianos (electrodomésticos, sensores, cámaras) conectados a internet que intercambian datos",
-          "c": "Una nueva red social"
+          "a": "30",
+          "b": "62",
+          "c": "126"
         },
-        "respuesta_correcta": "b"
+        "respuesta_correcta": "a"
       },
       {
         "numero": 39,
-        "tema": "Ideas de Negocio",
-        "pregunta": "¿Qué técnica creativa se basa en 5 etapas centradas en el usuario: Empatizar, Definir, Idear, Prototipar y Evaluar?",
+        "tema": "Subnetting y VLSM",
+        "pregunta": "¿Qué permite hacer VLSM que el subnetting clásico no permite?",
         "opciones": {
-          "a": "SCAMPER",
-          "b": "Design Thinking",
-          "c": "Lluvia de ideas"
+          "a": "Usar diferentes máscaras de subred en una misma red",
+          "b": "Crear subredes más rápido",
+          "c": "Usar direcciones IPv6"
         },
-        "respuesta_correcta": "b"
+        "respuesta_correcta": "a"
       },
       {
         "numero": 40,
-        "tema": "Creatividad e Innovación",
-        "pregunta": "En el lienzo Canvas, la 'estructura de costos' incluye:",
+        "tema": "Subnetting y VLSM",
+        "pregunta": "En VLSM, ¿cómo se deben ordenar los segmentos para asignar las subredes?",
         "opciones": {
-          "a": "Los ingresos por ventas",
-          "b": "Los costos fijos (alquiler, salarios) y variables (materiales, comisiones) del negocio",
-          "c": "La misión y visión de la empresa"
+          "a": "De menor a mayor cantidad de hosts",
+          "b": "De mayor a menor cantidad de hosts",
+          "c": "En orden alfabético"
         },
         "respuesta_correcta": "b"
       }
