@@ -1,0 +1,453 @@
+{
+  "examen": {
+    "titulo": "Examen: Introducción a las Redes",
+    "institucion": "CTP Las Palmitas",
+    "nivel": "Undécimo Nivel",
+    "año": 2026,
+    "especialidad": "Configuración y Soporte a Redes",
+    "total_preguntas": 40,
+    "instrucciones": "Selecciona la respuesta correcta. Solo una opción es verdadera por pregunta.",
+    "preguntas": [
+      {
+        "numero": 1,
+        "tema": "Redes y Tendencias",
+        "pregunta": "¿Qué tipo de red conecta dispositivos en un espacio geográfico limitado como una oficina o un edificio?",
+        "opciones": {
+          "a": "WAN",
+          "b": "LAN",
+          "c": "MAN"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 2,
+        "tema": "Redes y Tendencias",
+        "pregunta": "¿Cuál de los siguientes es un dispositivo intermedio en una red?",
+        "opciones": {
+          "a": "Impresora",
+          "b": "Switch",
+          "c": "Laptop"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 3,
+        "tema": "Redes y Tendencias",
+        "pregunta": "¿Qué tipo de conexión a internet ofrece la mayor velocidad y utiliza pulsos de luz?",
+        "opciones": {
+          "a": "DSL",
+          "b": "Fibra óptica",
+          "c": "Satelital"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 4,
+        "tema": "Redes y Tendencias",
+        "pregunta": "¿Qué característica de una red confiable permite que siga funcionando aunque fallen algunos componentes?",
+        "opciones": {
+          "a": "Escalabilidad",
+          "b": "Tolerancia a fallos",
+          "c": "QoS"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 5,
+        "tema": "Redes y Tendencias",
+        "pregunta": "¿Qué significa BYOD en el contexto de redes empresariales?",
+        "opciones": {
+          "a": "Los empleados usan sus propios dispositivos para trabajar",
+          "b": "La empresa compra todos los dispositivos",
+          "c": "Los dispositivos se conectan solo por cable"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 6,
+        "tema": "Configuración IOS",
+        "pregunta": "¿Cuál es el prompt del modo privilegiado en un switch Cisco?",
+        "opciones": {
+          "a": "Switch>",
+          "b": "Switch#",
+          "c": "Switch(config)#"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 7,
+        "tema": "Configuración IOS",
+        "pregunta": "¿Qué comando se usa para cambiar el nombre de un dispositivo Cisco?",
+        "opciones": {
+          "a": "name",
+          "b": "hostname",
+          "c": "rename"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 8,
+        "tema": "Configuración IOS",
+        "pregunta": "¿Qué comando guarda la configuración activa en la NVRAM?",
+        "opciones": {
+          "a": "save running-config",
+          "b": "copy running-config startup-config",
+          "c": "backup config"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 9,
+        "tema": "Configuración IOS",
+        "pregunta": "¿Cuál es la función del comando 'enable secret'?",
+        "opciones": {
+          "a": "Establecer una contraseña cifrada para modo privilegiado",
+          "b": "Activar el modo de configuración global",
+          "c": "Ver las interfaces del dispositivo"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 10,
+        "tema": "Configuración IOS",
+        "pregunta": "¿Qué comando se usa para configurar una dirección IP en un switch Cisco?",
+        "opciones": {
+          "a": "interface fastEthernet 0/1",
+          "b": "interface vlan 1",
+          "c": "interface serial 0/0/0"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 11,
+        "tema": "Protocolos y Modelos",
+        "pregunta": "¿Cuántas capas tiene el modelo OSI?",
+        "opciones": {
+          "a": "7",
+          "b": "4",
+          "c": "5"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 12,
+        "tema": "Protocolos y Modelos",
+        "pregunta": "¿Qué capa del modelo OSI se encarga del direccionamiento lógico y el enrutamiento?",
+        "opciones": {
+          "a": "Capa de Transporte",
+          "b": "Capa de Red",
+          "c": "Capa de Enlace"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 13,
+        "tema": "Protocolos y Modelos",
+        "pregunta": "¿Qué protocolo de transporte es orientado a conexión y confiable?",
+        "opciones": {
+          "a": "UDP",
+          "b": "IP",
+          "c": "TCP"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 14,
+        "tema": "Protocolos y Modelos",
+        "pregunta": "¿Qué protocolo traduce nombres de dominio como google.com a direcciones IP?",
+        "opciones": {
+          "a": "DHCP",
+          "b": "DNS",
+          "c": "HTTP"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 15,
+        "tema": "Protocolos y Modelos",
+        "pregunta": "En el proceso de encapsulamiento, ¿cómo se llama la unidad de datos en la capa de Transporte?",
+        "opciones": {
+          "a": "Paquete",
+          "b": "Trama",
+          "c": "Segmento"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 16,
+        "tema": "Capa Física y Enlace",
+        "pregunta": "¿Qué tipo de cable UTP es capaz de alcanzar velocidades de hasta 1 Gbps a 100 metros?",
+        "opciones": {
+          "a": "Cat 5e",
+          "b": "Cat 3",
+          "c": "Cat 8"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 17,
+        "tema": "Capa Física y Enlace",
+        "pregunta": "¿Qué tipo de fibra óptica se usa para distancias largas de hasta 100 km?",
+        "opciones": {
+          "a": "Multimodo (MMF)",
+          "b": "Monomodo (SMF)",
+          "c": "Cable coaxial"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 18,
+        "tema": "Capa Física y Enlace",
+        "pregunta": "¿Qué método de control de acceso al medio usa Ethernet cableado?",
+        "opciones": {
+          "a": "CSMA/CA",
+          "b": "CSMA/CD",
+          "c": "Token Passing"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 19,
+        "tema": "Capa Física y Enlace",
+        "pregunta": "¿Cuál es la topología de red más usada en las LAN modernas?",
+        "opciones": {
+          "a": "Bus",
+          "b": "Anillo",
+          "c": "Estrella"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 20,
+        "tema": "Capa Física y Enlace",
+        "pregunta": "¿Cuál es la distancia máxima recomendada para un cable UTP sin repetidores?",
+        "opciones": {
+          "a": "50 metros",
+          "b": "100 metros",
+          "c": "200 metros"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 21,
+        "tema": "Ethernet y ARP",
+        "pregunta": "¿Cuántos bytes tiene una dirección MAC?",
+        "opciones": {
+          "a": "4 bytes",
+          "b": "6 bytes",
+          "c": "8 bytes"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 22,
+        "tema": "Ethernet y ARP",
+        "pregunta": "¿Qué dirección MAC se usa para enviar una trama a todos los dispositivos de la LAN?",
+        "opciones": {
+          "a": "00:00:00:00:00:00",
+          "b": "FF:FF:FF:FF:FF:FF",
+          "c": "AA:AA:AA:AA:AA:AA"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 23,
+        "tema": "Ethernet y ARP",
+        "pregunta": "¿Qué hace un switch cuando recibe una trama y no conoce la MAC de destino?",
+        "opciones": {
+          "a": "Descarta la trama",
+          "b": "Inunda la trama por todos los puertos excepto el de origen",
+          "c": "La envía solo al puerto de origen"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 24,
+        "tema": "Ethernet y ARP",
+        "pregunta": "¿Cuál es la función del protocolo ARP?",
+        "opciones": {
+          "a": "Asignar direcciones IP automáticamente",
+          "b": "Traducir una dirección IP conocida a su dirección MAC",
+          "c": "Probar conectividad entre dispositivos"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 25,
+        "tema": "Ethernet y ARP",
+        "pregunta": "¿Cómo se llama el proceso de seguridad donde un atacante envía respuestas ARP falsas?",
+        "opciones": {
+          "a": "ARP Spoofing",
+          "b": "ARP Request",
+          "c": "ARP Cache"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 26,
+        "tema": "Capa de Red y Router",
+        "pregunta": "¿Qué campo del encabezado IPv4 evita que los paquetes circulen infinitamente en la red?",
+        "opciones": {
+          "a": "Checksum",
+          "b": "TTL",
+          "c": "Protocolo"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 27,
+        "tema": "Capa de Red y Router",
+        "pregunta": "¿Qué memoria del router almacena la configuración de inicio que se conserva al apagar?",
+        "opciones": {
+          "a": "RAM",
+          "b": "Flash",
+          "c": "NVRAM"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 28,
+        "tema": "Capa de Red y Router",
+        "pregunta": "¿Qué código aparece en la tabla de enrutamiento para una ruta configurada manualmente?",
+        "opciones": {
+          "a": "C",
+          "b": "S",
+          "c": "O"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 29,
+        "tema": "Capa de Red y Router",
+        "pregunta": "¿Qué ventaja tiene IPv6 sobre IPv4?",
+        "opciones": {
+          "a": "Usa direcciones de 32 bits",
+          "b": "Tiene un espacio de direcciones mucho más grande",
+          "c": "Requiere NAT obligatoriamente"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 30,
+        "tema": "Capa de Red y Router",
+        "pregunta": "¿Qué es la puerta de enlace predeterminada (default gateway)?",
+        "opciones": {
+          "a": "La dirección MAC del switch",
+          "b": "La IP del router al que los dispositivos envían paquetes a otras redes",
+          "c": "El nombre del dispositivo en la red"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 31,
+        "tema": "IPv4 e IPv6",
+        "pregunta": "¿Cuántos bits tiene una dirección IPv4?",
+        "opciones": {
+          "a": "32 bits",
+          "b": "64 bits",
+          "c": "128 bits"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 32,
+        "tema": "IPv4 e IPv6",
+        "pregunta": "¿Cuál de las siguientes es una dirección IPv4 privada?",
+        "opciones": {
+          "a": "8.8.8.8",
+          "b": "192.168.1.10",
+          "c": "200.10.20.30"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 33,
+        "tema": "IPv4 e IPv6",
+        "pregunta": "¿Cuál es la dirección de loopback en IPv6?",
+        "opciones": {
+          "a": "127.0.0.1",
+          "b": "::1",
+          "c": "FE80::1"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 34,
+        "tema": "IPv4 e IPv6",
+        "pregunta": "¿Qué comando se usa para probar conectividad entre dos dispositivos?",
+        "opciones": {
+          "a": "ping",
+          "b": "ipconfig",
+          "c": "hostname"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 35,
+        "tema": "IPv4 e IPv6",
+        "pregunta": "¿Qué tipo de dirección IPv6 comienza con FE80::?",
+        "opciones": {
+          "a": "Global Unicast (GUA)",
+          "b": "Link-Local (LLA)",
+          "c": "Multicast"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 36,
+        "tema": "Subnetting y VLSM",
+        "pregunta": "¿Cuántos hosts utilizables tiene una subred /30?",
+        "opciones": {
+          "a": "2",
+          "b": "6",
+          "c": "14"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 37,
+        "tema": "Subnetting y VLSM",
+        "pregunta": "Si tienes una red /24 y tomas 2 bits prestados, ¿cuántas subredes obtienes?",
+        "opciones": {
+          "a": "2",
+          "b": "4",
+          "c": "8"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 38,
+        "tema": "Subnetting y VLSM",
+        "pregunta": "¿Cuántos hosts utilizables tiene una subred /27?",
+        "opciones": {
+          "a": "30",
+          "b": "62",
+          "c": "126"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 39,
+        "tema": "Subnetting y VLSM",
+        "pregunta": "¿Qué permite hacer VLSM que el subnetting clásico no permite?",
+        "opciones": {
+          "a": "Usar diferentes máscaras de subred en una misma red",
+          "b": "Crear subredes más rápido",
+          "c": "Usar direcciones IPv6"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 40,
+        "tema": "Subnetting y VLSM",
+        "pregunta": "En VLSM, ¿cómo se deben ordenar los segmentos para asignar las subredes?",
+        "opciones": {
+          "a": "De menor a mayor cantidad de hosts",
+          "b": "De mayor a menor cantidad de hosts",
+          "c": "En orden alfabético"
+        },
+        "respuesta_correcta": "b"
+      }
+    ]
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "CCS01": {
+    "nombre": "Control de Calidad del Software",
+    "archivo": "Control de Calidad del Software.json",
+    "duracion_minutos": 60
+  },
+  "EMP01": {
+    "nombre": "Emprendimiento",
+    "archivo": "Emprendimiento.json",
+    "duracion_minutos": 60
+  },
+  "ADM01": {
+    "nombre": "Administración y Soporte a Computadoras Portátiles",
+    "archivo": "Administración y Soporte a Computadoras Portátiles.json",
+    "duracion_minutos": 60
+  },
+  "RED01": {
+    "nombre": "Introducción a las Redes",
+    "archivo": "Redes.json",
+    "duracion_minutos": 60
+  }
+}
