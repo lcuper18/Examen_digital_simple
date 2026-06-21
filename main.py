@@ -43,7 +43,7 @@ EXAMENES_DIR = BASE_DIR / "examenes"
 CODIGOS_FILE = BASE_DIR / "codigos.json"
 
 # Hash SHA-256 de la contraseña del docente (nunca almacenar la contraseña en texto plano)
-TEACHER_PASSWORD_HASH = "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3"
+TEACHER_PASSWORD_HASH = "849018898d5676cde9c6723b4604bd196d65e33c25304ec6e71fd7cc56af9a98"
 
 
 # =============================================================================
