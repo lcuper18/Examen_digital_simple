@@ -4,9 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Examen Digital</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,700;9..144,900&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+  <!-- Self-hosted fonts (no external dependencies) -->
+  <link rel="stylesheet" href="fonts/fonts.css">
   <style>
     :root {
       --bg-primary: #0A0A0F;
@@ -1976,7 +1976,7 @@
     <strong>Error:</strong> <span id="error-text"></span>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="/static/js/jspdf.min.js"></script>
   <script>
     // Variables globales
     let questions = [];
@@ -2217,8 +2217,8 @@
       const transformedQuestions = [];
 
       preguntasJSON.forEach((pregunta, index) => {
-        // Campos requeridos del API (NO incluye respuesta_correcta)
-        const requiredFields = ['numero', 'tema', 'pregunta', 'opciones'];
+        // Campos requeridos del API (incluye respuesta_correcta)
+        const requiredFields = ['numero', 'tema', 'pregunta', 'opciones', 'respuesta_correcta'];
         for (const field of requiredFields) {
           if (!pregunta[field]) throw new Error(`Pregunta ${index + 1}: falta el campo "${field}"`);
         }
@@ -2230,11 +2230,14 @@
           if (!pregunta.opciones[key]) throw new Error(`Pregunta ${index + 1}: falta la opción "${key}"`);
         }
 
+        // Convertir respuesta_correcta (a,b,c) a índice (0,1,2)
+        const ansIndex = pregunta.respuesta_correcta.charCodeAt(0) - 97;
+
         transformedQuestions.push({
           tema: pregunta.tema,
           q: pregunta.pregunta,
           opts: [pregunta.opciones.a, pregunta.opciones.b, pregunta.opciones.c],
-          ans: null, // Se llenará después con las respuestas correctas del API al enviar
+          ans: ansIndex,
           numeroOriginal: pregunta.numero
         });
       });
@@ -2597,7 +2600,7 @@
     function generatePDF() {
       if (typeof jsPDF === 'undefined' && typeof window.jspdf === 'undefined') {
         const script = document.createElement('script');
-        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        script.src = '/static/js/jspdf.min.js';
         script.onload = () => createPDF();
         script.onerror = () => alert('Error al cargar la biblioteca PDF.');
         document.head.appendChild(script);
