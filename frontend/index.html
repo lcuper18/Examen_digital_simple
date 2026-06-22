@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Examen Digital</title>
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+  <!-- Self-hosted fonts (no external dependencies) -->
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <!-- External styles -->
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <!-- Login Screen -->
+  <div class="login-overlay active" id="login-overlay">
+    <div class="login-container">
+      <div class="login-logo">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+        </svg>
+      </div>
+      <h1 class="login-title">Examen Digital</h1>
+      <p class="login-subtitle">Ingresa tus credenciales para continuar</p>
+      <form class="login-form" id="login-form" onsubmit="return false;">
+        <input type="text" id="login-username" placeholder="Usuario" autocomplete="username" required>
+        <input type="password" id="login-password" placeholder="Contraseña" autocomplete="current-password" required>
+        <button class="btn btn-primary" id="login-btn" onclick="performLogin()">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M11 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+          </svg>
+          Iniciar Sesión
+        </button>
+      </form>
+      <p class="login-error" id="login-error">Usuario o contraseña incorrectos</p>
+    </div>
+  </div>
+
+  <!-- Code Entry Screen -->
+  <div class="code-overlay" id="code-overlay">
+    <button class="code-logout" onclick="logout()">
+      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+      </svg>
+      Cerrar Sesión
+    </button>
+    <div class="code-container">
+      <p class="code-welcome">Bienvenido</p>
+      <p class="code-student-name" id="code-student-name">Estudiante</p>
+      <div class="code-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
+        </svg>
+      </div>
+      <p class="login-subtitle">Ingresa el código del examen</p>
+      <form class="code-form" id="code-form" onsubmit="return false;">
+        <input type="text" id="exam-code" placeholder="Código del examen" maxlength="20" autocomplete="off">
+        <button class="btn btn-primary" id="start-exam-btn" onclick="startExam()">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
+            <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Comenzar Examen
+        </button>
+      </form>
+      <p class="code-error" id="code-error">El código ingresado no es válido</p>
+      <p class="code-help">Solicita el código a tu profesor</p>
+    </div>
+  </div>
+
+  <div class="exam-container">
+    <header class="exam-header" id="exam-header" style="display: none;">
+      <div class="exam-badge">
+        <svg fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        Examen Digital
+      </div>
+      <h1 class="exam-title" id="exam-title-header">Examen Digital</h1>
+      <p class="exam-subtitle" id="exam-subtitle-header">Cargando...</p>
+      <p class="exam-specialty" id="exam-specialty"></p>
+      <p class="exam-professor" id="exam-professor"></p>
+      <div class="exam-instructions" id="exam-instructions">
+        <strong>Instrucciones:</strong> Cargando...
+      </div>
+    </header>
+
+    <div class="stats-bar">
+      <div class="stat-card answered">
+        <div class="stat-value" id="answered-count">0</div>
+        <div class="stat-label">Contestadas</div>
+      </div>
+      <div class="stat-card pending">
+        <div class="stat-value" id="pending-count">0</div>
+        <div class="stat-label">Pendientes</div>
+      </div>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-header">
+        <span class="progress-label">Progreso del examen</span>
+        <span class="progress-percentage" id="progress-text">0 / 0</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+      </div>
+      <div class="timer-display" id="timer-display" style="margin-top: 16px; justify-content: center;">
+        <span class="timer-icon">⏱</span>
+        <span id="timer-text">60:00</span>
+      </div>
+    </div>
+
+    <div class="question-nav" id="question-nav"></div>
+
+    <div id="exam-content"></div>
+
+    <div class="controls">
+      <button class="btn btn-primary" onclick="submitExam()">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        Enviar Examen
+      </button>
+    </div>
+  </div>
+
+  <!-- Results Overlay -->
+  <div class="results-overlay" id="results-overlay">
+    <div class="results-modal">
+      <div class="results-header">
+        <div class="results-icon" id="results-icon">🎉</div>
+        <h2 class="results-title" id="results-title">¡Excelente!</h2>
+        <p class="results-subtitle" id="results-subtitle">Has completado el examen</p>
+      </div>
+      <div class="results-stats">
+        <div class="results-stat">
+          <div class="results-stat-value correct" id="results-correct">0</div>
+          <div class="results-stat-label">Correctas</div>
+        </div>
+        <div class="results-stat">
+          <div class="results-stat-value wrong" id="results-wrong">0</div>
+          <div class="results-stat-label">Incorrectas</div>
+        </div>
+        <div class="results-stat">
+          <div class="results-stat-value total" id="results-total">0</div>
+          <div class="results-stat-label">Total</div>
+        </div>
+      </div>
+      <div class="detailed-results-section" id="detailed-results" style="display: none;">
+        <h4>Resultados Detallados</h4>
+        <div class="results-list" id="results-list"></div>
+      </div>
+      <div class="results-actions">
+        <button class="btn btn-secondary" onclick="closeResults()">Cerrar</button>
+        <button class="btn btn-primary" onclick="generatePDF()" id="download-pdf-btn" style="display: none;">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+          Descargar PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Password Modal -->
+  <div class="password-overlay" id="password-overlay">
+    <div class="password-modal">
+      <div class="password-header">
+        <h3>Acceso Docente</h3>
+        <p>Ingrese la contraseña para ver resultados detallados</p>
+      </div>
+      <div class="password-input">
+        <input type="password" id="teacher-password" placeholder="Contraseña" autocomplete="off">
+        <button class="btn btn-primary" id="verify-btn">Verificar</button>
+      </div>
+      <div class="password-actions">
+        <button class="btn btn-secondary" onclick="closePasswordModal()">Cancelar</button>
+      </div>
+      <p id="password-error" class="error-message" style="display: none;"></p>
+    </div>
+  </div>
+
+  <!-- Warning Modal -->
+  <div class="warning-overlay" id="warning-overlay">
+    <div class="warning-modal">
+      <div class="warning-icon">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+      </div>
+      <h3 class="warning-title">Preguntas Sin Contestar</h3>
+      <p class="warning-message" id="warning-message">Tienes preguntas sin contestar. ¿Deseas enviar el examen de todas formas?</p>
+      <div class="warning-actions">
+        <button class="btn btn-secondary" onclick="closeWarningModal()">Cancelar</button>
+        <button class="btn btn-primary" onclick="confirmSubmit()">Enviar de todas formas</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div id="loading-indicator">
+    <div class="spinner"></div>
+    <div style="font-size: 16px; color: var(--text-secondary);">Cargando preguntas...</div>
+  </div>
+
+  <!-- Error -->
+  <div id="error-message" style="display: none;">
+    <strong>Error:</strong> <span id="error-text"></span>
+  </div>
+
+  <!-- External scripts -->
+  <script src="/js/app.js"></script>
+</body>
+</html>

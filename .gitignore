@@ -27,9 +27,11 @@ Thumbs.db
 *.log
 logs/
 
-# Datos de exámenes (generados dinámicamente)
-examenes/PDF/
-examenes/*.sqlite
+# Database (generated at runtime)
+examen_db.sqlite
+
+# Exam PDFs (generated dynamically)
+data/examenes/PDF/
 
 # Node (si se usa en el futuro)
 node_modules/

@@ -1,9 +1,13 @@
 #!/bin/bash
+# Examen Digital Simple v2 - Script de inicio (Linux/Mac)
+# Uso: bash scripts/iniciar.sh
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+cd "$PROJECT_ROOT"
 
 # Activar venv si existe
-if [ -f "$SCRIPT_DIR/venv/bin/activate" ]; then
+if [ -f "$PROJECT_ROOT/venv/bin/activate" ]; then
     source venv/bin/activate
 fi
 
@@ -17,10 +21,10 @@ echo "=============================================="
 echo "  SERVIDOR EXAMEN DIGITAL v2"
 echo "=============================================="
 echo ""
-echo "  Acceso local:   http://localhost:8080"
-echo "  Acceso red:     http://$IP:8080"
+echo "  Acceso local:   http://localhost:8000"
+echo "  Acceso red:     http://$IP:8000"
 echo ""
 echo "  Presiona Ctrl+C para detener"
 echo "=============================================="
 
-uvicorn main:app --host 0.0.0.0 --port 8080 --reload
+uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload

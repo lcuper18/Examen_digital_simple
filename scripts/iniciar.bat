@@ -7,9 +7,10 @@ echo   EXAMEN DIGITAL - INICIANDO SERVIDOR
 echo ==============================================
 echo.
 
-REM Obtener la ruta del script
+REM Obtener la ruta del script y proyecto
 set SCRIPT_DIR=%~dp0
-cd /d "%SCRIPT_DIR%"
+set PROJECT_ROOT=%SCRIPT_DIR%..
+cd /d "%PROJECT_ROOT%"
 
 REM Verificar que Python esta instalado
 python --version >nul 2>&1
@@ -74,12 +75,10 @@ echo ==============================================
 echo.
 echo   SERVIDOR INICIADO EXITOSAMENTE
 echo.
-echo   Acceso local:  http://localhost:8080
+echo   Acceso local:  http://localhost:8000
 if not "%LOCAL_IP%"=="localhost" (
-    echo   Acceso red:    http://%LOCAL_IP%:8080
+    echo   Acceso red:    http://%LOCAL_IP%:8000
 )
-echo.
-echo   Codigo del examen: PER01
 echo.
 echo   Presiona Ctrl+C para detener el servidor
 echo.
@@ -87,4 +86,4 @@ echo ==============================================
 echo.
 
 REM Iniciar el servidor
-uvicorn main:app --host 0.0.0.0 --port 8080 --reload
+uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload

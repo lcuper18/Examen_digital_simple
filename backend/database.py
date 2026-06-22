@@ -1,6 +1,6 @@
 """
-Módulo de base de datos para Examen Digital Simple v2.
-Proporciona conexión SQLite y creación de tablas.
+Database module for Examen Digital.
+Provides SQLite connection and table creation.
 """
 import sqlite3
 import hashlib
@@ -8,9 +8,11 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Generator
 
-DATABASE_PATH = Path(__file__).parent / "examen_db.sqlite"
+# Database path - project root (parent of backend/)
+PROJECT_ROOT = Path(__file__).parent.parent
+DATABASE_PATH = PROJECT_ROOT / "examen_db.sqlite"
 
-# Datos de estudiantes para auto-poblar
+# Student data for auto-population
 ESTUDIANTES = [
     # Sección 11-1
     ("1-2050-0131", "WESLY ABDRIEL", "ALVARADO", "MORA", "11-1"),
@@ -128,7 +130,7 @@ def init_db() -> int:
         """)
 
         conn.commit()
-    
+
     # Poblar estudiantes si la tabla está vacía
     return ensure_students()
 
@@ -143,17 +145,17 @@ def ensure_students() -> int:
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM estudiantes")
         count = cursor.fetchone()[0]
-        
+
         if count > 0:
             return 0  # Ya hay estudiantes
-        
+
         # Poblar estudiantes
         insertados = 0
         for cedula, nombre, apellido1, apellido2, seccion in ESTUDIANTES:
             username = calcular_username(nombre, apellido1)
             password_texto = calcular_password(cedula, apellido1)
             password_hash = hash_password(password_texto)
-            
+
             try:
                 cursor.execute(
                     """INSERT INTO estudiantes
@@ -164,6 +166,6 @@ def ensure_students() -> int:
                 insertados += 1
             except Exception:
                 pass  # Ignorar duplicados
-        
+
         conn.commit()
         return insertados
