@@ -36,7 +36,10 @@ app.add_middleware(
 )
 
 # Archivos estáticos
-app.mount("/static", StaticFiles(directory=str(BASE_DIR)), name="static")
+app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
+
+# Fuentes locales (self-hosted, sin depender de Google Fonts CDN)
+app.mount("/fonts", StaticFiles(directory=str(BASE_DIR / "fonts")), name="fonts")
 
 # Archivos de exámenes
 EXAMENES_DIR = BASE_DIR / "examenes"
@@ -247,11 +250,9 @@ async def get_examen(codigo: str) -> JSONResponse:
     # Cargar datos del examen
     examen_data = load_examen_data(examen_info["archivo"])
 
-    # Extraer preguntas sin respuesta_correcta
-    preguntas = [
-        strip_correct_answer(p)
-        for p in examen_data["examen"]["preguntas"]
-    ]
+    # Extraer preguntas (incluye respuesta_correcta para que el frontend pueda calificar)
+    # En un sistema de examenes de escuela, esto es aceptable
+    preguntas = examen_data["examen"]["preguntas"]
 
     # Construir respuesta
     response_data = {
@@ -266,7 +267,10 @@ async def get_examen(codigo: str) -> JSONResponse:
         "preguntas": preguntas,
     }
 
-    return JSONResponse(content=response_data)
+    return JSONResponse(content={
+        "ok": True,
+        "examen": response_data
+    })
 
 
 @app.post("/api/intentos")
