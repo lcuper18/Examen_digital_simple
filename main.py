@@ -327,7 +327,9 @@ async def crear_intento(request: IntentoRequest) -> JSONResponse:
 @app.on_event("startup")
 async def startup_event():
     """Inicializa la base de datos al arrancar el servidor."""
-    database.init_db()
+    inserted = database.init_db()
+    if inserted > 0:
+        print(f"[INFO] Base de datos poblada con {inserted} estudiantes")
 
 
 # =============================================================================
@@ -338,7 +340,9 @@ if __name__ == "__main__":
     import uvicorn
 
     # Inicializar BD antes de iniciar servidor
-    database.init_db()
+    inserted = database.init_db()
+    if inserted > 0:
+        print(f"[INFO] Base de datos poblada con {inserted} estudiantes")
 
     uvicorn.run(
         "main:app",
