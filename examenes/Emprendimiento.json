@@ -1,0 +1,454 @@
+{
+  "examen": {
+    "titulo": "Emprendimiento e innovación para sistemas de calidad - Periodo01 Examen01",
+    "institucion": "CTP Las Palmitas",
+    "especialidad": "Control de Calidad del Software",
+    "nivel": "Undécimo",
+    "curso_lectivo": 2026,
+    "profesor": "Luis Cuper Fallas Rivas",
+    "instrucciones": "Selecciona la respuesta correcta para cada pregunta. El examen cubre 4 temas: Emprendimiento, Mercado, Ideas de Negocio, Creatividad e Innovación.",
+    "total_preguntas": 40,
+    "preguntas": [
+      {
+        "numero": 1,
+        "tema": "Emprendimiento",
+        "pregunta": "¿Cuál de las siguientes NO es una característica esencial del emprendimiento?",
+        "opciones": {
+          "a": "Innovación",
+          "b": "Riesgo calculado",
+          "c": "Dependencia total de un solo cliente"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 2,
+        "tema": "Emprendimiento",
+        "pregunta": "¿Qué significa que un emprendedor tenga 'visión de futuro'?",
+        "opciones": {
+          "a": "Saber exactamente qué va a pasar en los próximos 50 años",
+          "b": "Tener claridad sobre a dónde quiere llegar y cómo lograrlo, aunque el camino pueda ajustarse",
+          "c": "Invertir todo el dinero en acciones de la bolsa"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 3,
+        "tema": "Emprendimiento",
+        "pregunta": "La 'cultura emprendedora' se basa en valores, actitudes y comportamientos que favorecen:",
+        "opciones": {
+          "a": "Evitar cualquier tipo de riesgo",
+          "b": "La creación de empresas y proyectos innovadores",
+          "c": "Trabajar toda la vida para la misma empresa"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 4,
+        "tema": "Emprendimiento",
+        "pregunta": "Un emprendedor en el área de redes informáticas necesita habilidades blandas como:",
+        "opciones": {
+          "a": "Saber configurar un router",
+          "b": "Comunicación efectiva y negociación con clientes",
+          "c": "Instalar cables de red"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 5,
+        "tema": "Emprendimiento",
+        "pregunta": "Dentro de los trámites legales para iniciar un negocio en Costa Rica se incluye:",
+        "opciones": {
+          "a": "Comprar un dominio .com",
+          "b": "Inscripción en el Registro Nacional y patentes municipales",
+          "c": "Crear una cuenta de TikTok"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 6,
+        "tema": "Emprendimiento",
+        "pregunta": "El análisis FODA (Fortalezas, Oportunidades, Debilidades, Amenazas) sirve para:",
+        "opciones": {
+          "a": "Calcular las ganancias del negocio",
+          "b": "Analizar la situación interna y externa del emprendimiento",
+          "c": "Diseñar el logotipo de la empresa"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 7,
+        "tema": "Emprendimiento",
+        "pregunta": "¿Cuál de las siguientes es una fuente de financiamiento para emprendedores costarricenses?",
+        "opciones": {
+          "a": "FODEMIPYME",
+          "b": "PayPal",
+          "c": "Spotify"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 8,
+        "tema": "Emprendimiento",
+        "pregunta": "¿Qué plataforma de comercio electrónico se menciona en el material como útil para vender en línea?",
+        "opciones": {
+          "a": "Netflix",
+          "b": "Shopify",
+          "c": "WhatsApp"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 9,
+        "tema": "Mercado",
+        "pregunta": "En el mercado, la 'oferta' se refiere a:",
+        "opciones": {
+          "a": "Lo que los clientes necesitan y están dispuestos a pagar",
+          "b": "Los bienes y servicios disponibles que la empresa ofrece",
+          "c": "El precio más bajo del mercado"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 10,
+        "tema": "Mercado",
+        "pregunta": "¿Qué significa 'competencia' en el contexto de mercado?",
+        "opciones": {
+          "a": "Los proveedores de materia prima",
+          "b": "Otras empresas que ofrecen productos o servicios similares",
+          "c": "Los clientes potenciales"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 11,
+        "tema": "Mercado",
+        "pregunta": "El análisis PESTEL incluye factores Políticos, Económicos, Sociales, Tecnológicos, Ecológicos y:",
+        "opciones": {
+          "a": "Logísticos",
+          "b": "Legales",
+          "c": "Lúdicos"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 12,
+        "tema": "Mercado",
+        "pregunta": "¿Qué herramienta de recolección de información consiste en una conversación directa con un cliente potencial para obtener información cualitativa profunda?",
+        "opciones": {
+          "a": "La encuesta online",
+          "b": "La entrevista personal",
+          "c": "El análisis de redes sociales"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 13,
+        "tema": "Mercado",
+        "pregunta": "Segmentar el mercado por 'comportamiento' significa dividir según:",
+        "opciones": {
+          "a": "La edad y el género",
+          "b": "La ubicación geográfica",
+          "c": "Los hábitos de compra, uso del producto o lealtad a la marca"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 14,
+        "tema": "Mercado",
+        "pregunta": "¿Cuál es el primer paso para detectar una oportunidad de negocio?",
+        "opciones": {
+          "a": "Crear el logotipo de la empresa",
+          "b": "Identificar una necesidad insatisfecha o un problema real en el mercado",
+          "c": "Pedir un préstamo bancario"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 15,
+        "tema": "Ideas de Negocio",
+        "pregunta": "¿Cuál de las siguientes es una fuente de ideas empresariales?",
+        "opciones": {
+          "a": "La experiencia personal resolviendo un problema tecnológico",
+          "b": "Copiar exactamente lo que hace un negocio extranjero sin adaptarlo",
+          "c": "Esperar a que alguien más tenga la idea"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 16,
+        "tema": "Ideas de Negocio",
+        "pregunta": "En una sesión de lluvia de ideas (brainstorming), ¿qué NO se debe hacer?",
+        "opciones": {
+          "a": "Anotar todas las ideas por más locas que parezcan",
+          "b": "Criticar o juzgar las ideas de los demás durante la generación",
+          "c": "Construir sobre ideas de otros participantes"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 17,
+        "tema": "Ideas de Negocio",
+        "pregunta": "En la técnica SCAMPER, la letra 'S' representa 'Sustituir'. ¿Qué pregunta te harías?",
+        "opciones": {
+          "a": "¿Qué puedo eliminar para simplificar el servicio?",
+          "b": "¿Qué elementos del servicio puedo reemplazar por otros?",
+          "c": "¿Cómo puedo reorganizar los pasos del proceso?"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 18,
+        "tema": "Ideas de Negocio",
+        "pregunta": "Un mapa mental es una herramienta visual que sirve para:",
+        "opciones": {
+          "a": "Calcular impuestos",
+          "b": "Organizar ideas alrededor de un concepto central, mostrando relaciones",
+          "c": "Diseñar el plano de una oficina"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 19,
+        "tema": "Ideas de Negocio",
+        "pregunta": "La etapa 'Definir' en Design Thinking consiste en:",
+        "opciones": {
+          "a": "Crear un prototipo físico del producto",
+          "b": "Establecer claramente el problema a resolver basado en lo aprendido en empatizar",
+          "c": "Generar muchas ideas sin restricciones"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 20,
+        "tema": "Ideas de Negocio",
+        "pregunta": "¿Qué criterio de selección de ideas evalúa si hay suficiente demanda para el producto o servicio?",
+        "opciones": {
+          "a": "Viabilidad financiera",
+          "b": "Necesidad del mercado",
+          "c": "Impacto social"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 21,
+        "tema": "Creatividad e Innovación",
+        "pregunta": "La creatividad es la capacidad de generar ideas nuevas, mientras que la innovación es:",
+        "opciones": {
+          "a": "Solo para ingenieros",
+          "b": "La implementación exitosa de esas ideas generando valor",
+          "c": "Un proceso mágico que no se puede aprender"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 22,
+        "tema": "Creatividad e Innovación",
+        "pregunta": "¿Qué es la 'incubación' en el proceso creativo?",
+        "opciones": {
+          "a": "El momento en que surge la idea de repente",
+          "b": "Dejar que la mente procese inconscientemente la información recopilada",
+          "c": "Evaluar si la idea es viable"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 23,
+        "tema": "Creatividad e Innovación",
+        "pregunta": "La 'verificación' en el proceso creativo consiste en:",
+        "opciones": {
+          "a": "Implementar la idea en el mercado",
+          "b": "Evaluar la idea para determinar si es viable, factible y pertinente",
+          "c": "Esperar a que llegue la inspiración"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 24,
+        "tema": "Creatividad e Innovación",
+        "pregunta": "La habilidad de 'asociación de ideas' se refiere a:",
+        "opciones": {
+          "a": "Memorizar grandes cantidades de información",
+          "b": "Conectar conceptos aparentemente no relacionados para generar soluciones nuevas",
+          "c": "Copiar ideas de la competencia"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 25,
+        "tema": "Creatividad e Innovación",
+        "pregunta": "Crear un nuevo tipo de router inteligente con funciones nunca antes vistas es un ejemplo de:",
+        "opciones": {
+          "a": "Innovación de producto",
+          "b": "Innovación de proceso",
+          "c": "Innovación de marketing"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 26,
+        "tema": "Creatividad e Innovación",
+        "pregunta": "Ofrecer soporte técnico de redes a empresas agrícolas que nunca antes habían usado tecnología es un ejemplo de:",
+        "opciones": {
+          "a": "Innovación de mercado (llegar a nuevos clientes)",
+          "b": "Innovación incremental",
+          "c": "Innovación de modelo de negocio"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 27,
+        "tema": "Creatividad e Innovación",
+        "pregunta": "En el lienzo (Canvas) de modelo de negocio, el bloque 'Canales de distribución' responde:",
+        "opciones": {
+          "a": "¿Cuánto va a pagar el cliente?",
+          "b": "¿Cómo llegará la solución al cliente? (tienda física, digital, redes sociales)",
+          "c": "¿Quiénes son mis socios estratégicos?"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 28,
+        "tema": "Creatividad e Innovación",
+        "pregunta": "¿Qué significa 'MVP' (Producto Mínimo Viable) en el proceso de innovación?",
+        "opciones": {
+          "a": "El producto final completamente terminado",
+          "b": "Una versión simplificada del producto con funciones básicas para probar con clientes reales",
+          "c": "El manual de usuario del producto"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 29,
+        "tema": "Emprendimiento",
+        "pregunta": "¿Cuál es una ventaja de usar herramientas de productividad como Trello o Notion en un emprendimiento?",
+        "opciones": {
+          "a": "Solo sirven para jugar",
+          "b": "Organizar tareas, proyectos y trabajo en equipo de manera eficiente",
+          "c": "Reemplazar completamente a los empleados"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 30,
+        "tema": "Mercado",
+        "pregunta": "La técnica de 'observación directa' para detectar necesidades del mercado consiste en:",
+        "opciones": {
+          "a": "Preguntar a las personas qué necesitan",
+          "b": "Analizar el comportamiento de usuarios en su entorno natural para identificar problemas que ellos no expresan",
+          "c": "Leer informes de mercado ya hechos"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 31,
+        "tema": "Ideas de Negocio",
+        "pregunta": "Una idea empresarial debe responder: ¿Cómo genera ingresos? Esto se refiere a:",
+        "opciones": {
+          "a": "El modelo de negocio (suscripción, pago por proyecto, freemium, etc.)",
+          "b": "El logotipo de la empresa",
+          "c": "La misión y visión"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 32,
+        "tema": "Creatividad e Innovación",
+        "pregunta": "La 'tolerancia a la ambigüedad' como habilidad creativa significa:",
+        "opciones": {
+          "a": "No entender nada de lo que pasa",
+          "b": "Trabajar con comodidad en situaciones de incertidumbre o información incompleta",
+          "c": "Evitar cualquier situación nueva"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 33,
+        "tema": "Emprendimiento",
+        "pregunta": "¿Cuál es un ejemplo de 'uso productivo de tecnologías' en un negocio?",
+        "opciones": {
+          "a": "Usar redes sociales solo para ver memes",
+          "b": "Implementar un sistema de facturación electrónica y marketing digital para llegar a más clientes",
+          "c": "Tener la computadora más cara sin usarla"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 34,
+        "tema": "Mercado",
+        "pregunta": "Un grupo focal (focus group) es una reunión de 6 a 12 personas representativas del mercado para:",
+        "opciones": {
+          "a": "Firmar contratos",
+          "b": "Discutir sobre un producto o problemática específica y obtener retroalimentación",
+          "c": "Vender productos directamente"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 35,
+        "tema": "Ideas de Negocio",
+        "pregunta": "En SCAMPER, la letra 'E' representa 'Eliminar'. ¿Qué pregunta te harías?",
+        "opciones": {
+          "a": "¿Qué puedo quitar para simplificar el producto o servicio?",
+          "b": "¿Qué puedo agregar para mejorarlo?",
+          "c": "¿Cómo puedo cambiar el color?"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 36,
+        "tema": "Creatividad e Innovación",
+        "pregunta": "La innovación 'incremental' se caracteriza por:",
+        "opciones": {
+          "a": "Cambios disruptivos que transforman toda la industria",
+          "b": "Mejoras graduales y continuas sobre productos o procesos existentes",
+          "c": "Crear algo completamente nuevo desde cero"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 37,
+        "tema": "Emprendimiento",
+        "pregunta": "¿Qué elemento del proyecto analiza la demanda, competencia, precios y clientes potenciales?",
+        "opciones": {
+          "a": "Justificación",
+          "b": "Estudio de mercado",
+          "c": "Análisis FODA"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 38,
+        "tema": "Mercado",
+        "pregunta": "La tendencia tecnológica 'Internet de las Cosas (IoT)' se refiere a:",
+        "opciones": {
+          "a": "Solo a los teléfonos inteligentes",
+          "b": "Dispositivos cotidianos (electrodomésticos, sensores, cámaras) conectados a internet que intercambian datos",
+          "c": "Una nueva red social"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 39,
+        "tema": "Ideas de Negocio",
+        "pregunta": "¿Qué técnica creativa se basa en 5 etapas centradas en el usuario: Empatizar, Definir, Idear, Prototipar y Evaluar?",
+        "opciones": {
+          "a": "SCAMPER",
+          "b": "Design Thinking",
+          "c": "Lluvia de ideas"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 40,
+        "tema": "Creatividad e Innovación",
+        "pregunta": "En el lienzo Canvas, la 'estructura de costos' incluye:",
+        "opciones": {
+          "a": "Los ingresos por ventas",
+          "b": "Los costos fijos (alquiler, salarios) y variables (materiales, comisiones) del negocio",
+          "c": "La misión y visión de la empresa"
+        },
+        "respuesta_correcta": "b"
+      }
+    ]
+  }
+}

@@ -28,7 +28,8 @@ Thumbs.db
 logs/
 
 # Datos de exámenes (generados dinámicamente)
-examenes/
+examenes/PDF/
+examenes/*.sqlite
 
 # Node (si se usa en el futuro)
 node_modules/
