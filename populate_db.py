@@ -20,7 +20,7 @@ def hash_password(password: str) -> str:
 ESTUDIANTES = [
     # Sección 11-1
     ("1-2050-0131", "WESLY ABDRIEL", "ALVARADO", "MORA", "11-1"),
-    ("7-0343-0198", "MARIA LUISA", "ARTAVIA", "CAMPOS", "11-1"),
+    ("7-0457-0912", "MARIA", "ARTAVIA", "MONDRAGON", "11-1"),
     ("7-0344-0360", "KARINA YULIETH", "CARRILLO", "AGUIRRE", "11-1"),
     ("7-0345-0802", "DIANA FIORELLA", "CASTRO", "LEON", "11-1"),
     ("1-2055-0786", "BRENAN SOFIA", "CENTENO", "SALAS", "11-1"),
