@@ -122,6 +122,16 @@ master (v2 estable)
 | 1.7 | Endpoint de Monitoreo Antitrampas | SeniorDev | 1.2 | 1 día |
 | 1.7.1 | WebSocket `ws://api/admin/monitor` (progreso en vivo) | | | |
 | 1.7.2 | `POST /api/admin/intentos/{id}/marcar-sospechoso` | | | |
+| 1.8 | Módulo de Notas del Docente | SeniorDev | 1.1 | 7 días |
+| 1.8.1 | Modelo `Subject` (sección, nombre_materia, periodo, ponderaciones) | ExpertSQL | | |
+| 1.8.2 | Modelo `Grade` (estudiante_id, subject_id, tc, tareas, p01, p02, proyecto, asistencia) | ExpertSQL | | |
+| 1.8.3 | Seed data: 3 materias por sección × 2 periodos = 6 subjects | SeniorDev | | |
+| 1.8.4 | Endpoint `GET /api/admin/subjects` (listar materias con ponderaciones) | SeniorDev | | |
+| 1.8.5 | Endpoint `GET /api/admin/grades?subject_id=X` (notas de una materia) | SeniorDev | | |
+| 1.8.6 | Endpoint `PUT /api/admin/grades/{id}` (actualizar nota individual) | SeniorDev | | |
+| 1.8.7 | Endpoint `POST /api/admin/grades/batch` (guardar todas las notas de una materia) | SeniorDev | | |
+| 1.8.8 | Endpoint `GET /api/admin/grades/calculate?subject_id=X&estudiante_id=Y` (nota final ponderada) | SeniorDev | | |
+| 1.8.9 | Endpoint `GET /api/admin/grades/report?seccion=X&periodo=Y` (reporte completo) | SeniorDev | | |
 
 ### Entregables de Fase 1
 
@@ -129,6 +139,7 @@ master (v2 estable)
 - CRUD de estudiantes, exámenes, códigos
 - Reportes y estadísticas vía API
 - WebSocket de monitoreo en vivo
+- **Módulo de notas completo (6 materias, 2 periodos, ponderaciones configurables)**
 
 ---
 
@@ -179,6 +190,13 @@ master (v2 estable)
 | 2.8 | Monitoreo en Vivo | FrontendDev | 2.1 | 2 días |
 | 2.8.1 | Tabla en tiempo real (WebSocket): quién rinde, progreso, tiempo | | | |
 | 2.8.2 | Alertas de comportamiento sospechoso | | | |
+| 2.9 | Módulo de Notas | FrontendDev | 2.1 | 5 días |
+| 2.9.1 | Selector sección → materia → periodo | | | |
+| 2.9.2 | Tabla de notas editable inline (TC, Tareas, Prueba01, Prueba02, Proyecto, Asistencia) | | | |
+| 2.9.3 | Cálculo automático de nota final con barra de progreso por estudiante | | | |
+| 2.9.4 | Botón guardar/batch (guardar todas las notas de una materia) | | | |
+| 2.9.5 | Reporte de notas por sección y periodo (PDF/Excel) | | | |
+| 2.9.6 | Vista de promedios por materia y sección | | | |
 
 ### Entregables de Fase 2
 
@@ -186,6 +204,7 @@ master (v2 estable)
 - Dashboard, CRUD estudiantes, CRUD exámenes
 - Visor de resultados con filtros y exportación
 - Estadísticas gráficas, códigos, monitoreo en vivo
+- **Módulo de notas (edición inline, cálculo automático, exportación)**
 
 ---
 
@@ -303,15 +322,74 @@ master (v2 estable)
 | Fase | Días | Agentes involucrados |
 |------|------|---------------------|
 | Fase 0 — Docker + PostgreSQL + Despliegue | 7 | DevOps, ExpertSQL, SeniorDev, QA |
-| Fase 1 — Backend Admin | 11 | SeniorDev, ExpertSQL |
-| Fase 2 — Frontend Admin | 17 | FrontendDev |
+| Fase 1 — Backend Admin | 18 | SeniorDev, ExpertSQL |
+| Fase 2 — Frontend Admin | 22 | FrontendDev |
 | Fase 3 — Mejoras Estudiante | 6 | FrontendDev, SeniorDev |
 | Fase 4 — Seguridad y Producción | 8 | SeniorDev, DevOps, QA |
-| **Total** | **~49 días** | **Múltiples agentes en paralelo** |
+| **Total** | **~61 días** | **Múltiples agentes en paralelo** |
 
 > **Nota:** Las fases 0, 1 y 2 pueden ejecutarse con agentes en paralelo:
 > - DevOps en Fase 0 mientras SeniorDev hace Fase 1
 > - FrontendDev puede empezar Fase 2 con endpoints simulados (mock API)
+
+---
+
+## Modelo de Datos — Módulo de Notas
+
+### Materias por Sección
+
+| Sección | Materia 1 | Materia 2 | Materia 3 |
+|---------|-----------|-----------|-----------|
+| **11-1** | Emprendimiento e Innovación | Administración y Soporte a las Computadoras | Configuración y Soporte a Redes |
+| **11-2** | Emprendimiento e Innovación | Pruebas de SQA | Gestión y Control de la Calidad del Software |
+
+### Ponderaciones estándar
+
+| # | Componente | Porcentaje |
+|---|-----------|-----------|
+| 1 | Trabajo cotidiano | 25% |
+| 2 | Tareas | 10% |
+| 3 | Prueba 01 | 20% |
+| 4 | Prueba 02 | 25% |
+| 5 | Proyecto | 15% |
+| 6 | Asistencia | 5% |
+| | **Total** | **100%** |
+
+### Modelo de datos
+
+```python
+# Seed data — 6 subjects (3 materias × 2 periodos)
+SUBJECTS = [
+    # Sección 11-1 — Periodo 1
+    {"seccion": "11-1", "materia": "Emprendimiento e Innovación", "periodo": 1},
+    {"seccion": "11-1", "materia": "Administración y Soporte a las Computadoras", "periodo": 1},
+    {"seccion": "11-1", "materia": "Configuración y Soporte a Redes", "periodo": 1},
+    # Sección 11-1 — Periodo 2
+    {"seccion": "11-1", "materia": "Emprendimiento e Innovación", "periodo": 2},
+    {"seccion": "11-1", "materia": "Administración y Soporte a las Computadoras", "periodo": 2},
+    {"seccion": "11-1", "materia": "Configuración y Soporte a Redes", "periodo": 2},
+    # Sección 11-2 — Periodo 1
+    {"seccion": "11-2", "materia": "Emprendimiento e Innovación", "periodo": 1},
+    {"seccion": "11-2", "materia": "Pruebas de SQA", "periodo": 1},
+    {"seccion": "11-2", "materia": "Gestión y Control de la Calidad del Software", "periodo": 1},
+    # Sección 11-2 — Periodo 2
+    {"seccion": "11-2", "materia": "Emprendimiento e Innovación", "periodo": 2},
+    {"seccion": "11-2", "materia": "Pruebas de SQA", "periodo": 2},
+    {"seccion": "11-2", "materia": "Gestión y Control de la Calidad del Software", "periodo": 2},
+]
+
+PONDERACIONES = {
+    "trabajo_cotidiano": 25,
+    "tareas": 10,
+    "prueba01": 20,
+    "prueba02": 25,
+    "proyecto": 15,
+    "asistencia": 5,
+}
+
+# Fórmula de nota final:
+# nota = (tc*0.25) + (tareas*0.10) + (p01*0.20) + (p02*0.25) + (proyecto*0.15) + (asistencia*0.05)
+```
 
 ---
 
@@ -332,6 +410,7 @@ master (v2 estable)
 - [ ] Generación y revocación de códigos de examen
 - [ ] Reportes de notas y desglose por tema
 - [ ] WebSocket de monitoreo funcional
+- [ ] **Módulo de notas: CRUD de subjects, grades, cálculo ponderado, reporte por sección**
 
 ### Fase 2
 
@@ -341,6 +420,7 @@ master (v2 estable)
 - [ ] Visor de resultados con filtros y exportación Excel
 - [ ] Estadísticas gráficas funcionales
 - [ ] Monitoreo en vivo con WebSocket
+- [ ] **Módulo de notas: tabla editable, cálculo automático, exportación**
 
 ### Fase 3
 
