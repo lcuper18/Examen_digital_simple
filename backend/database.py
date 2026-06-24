@@ -56,11 +56,12 @@ def calcular_username(nombre: str, apellido1: str) -> str:
     return f"{primer_nombre}.{apellido1.lower()}"
 
 
-def calcular_password(cedula: str, apellido1: str) -> str:
-    """Calcula el password."""
+def calcular_password(cedula: str, nombre: str, apellido1: str) -> str:
+    """Calcula el password: 3 letras del nombre + ultimos 4 de cedula."""
     cedula_sin_guiones = cedula.replace('-', '')
     ultimos_4 = cedula_sin_guiones[-4:]
-    return f"{apellido1[0:3].upper()}{ultimos_4}"
+    primer_nombre = nombre.split(' ')[0]  # Toma solo el primer nombre
+    return f"{primer_nombre[0:3].upper()}{ultimos_4}"
 
 
 def get_db() -> sqlite3.Connection:
@@ -153,7 +154,7 @@ def ensure_students() -> int:
         insertados = 0
         for cedula, nombre, apellido1, apellido2, seccion in ESTUDIANTES:
             username = calcular_username(nombre, apellido1)
-            password_texto = calcular_password(cedula, apellido1)
+            password_texto = calcular_password(cedula, nombre, apellido1)
             password_hash = hash_password(password_texto)
 
             try:
