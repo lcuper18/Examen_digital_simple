@@ -1,0 +1,784 @@
+{
+  "examen": {
+    "titulo": "Mantenimiento y Reparación de Dispositivos Periféricos (Prueba 02)",
+    "institucion": "CTP Las Palmitas",
+    "especialidad": "Administración y Soporte a las Computadoras",
+    "nivel": "Undécimo",
+    "curso_lectivo": 2026,
+    "profesor": "Luis Cuper Fallas Rivas",
+    "instrucciones": "Selecciona la respuesta correcta para cada pregunta. El examen cubre 7 temas: monitores, impresoras, scanners, relaciones públicas y razonamiento técnico.",
+    "total_preguntas": 70,
+    "preguntas": [
+      {
+        "numero": 1,
+        "tema": "Componentes Internos de los Monitores",
+        "pregunta": "¿Cuál es la función principal del monitor en una computadora?",
+        "opciones": {
+          "a": "Mostrar la información gráfica y textual al usuario",
+          "b": "Procesar las instrucciones del sistema operativo",
+          "c": "Almacenar datos de forma permanente"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 2,
+        "tema": "Componentes Internos de los Monitores",
+        "pregunta": "¿Qué tecnología de despliegue utiliza un tubo de vidrio al vacío con un haz de electrones que impacta fósforo?",
+        "opciones": {
+          "a": "OLED (Diodo Orgánico Emisor de Luz)",
+          "b": "CRT (Tubo de Rayos Catódicos)",
+          "c": "LCD (Pantalla de Cristal Líquido)"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 3,
+        "tema": "Componentes Internos de los Monitores",
+        "pregunta": "¿Cuál es una desventaja de la tecnología LCD en sus modelos antiguos?",
+        "opciones": {
+          "a": "Gran peso y tamaño voluminoso",
+          "b": "Ángulo de visión limitado",
+          "c": "Alto consumo de energía"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 4,
+        "tema": "Componentes Internos de los Monitores",
+        "pregunta": "¿Qué variante de LCD utiliza retroiluminación LED en lugar de CCFL?",
+        "opciones": {
+          "a": "OLED",
+          "b": "LED (Diodo Emisor de Luz)",
+          "c": "Plasma"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 5,
+        "tema": "Componentes Internos de los Monitores",
+        "pregunta": "¿Cuál es una ventaja de la tecnología OLED?",
+        "opciones": {
+          "a": "Negros absolutos y paneles ultra delgados",
+          "b": "Larga vida útil sin degradación",
+          "c": "Bajo costo de producción"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 6,
+        "tema": "Componentes Internos de los Monitores",
+        "pregunta": "¿Qué componente de la tarjeta de video almacena temporalmente texturas y buffers de imagen?",
+        "opciones": {
+          "a": "VRAM (Memoria de video)",
+          "b": "Controlador de pantalla",
+          "c": "GPU (Unidad de Procesamiento Gráfico)"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 7,
+        "tema": "Componentes Internos de los Monitores",
+        "pregunta": "¿Qué función cumple el inversor (backlight inverter) en monitores LCD?",
+        "opciones": {
+          "a": "Controlar los tiempos de activación de cada píxel",
+          "b": "Interpretar las señales de la GPU y enviarlas al panel",
+          "c": "Convertir corriente DC en alta tensión AC para iluminar tubos fluorescentes"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 8,
+        "tema": "Componentes Internos de los Monitores",
+        "pregunta": "¿Qué voltajes genera generalmente la fuente de alimentación de un monitor?",
+        "opciones": {
+          "a": "5V, 12V y 24V",
+          "b": "3.3V y 5V",
+          "c": "110V y 220V"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 9,
+        "tema": "Componentes Internos de los Monitores",
+        "pregunta": "¿Por qué los capacitores representan un riesgo de seguridad incluso después de desconectar el monitor?",
+        "opciones": {
+          "a": "Generan radiación constante",
+          "b": "Contienen mercurio líquido",
+          "c": "Almacenan carga eléctrica incluso después de apagado"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 10,
+        "tema": "Componentes Internos de los Monitores",
+        "pregunta": "¿Cuánto tiempo se recomienda esperar antes de abrir un monitor después de desconectarlo?",
+        "opciones": {
+          "a": "Al menos 5 minutos",
+          "b": "Al menos 30 minutos",
+          "c": "Al menos 2 horas"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 11,
+        "tema": "Componentes Internos de los Monitores",
+        "pregunta": "¿Cuál es una medida de seguridad obligatoria al manipular componentes electrónicos de un monitor?",
+        "opciones": {
+          "a": "Usar lentes de soldadura",
+          "b": "Trabajar con guantes de látex",
+          "c": "Usar pulsera antiestática (ESD)"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 12,
+        "tema": "Componentes Internos de los Monitores",
+        "pregunta": "¿Qué componente controla los tiempos de activación de cada píxel en el panel del monitor?",
+        "opciones": {
+          "a": "Panel T-Con (Timing Controller)",
+          "b": "Controlador de pantalla",
+          "c": "Inversor (backlight inverter)"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 13,
+        "tema": "Componentes Internos de los Monitores",
+        "pregunta": "¿Cuál de los siguientes NO es un riesgo de trabajo al reparar monitores?",
+        "opciones": {
+          "a": "Descarga eléctrica por capacitores cargados",
+          "b": "Corto circuito por software mal configurado",
+          "c": "Quemaduras por componentes calientes"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 14,
+        "tema": "Mantenimiento de Monitores",
+        "pregunta": "¿Cuál es el primer paso en el diagnóstico de un monitor?",
+        "opciones": {
+          "a": "Inspección visual del estado físico y verificación de conectividad",
+          "b": "Actualizar el firmware del monitor",
+          "c": "Reemplazar la tarjeta de video"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 15,
+        "tema": "Mantenimiento de Monitores",
+        "pregunta": "¿Qué información NO debe incluirse en un informe técnico de servicio?",
+        "opciones": {
+          "a": "Datos del equipo (marca, modelo, serie)",
+          "b": "Descripción del problema reportado",
+          "c": "Opiniones personales del técnico sobre el cliente"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 16,
+        "tema": "Mantenimiento de Monitores",
+        "pregunta": "¿Qué herramienta es obligatoria al manipular componentes electrónicos?",
+        "opciones": {
+          "a": "Pulsera antiestática (ESD)",
+          "b": "Martillo de goma",
+          "c": "Taladro inalámbrico"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 17,
+        "tema": "Mantenimiento de Monitores",
+        "pregunta": "¿Para qué se utiliza el alcohol isopropílico al 99% en el mantenimiento de monitores?",
+        "opciones": {
+          "a": "Lubricación de rodillos",
+          "b": "Soldadura de componentes",
+          "c": "Limpieza de contactos y circuitos"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 18,
+        "tema": "Mantenimiento de Monitores",
+        "pregunta": "¿Qué tipo de mantenimiento incluye la limpieza externa con paño de microfibra y limpieza interna con aire comprimido?",
+        "opciones": {
+          "a": "Mantenimiento correctivo",
+          "b": "Mantenimiento predictivo",
+          "c": "Mantenimiento preventivo"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 19,
+        "tema": "Mantenimiento de Monitores",
+        "pregunta": "¿Cuál es un ejemplo de mantenimiento correctivo en monitores?",
+        "opciones": {
+          "a": "Reemplazo de capacitores dañados en la fuente de alimentación",
+          "b": "Limpieza externa con paño de microfibra",
+          "c": "Verificación de conexiones y cables"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 20,
+        "tema": "Mantenimiento de Monitores",
+        "pregunta": "¿Mediante qué menú se configura el brillo, contraste y temperatura de color del monitor?",
+        "opciones": {
+          "a": "Panel de control de Windows",
+          "b": "Menú OSD (On-Screen Display)",
+          "c": "BIOS del monitor"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 21,
+        "tema": "Mantenimiento de Monitores",
+        "pregunta": "¿Qué programa permite evaluar píxeles muertos y uniformidad de color en un monitor?",
+        "opciones": {
+          "a": "Microsoft Word",
+          "b": "Dead Pixel Buddy",
+          "c": "Adobe Photoshop"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 22,
+        "tema": "Mantenimiento de Monitores",
+        "pregunta": "¿Qué tipo de destornillador se recomienda usar para evitar la pérdida de tornillos?",
+        "opciones": {
+          "a": "Destornillador de precisión",
+          "b": "Destornillador eléctrico",
+          "c": "Destornillador imantado"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 23,
+        "tema": "Mantenimiento de Monitores",
+        "pregunta": "¿Cuál de las siguientes es una actividad de mantenimiento preventivo en monitores?",
+        "opciones": {
+          "a": "Reparación de conectores rotos",
+          "b": "Reemplazo del panel dañado",
+          "c": "Revisión de capacitores (hinchados, fugados)"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 24,
+        "tema": "Mantenimiento de Monitores",
+        "pregunta": "¿Qué fenómeno visual se evalúa con patrones de prueba para identificar problemas de uniformidad?",
+        "opciones": {
+          "a": "Frecuencia de refresco",
+          "b": "Bleeding y ghosting",
+          "c": "Resolución y contraste"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 25,
+        "tema": "Mantenimiento de Monitores",
+        "pregunta": "¿Qué se debe hacer antes de reemplazar un capacitor en la fuente de alimentación del monitor?",
+        "opciones": {
+          "a": "Descargar los capacitores con una resistencia adecuada",
+          "b": "Calentar el capacitor con el soldador",
+          "c": "Aplicar alcohol isopropílico al capacitor"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 26,
+        "tema": "Mantenimiento de Monitores",
+        "pregunta": "¿Cuál es el propósito del informe técnico en el servicio de mantenimiento de monitores?",
+        "opciones": {
+          "a": "Servir como respaldo legal y técnico del trabajo realizado",
+          "b": "Solicitar repuestos al fabricante",
+          "c": "Facturar al cliente por el servicio"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 27,
+        "tema": "Tipos y Componentes de Impresoras",
+        "pregunta": "¿Qué característica mide la velocidad de impresión de una impresora?",
+        "opciones": {
+          "a": "ppp (puntos por pulgada)",
+          "b": "dpi (dots per inch)",
+          "c": "ppm (páginas por minuto)"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 28,
+        "tema": "Tipos y Componentes de Impresoras",
+        "pregunta": "¿Qué tipo de impresora utiliza agujas que golpean una cinta entintada contra el papel?",
+        "opciones": {
+          "a": "Matriz de puntos (Impacto)",
+          "b": "Inyección de tinta",
+          "c": "Láser"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 29,
+        "tema": "Tipos y Componentes de Impresoras",
+        "pregunta": "¿Cuál es una desventaja de las impresoras de matriz de puntos?",
+        "opciones": {
+          "a": "Requieren papel especial",
+          "b": "Son ruidosas y lentas",
+          "c": "Los cartuchos son muy costosos"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 30,
+        "tema": "Tipos y Componentes de Impresoras",
+        "pregunta": "¿Las impresoras de inyección de tinta expulsan gotas de tinta mediante cabezales?",
+        "opciones": {
+          "a": "Piezoeléctricos o térmicos",
+          "b": "Láser o LED",
+          "c": "De impacto o matriz"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 31,
+        "tema": "Tipos y Componentes de Impresoras",
+        "pregunta": "¿Qué consumible utiliza una impresora térmica?",
+        "opciones": {
+          "a": "Cinta entintada",
+          "b": "Papel térmico en rollo",
+          "c": "Cartuchos de tinta negra y color"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 32,
+        "tema": "Tipos y Componentes de Impresoras",
+        "pregunta": "¿Cómo funciona una impresora láser?",
+        "opciones": {
+          "a": "Expulsión de gotas microscópicas de tinta",
+          "b": "Tóner en polvo electrizado que se fusiona al papel mediante calor y presión",
+          "c": "Agujas que golpean una cinta entintada"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 33,
+        "tema": "Tipos y Componentes de Impresoras",
+        "pregunta": "¿Cuál de los siguientes es un componente mecánico de las impresoras?",
+        "opciones": {
+          "a": "Placa lógica (mainboard)",
+          "b": "Motor paso a paso o DC con encoder",
+          "c": "Fuente de alimentación"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 34,
+        "tema": "Tipos y Componentes de Impresoras",
+        "pregunta": "¿Qué función cumplen las almohadillas (wipers/pads) en impresoras de inyección de tinta?",
+        "opciones": {
+          "a": "Sujetar y avanzar el papel",
+          "b": "Transmitir movimiento al cabezal",
+          "c": "Limpiar y sellar los cabezales de impresión"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 35,
+        "tema": "Tipos y Componentes de Impresoras",
+        "pregunta": "¿Cuál de los siguientes es un componente electrónico de las impresoras?",
+        "opciones": {
+          "a": "Poleas y fajas",
+          "b": "Sensores ópticos y de contacto",
+          "c": "Ruedas y rodillos"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 36,
+        "tema": "Tipos y Componentes de Impresoras",
+        "pregunta": "¿Qué componente crítico transfiere la tinta o tóner al papel en una impresora?",
+        "opciones": {
+          "a": "Motor paso a paso",
+          "b": "Cabezas de impresión",
+          "c": "Fuente de alimentación"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 37,
+        "tema": "Tipos y Componentes de Impresoras",
+        "pregunta": "¿Qué contiene la placa lógica (mainboard) de una impresora?",
+        "opciones": {
+          "a": "Los rodillos de alimentación",
+          "b": "Los cartuchos de tinta",
+          "c": "Procesador, memoria y firmware de control"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 38,
+        "tema": "Tipos y Componentes de Impresoras",
+        "pregunta": "¿Cuál es una ventaja de las impresoras láser?",
+        "opciones": {
+          "a": "Alta velocidad y bajo costo por página",
+          "b": "Impresión a color de alta calidad",
+          "c": "Bajo precio de compra inicial"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 39,
+        "tema": "Tipos y Componentes de Impresoras",
+        "pregunta": "¿Qué tipo de impresora es silenciosa y rápida, pero solo imprime en monocromático?",
+        "opciones": {
+          "a": "Inyección de tinta",
+          "b": "Térmica",
+          "c": "Matriz de puntos"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 40,
+        "tema": "Mantenimiento de Impresoras",
+        "pregunta": "¿Cuál es el primer paso en el diagnóstico de una impresora?",
+        "opciones": {
+          "a": "Desmontar completamente la impresora",
+          "b": "Verificar indicadores LED y mensajes de error",
+          "c": "Reemplazar el cartucho de tinta"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 41,
+        "tema": "Mantenimiento de Impresoras",
+        "pregunta": "¿Cuál es una causa probable de atascos de papel en una impresora?",
+        "opciones": {
+          "a": "Falta de tinta en el cartucho",
+          "b": "Controlador de pantalla dañado",
+          "c": "Rodillos desgastados"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 42,
+        "tema": "Mantenimiento de Impresoras",
+        "pregunta": "¿Qué solución se recomienda para la calidad de impresión deficiente por cabezales obstruidos?",
+        "opciones": {
+          "a": "Actualizar el firmware",
+          "b": "Ejecutar un ciclo de limpieza de cabezales",
+          "c": "Reemplazar la placa lógica"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 43,
+        "tema": "Mantenimiento de Impresoras",
+        "pregunta": "¿Qué causa las líneas o rayas en la impresión de una impresora láser?",
+        "opciones": {
+          "a": "Falta de papel en la bandeja",
+          "b": "Tambor rayado o sellos de limpieza desgastados",
+          "c": "Cable USB desconectado"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 44,
+        "tema": "Mantenimiento de Impresoras",
+        "pregunta": "¿Qué se debe verificar primero si la impresora no imprime?",
+        "opciones": {
+          "a": "El estado del fusor",
+          "b": "El nivel de tinta en los cartuchos",
+          "c": "Conexiones, drivers y cola de impresión"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 45,
+        "tema": "Mantenimiento de Impresoras",
+        "pregunta": "¿Qué es la impresión fantasmal (ghosting) en una impresora láser?",
+        "opciones": {
+          "a": "Atascos repetitivos de papel",
+          "b": "Imágenes que aparecen repetidas en la página",
+          "c": "Páginas completamente en blanco"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 46,
+        "tema": "Mantenimiento de Impresoras",
+        "pregunta": "¿Qué software permite verificar niveles de tinta y ejecutar ciclos de limpieza en impresoras HP?",
+        "opciones": {
+          "a": "Adobe Reader",
+          "b": "HP Smart / HP Toolbox",
+          "c": "Microsoft Print to PDF"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 47,
+        "tema": "Mantenimiento de Impresoras",
+        "pregunta": "¿Qué actividad forma parte del mantenimiento preventivo de impresoras?",
+        "opciones": {
+          "a": "Cambio de cabezales obstruidos",
+          "b": "Reemplazo del fusor dañado",
+          "c": "Lubricación de rodillos y ejes móviles"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 48,
+        "tema": "Mantenimiento de Impresoras",
+        "pregunta": "¿Qué se debe hacer tras realizar el mantenimiento correctivo de una impresora?",
+        "opciones": {
+          "a": "Imprimir página de prueba y verificar calidad",
+          "b": "Desechar la impresora",
+          "c": "Reinstalar el sistema operativo"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 49,
+        "tema": "Mantenimiento de Impresoras",
+        "pregunta": "¿Cuál es un ejemplo de mantenimiento correctivo en impresoras?",
+        "opciones": {
+          "a": "Limpieza externa de la carcasa",
+          "b": "Verificación de bandejas de papel",
+          "c": "Reemplazo del fusor en impresoras láser"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 50,
+        "tema": "Mantenimiento de Impresoras",
+        "pregunta": "¿Qué se recomienda al reponer componentes en una impresora?",
+        "opciones": {
+          "a": "Fabricar las piezas manualmente",
+          "b": "Usar piezas originales o compatibles certificadas",
+          "c": "Usar cualquier pieza disponible"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 51,
+        "tema": "Mantenimiento de Impresoras",
+        "pregunta": "¿Cuál es una causa probable de error de firmware en una impresora?",
+        "opciones": {
+          "a": "Papel incorrecto en la bandeja",
+          "b": "Bajo nivel de tinta",
+          "c": "Actualización fallida o corrupción de memoria"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 52,
+        "tema": "Mantenimiento de Impresoras",
+        "pregunta": "¿Qué se debe hacer antes de realizar el reseteo de una impresora por software?",
+        "opciones": {
+          "a": "Respaldar la configuración actual si es posible",
+          "b": "Retirar los cartuchos de tinta",
+          "c": "Desconectar todos los cables"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 53,
+        "tema": "Elementos y Componentes de los Scanners",
+        "pregunta": "¿Qué tipo de periférico es un scanner?",
+        "opciones": {
+          "a": "Dispositivo de entrada",
+          "b": "Dispositivo de almacenamiento",
+          "c": "Dispositivo de salida"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 54,
+        "tema": "Elementos y Componentes de los Scanners",
+        "pregunta": "¿Qué característica mide la resolución óptica de un scanner?",
+        "opciones": {
+          "a": "ppp (puntos por pulgada)",
+          "b": "GB (gigabytes) de almacenamiento",
+          "c": "ppm (páginas por minuto)"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 55,
+        "tema": "Elementos y Componentes de los Scanners",
+        "pregunta": "¿Cuál es un tipo de scanner utilizado para control de acceso y seguridad?",
+        "opciones": {
+          "a": "Media página portátil",
+          "b": "Cama plana",
+          "c": "Biométrico"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 56,
+        "tema": "Elementos y Componentes de los Scanners",
+        "pregunta": "¿Qué tipo de sensor utilizan los scanners para capturar la luz reflejada del documento?",
+        "opciones": {
+          "a": "LED (Diodo Emisor de Luz)",
+          "b": "CCD (Charge-Coupled Device) o CIS",
+          "c": "CMOS (Complementary Metal-Oxide-Semiconductor)"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 57,
+        "tema": "Elementos y Componentes de los Scanners",
+        "pregunta": "¿Cuál es un componente mecánico de los scanners?",
+        "opciones": {
+          "a": "Placa lógica con firmware",
+          "b": "Sensor de imagen CCD",
+          "c": "Motor que desplaza el cabezal de escaneo"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 58,
+        "tema": "Elementos y Componentes de los Scanners",
+        "pregunta": "¿Qué resolución de escaneo se recomienda para documentos estándar de oficina?",
+        "opciones": {
+          "a": "150 ppp",
+          "b": "1200 ppp",
+          "c": "300 ppp"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 59,
+        "tema": "Relaciones Públicas en la Atención a Clientes",
+        "pregunta": "¿Cuál es el objetivo principal de las relaciones públicas en una empresa de servicio técnico?",
+        "opciones": {
+          "a": "Reducir el tiempo de las reparaciones",
+          "b": "Crear y mantener una imagen positiva de la empresa",
+          "c": "Aumentar el precio de los servicios"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 60,
+        "tema": "Relaciones Públicas en la Atención a Clientes",
+        "pregunta": "¿Cómo se clasifican las relaciones públicas en el ámbito del servicio técnico?",
+        "opciones": {
+          "a": "Internas, externas e internacionales",
+          "b": "Técnicas, administrativas y financieras",
+          "c": "Personales, telefónicas y digitales"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 61,
+        "tema": "Relaciones Públicas en la Atención a Clientes",
+        "pregunta": "¿Cuál es la primera fase del protocolo de atención al cliente?",
+        "opciones": {
+          "a": "Recepción: saludar, identificarse y solicitar descripción del problema",
+          "b": "Reparación: mantener informado al cliente",
+          "c": "Postventa: dar seguimiento al servicio"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 62,
+        "tema": "Relaciones Públicas en la Atención a Clientes",
+        "pregunta": "¿Qué se debe hacer antes de proceder con una reparación según el protocolo de atención?",
+        "opciones": {
+          "a": "Entregar el equipo sin explicación",
+          "b": "Iniciar la reparación inmediatamente",
+          "c": "Solicitar autorización del cliente informando costos estimados"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 63,
+        "tema": "Relaciones Públicas en la Atención a Clientes",
+        "pregunta": "¿Cómo se debe manejar una queja de un cliente según el protocolo de servicio?",
+        "opciones": {
+          "a": "Escuchar sin interrumpir y ofrecer soluciones concretas",
+          "b": "Ignorar la queja si el cliente está molesto",
+          "c": "Discutir con el cliente para aclarar el malentendido"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 64,
+        "tema": "Relaciones Públicas en la Atención a Clientes",
+        "pregunta": "¿Qué tipo de relaciones públicas se dirige al personal interno de la empresa?",
+        "opciones": {
+          "a": "Relaciones públicas externas",
+          "b": "Relaciones públicas internas",
+          "c": "Relaciones internacionales"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 65,
+        "tema": "Supuestos del Razonamiento en Mantenimiento",
+        "pregunta": "¿Cuál de los siguientes es un supuesto del razonamiento técnico en mantenimiento?",
+        "opciones": {
+          "a": "Economía: usar siempre la pieza más barata disponible",
+          "b": "Velocidad: reparar lo más rápido posible sin importar el método",
+          "c": "Claridad: comprender con precisión el problema sin ambigüedades"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 66,
+        "tema": "Supuestos del Razonamiento en Mantenimiento",
+        "pregunta": "¿Qué supuesto del razonamiento implica basarse en datos objetivos y verificables usando herramientas de medición?",
+        "opciones": {
+          "a": "Exactitud",
+          "b": "Relevancia",
+          "c": "Claridad"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 67,
+        "tema": "Supuestos del Razonamiento en Mantenimiento",
+        "pregunta": "¿Qué supuesto del razonamiento se aplica cuando el técnico identifica el subsistema exacto que falla?",
+        "opciones": {
+          "a": "Claridad",
+          "b": "Precisión",
+          "c": "Exactitud"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 68,
+        "tema": "Supuestos del Razonamiento en Mantenimiento",
+        "pregunta": "¿Qué supuesto permite distinguir entre síntomas correlacionados y causas reales?",
+        "opciones": {
+          "a": "Claridad",
+          "b": "Precisión",
+          "c": "Relevancia"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 69,
+        "tema": "Supuestos del Razonamiento en Mantenimiento",
+        "pregunta": "¿Cuál es el primer paso de la metodología de razonamiento para diagnóstico técnico?",
+        "opciones": {
+          "a": "Identificación del problema mediante entrevista al usuario y observación",
+          "b": "Solución y verificación de la reparación",
+          "c": "Formulación de hipótesis basadas en la experiencia"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 70,
+        "tema": "Supuestos del Razonamiento en Mantenimiento",
+        "pregunta": "¿Cuál es el último paso de la metodología de razonamiento para diagnóstico técnico?",
+        "opciones": {
+          "a": "Autoevaluación del proceso de razonamiento seguido",
+          "b": "Identificación del problema",
+          "c": "Prueba de hipótesis"
+        },
+        "respuesta_correcta": "a"
+      }
+    ]
+  }
+}
