@@ -1,0 +1,784 @@
+{
+  "examen": {
+    "titulo": "Sistemas de Gestión de Calidad del Software (Temas 1-4)",
+    "institucion": "CTP Las Palmitas",
+    "especialidad": "Control de Calidad del Software | Gestión y Control de la Calidad del Software",
+    "nivel": "Undécimo",
+    "curso_lectivo": 2026,
+    "profesor": "Luis Cuper Fallas Rivas",
+    "instrucciones": "Selecciona la respuesta correcta para cada pregunta. El examen cubre los Temas 1 al 4: Gestión de Riesgos, Normas ISO, Planificación según Políticas Internas, y Monitoreo de Incidencias.",
+    "total_preguntas": 70,
+    "preguntas": [
+      {
+        "numero": 1,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "¿Qué es un riesgo en un proyecto de software?",
+        "opciones": {
+          "a": "Un evento seguro que ocurrirá durante el proyecto",
+          "b": "Un evento o condición incierta que, si ocurre, tiene un efecto positivo o negativo en los objetivos del proyecto",
+          "c": "Un error en el código que debe corregirse inmediatamente"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 2,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "¿Cuál de los siguientes NO es un beneficio de gestionar los riesgos en proyectos de software?",
+        "opciones": {
+          "a": "Reduce la incertidumbre",
+          "b": "Minimiza costos y retrasos",
+          "c": "Elimina todos los problemas del proyecto"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 3,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "¿Qué tipo de riesgo se relaciona con la tecnología, herramientas y plataformas utilizadas en el proyecto?",
+        "opciones": {
+          "a": "Riesgos de Gestión",
+          "b": "Riesgos Técnicos",
+          "c": "Riesgos Externos"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 4,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "¿Cuál de los siguientes es un ejemplo de riesgo de gestión?",
+        "opciones": {
+          "a": "Tecnología no probada",
+          "b": "Estimaciones incorrectas",
+          "c": "Cambios regulatorios"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 5,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "Los riesgos organizacionales se derivan de:",
+        "opciones": {
+          "a": "Factores fuera del control del equipo de proyecto",
+          "b": "El entorno organizacional y la cultura empresarial",
+          "c": "La calidad y características del software"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 6,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "¿Cuál es un ejemplo de riesgo externo en proyectos de software?",
+        "opciones": {
+          "a": "Falta de apoyo gerencial",
+          "b": "Mala asignación de recursos",
+          "c": "Cambios regulatorios"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 7,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "Los riesgos de producto están relacionados con:",
+        "opciones": {
+          "a": "La planificación y control del proyecto",
+          "b": "La calidad y características del software",
+          "c": "La tecnología y plataformas utilizadas"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 8,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "¿Cuál es la primera fase del modelo de gestión de riesgos?",
+        "opciones": {
+          "a": "Identificar los riesgos",
+          "b": "Planificar la gestión de riesgos",
+          "c": "Monitorear y controlar los riesgos"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 9,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "En la fase de identificación de riesgos se:",
+        "opciones": {
+          "a": "Determina qué riesgos podrían afectar el proyecto y documenta sus características",
+          "b": "Ejecuta los planes de respuesta definidos",
+          "c": "Analiza la probabilidad e impacto de cada riesgo para priorizarlos"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 10,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "¿Qué se realiza en la fase de estimación y evaluación de riesgos?",
+        "opciones": {
+          "a": "Definir cómo se abordarán las actividades de gestión de riesgos",
+          "b": "Analizar la probabilidad e impacto de cada riesgo para priorizarlos",
+          "c": "Desarrollar opciones para mejorar oportunidades y reducir amenazas"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 11,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "¿Cuál es la estrategia recomendada para evitar la materialización del riesgo de requisitos cambiantes?",
+        "opciones": {
+          "a": "Implementar reuniones regulares con el equipo",
+          "b": "Establecer un proceso formal de control de cambios y gestionar el alcance con el cliente",
+          "c": "Realizar integración continua desde etapas tempranas"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 12,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "Para evitar el riesgo de estimaciones incorrectas se recomienda:",
+        "opciones": {
+          "a": "Usar técnicas de estimación estructuradas como PERT e incluir reservas de contingencia",
+          "b": "Documentar el conocimiento en repositorios",
+          "c": "Definir interfaces claras entre módulos"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 13,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "¿Qué estrategia ayuda a evitar la materialización del riesgo de falta de comunicación?",
+        "opciones": {
+          "a": "Refactorizar código periódicamente",
+          "b": "Implementar reuniones regulares, herramientas colaborativas y reportes de estado transparentes",
+          "c": "Establecer un proceso formal de control de cambios"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 14,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "¿Cuántas fases tiene el modelo de gestión de riesgos más utilizado?",
+        "opciones": {
+          "a": "4 fases",
+          "b": "5 fases",
+          "c": "6 fases"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 15,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "¿Cómo se puede mitigar el riesgo de rotación de personal en un proyecto de software?",
+        "opciones": {
+          "a": "Realizando integración continua",
+          "b": "Documentando el conocimiento, fomentando un buen ambiente laboral y teniendo planes de respaldo",
+          "c": "Usando técnicas de estimación estructuradas"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 16,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "¿Qué establece el principio de amplificación de costos en la gestión de riesgos?",
+        "opciones": {
+          "a": "Los costos aumentan linealmente con el tiempo del proyecto",
+          "b": "Identificar riesgos temprano es más barato que corregir problemas después de que ocurren",
+          "c": "Todos los riesgos tienen el mismo costo de mitigación"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 17,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "¿Cuál es la última fase del modelo de gestión de riesgos?",
+        "opciones": {
+          "a": "Implementar la respuesta a los riesgos",
+          "b": "Planificar la respuesta a los riesgos",
+          "c": "Monitorear y controlar los riesgos"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 18,
+        "tema": "Gestión de Riesgos",
+        "pregunta": "Para evitar el riesgo de fallas en integración se recomienda:",
+        "opciones": {
+          "a": "Definir interfaces claras, realizar integración continua y pruebas de integración desde etapas tempranas",
+          "b": "Documentar el conocimiento del equipo",
+          "c": "Implementar reuniones regulares con el cliente"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 19,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "¿Cuáles son los tres procesos principales de la gestión de calidad del software?",
+        "opciones": {
+          "a": "Análisis, diseño e implementación",
+          "b": "Planificación, aseguramiento y control de la calidad",
+          "c": "Verificación, validación y certificación"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 20,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "La planificación de la calidad consiste en:",
+        "opciones": {
+          "a": "Auditar los procesos para verificar que se siguen los estándares",
+          "b": "Identificar estándares y determinar cómo cumplirlos",
+          "c": "Monitorear productos específicos para verificar que cumplen los requisitos"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 21,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "El aseguramiento de la calidad se enfoca en:",
+        "opciones": {
+          "a": "Definir estándares de calidad del proyecto",
+          "b": "Auditar los procesos para verificar que se siguen los estándares",
+          "c": "Corregir defectos en el producto final"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 22,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "El control de la calidad consiste en:",
+        "opciones": {
+          "a": "Monitorear productos específicos para verificar que cumplen los requisitos",
+          "b": "Definir la política de calidad de la organización",
+          "c": "Capacitar al personal en estándares de calidad"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 23,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "¿Cuál es un beneficio de la gestión de calidad del software?",
+        "opciones": {
+          "a": "Aumento de defectos en producción",
+          "b": "Reducción de costos al detectar defectos temprano",
+          "c": "Mayor cantidad de documentación técnica"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 24,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "¿Qué ciclo está asociado a la mejora continua en la gestión de calidad?",
+        "opciones": {
+          "a": "DMAIC (Definir, Medir, Analizar, Implementar, Controlar)",
+          "b": "PDCA (Planificar, Hacer, Verificar, Actuar)",
+          "c": "Scrum (Sprint, Review, Retrospective)"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 25,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "La mitigación en la gestión de riesgos se refiere a:",
+        "opciones": {
+          "a": "Acciones proactivas para reducir la probabilidad o el impacto de un riesgo antes de que ocurra",
+          "b": "Acciones planificadas para responder cuando un riesgo se materializa",
+          "c": "Trasladar el impacto del riesgo a un tercero"
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 26,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "La contingencia en la gestión de riesgos se define como:",
+        "opciones": {
+          "a": "Acciones proactivas para reducir la probabilidad de un riesgo",
+          "b": "Acciones planificadas para responder cuando un riesgo se materializa (plan B)",
+          "c": "El riesgo que permanece después de aplicar las estrategias de mitigación"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 27,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "¿Qué es el riesgo residual?",
+        "opciones": {
+          "a": "El riesgo identificado al inicio del proyecto",
+          "b": "El riesgo que permanece después de aplicar las estrategias de mitigación",
+          "c": "El riesgo que se transfiere a un tercero"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 28,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "¿En qué consiste la transferencia de riesgos?",
+        "opciones": {
+          "a": "Aceptar el riesgo y documentarlo formalmente",
+          "b": "Trasladar el impacto del riesgo a un tercero mediante seguros o contratos",
+          "c": "Reducir la probabilidad de ocurrencia del riesgo"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 29,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "¿Cuál es un ejemplo de mitigación aplicada a la calidad del software?",
+        "opciones": {
+          "a": "Plan de recuperación ante desastres",
+          "b": "Pruebas exhaustivas y revisiones de código",
+          "c": "Contratos con proveedores externos"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 30,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "¿Cuál es un ejemplo de contingencia en proyectos de software?",
+        "opciones": {
+          "a": "Pruebas unitarias automatizadas",
+          "b": "Plan de recuperación ante desastres con servidores de respaldo",
+          "c": "Capacitación del equipo en nuevas tecnologías"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 31,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "¿Qué es la norma ISO 9001?",
+        "opciones": {
+          "a": "Un estándar para el diseño de interfaces de usuario",
+          "b": "El estándar internacional más reconocido para sistemas de gestión de calidad",
+          "c": "Una norma para la seguridad de la información"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 32,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "¿Cuál de los siguientes es un principio de la norma ISO 9001?",
+        "opciones": {
+          "a": "Desarrollo en cascada",
+          "b": "Enfoque al cliente",
+          "c": "Programación extrema (XP)"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 33,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "¿Cuál es la primera fase de implementación de la norma ISO 9001 en proyectos de software?",
+        "opciones": {
+          "a": "Documentación",
+          "b": "Planificación",
+          "c": "Diagnóstico"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 34,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "En la fase de documentación de la implementación de ISO 9001 se elabora:",
+        "opciones": {
+          "a": "El plan de implementación con cronograma y recursos",
+          "b": "El manual de calidad, procedimientos documentados e instrucciones de trabajo",
+          "c": "La auditoría interna del sistema de calidad"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 35,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "¿Qué se realiza en la fase de auditoría y certificación de ISO 9001?",
+        "opciones": {
+          "a": "Capacitar al personal en los nuevos procesos",
+          "b": "Evaluar el estado actual de los procesos frente a los requisitos",
+          "c": "Realizar auditorías internas y someterse a la auditoría externa de certificación"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 36,
+        "tema": "Normas ISO y Marco Normativo",
+        "pregunta": "¿Qué beneficio de la gestión de calidad se relaciona con la diferenciación de la empresa en el mercado?",
+        "opciones": {
+          "a": "Reducción de costos",
+          "b": "Ventaja competitiva mediante certificación en normas de calidad",
+          "c": "Cumplimiento normativo"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 37,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "Las políticas internas de una empresa son:",
+        "opciones": {
+          "a": "Leyes gubernamentales que regulan la industria del software",
+          "b": "Lineamientos y directrices establecidos por la dirección para guiar la toma de decisiones y las operaciones",
+          "c": "Estándares internacionales de calidad del software"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 38,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "¿Cuál de los siguientes es un ejemplo de política interna en una empresa de software?",
+        "opciones": {
+          "a": "La Constitución Política del país",
+          "b": "Políticas de seguridad de la información",
+          "c": "El Código de Trabajo"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 39,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "¿Qué es la WBS (Work Breakdown Structure)?",
+        "opciones": {
+          "a": "Un cronograma visual con barras que representan tareas y duraciones",
+          "b": "Una descomposición jerárquica del trabajo en paquetes más pequeños y manejables",
+          "c": "Una técnica de estimación de costos basada en proyectos anteriores"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 40,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "¿Cuándo se recomienda utilizar el diagrama de Gantt como técnica de planificación?",
+        "opciones": {
+          "a": "Al inicio del proyecto para definir el alcance completo del producto",
+          "b": "Para comunicar el plan al equipo y stakeholders de forma clara",
+          "c": "Cuando los requisitos son ambiguos y el cliente necesita visualizar el producto"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 41,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "¿Qué técnica de planificación es más adecuada para proyectos complejos con muchas interdependencias entre actividades?",
+        "opciones": {
+          "a": "Diagrama de Gantt",
+          "b": "PERT/CPM",
+          "c": "Historias de Usuario (User Stories)"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 42,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "¿Qué calcula la técnica PERT/CPM en la planificación de proyectos?",
+        "opciones": {
+          "a": "La duración total del proyecto",
+          "b": "La ruta crítica del proyecto",
+          "c": "El costo total del proyecto"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 43,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "Las Historias de Usuario (User Stories) se utilizan principalmente en:",
+        "opciones": {
+          "a": "Proyectos con metodologías tradicionales en cascada",
+          "b": "Metodologías ágiles como Scrum y XP para planificar iteraciones",
+          "c": "Proyectos de infraestructura de red"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 44,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "¿Cuándo se recomienda utilizar el prototipado como técnica de planificación?",
+        "opciones": {
+          "a": "Cuando el alcance del proyecto está completamente definido desde el inicio",
+          "b": "Cuando los requisitos son ambiguos o el cliente necesita visualizar el producto",
+          "c": "Al final del proyecto para validar el producto terminado"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 45,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "¿Cuál es la técnica de estimación de costos más rápida y económica?",
+        "opciones": {
+          "a": "Estimación paramétrica",
+          "b": "Estimación ascendente (bottom-up)",
+          "c": "Estimación análoga"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 46,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "La estimación paramétrica se basa en:",
+        "opciones": {
+          "a": "Proyectos similares realizados anteriormente",
+          "b": "Modelos matemáticos con variables como líneas de código o puntos de función",
+          "c": "La descomposición del proyecto en tareas pequeñas"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 47,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "¿Cuál es la técnica de estimación más precisa, aunque requiere más tiempo y detalle?",
+        "opciones": {
+          "a": "Estimación análoga",
+          "b": "Estimación paramétrica",
+          "c": "Estimación ascendente (bottom-up)"
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 48,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "¿En qué etapa del proyecto es más útil la estimación análoga?",
+        "opciones": {
+          "a": "En fases avanzadas cuando hay mucho detalle",
+          "b": "En fases tempranas cuando hay poca información detallada",
+          "c": "Solo al finalizar el proyecto"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 49,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "El análisis de viabilidad técnica evalúa:",
+        "opciones": {
+          "a": "Si los beneficios del proyecto superan los costos",
+          "b": "Si se tiene la tecnología y el conocimiento necesario para el proyecto",
+          "c": "Si la organización puede soportar el producto operativamente"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 50,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "¿Qué tipo de requerimiento describe qué debe hacer el sistema?",
+        "opciones": {
+          "a": "Requerimiento no funcional",
+          "b": "Requerimiento funcional",
+          "c": "Requerimiento de rendimiento"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 51,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "¿Cuál es un ejemplo de requerimiento no funcional?",
+        "opciones": {
+          "a": "El sistema debe permitir registrar usuarios",
+          "b": "El sistema debe procesar 1000 transacciones por segundo",
+          "c": "El sistema debe generar reportes mensuales de ventas"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 52,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "¿Para qué sirven las matrices de trazabilidad en la gestión de requerimientos?",
+        "opciones": {
+          "a": "Para estimar los costos del proyecto",
+          "b": "Para dar seguimiento a los requerimientos desde su origen hasta su implementación",
+          "c": "Para crear el diagrama de Gantt del proyecto"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 53,
+        "tema": "Planificación según Políticas Internas",
+        "pregunta": "¿Qué evalúa el análisis de viabilidad operativa?",
+        "opciones": {
+          "a": "Si se tiene la tecnología necesaria para el proyecto",
+          "b": "Si la organización puede soportar el producto en operación",
+          "c": "Si el proyecto cumple con las regulaciones aplicables"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 54,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "¿Qué es una incidencia en el desarrollo de software?",
+        "opciones": {
+          "a": "Únicamente un error en el código fuente",
+          "b": "Un defecto, solicitud de cambio, no conformidad u observación de mejora",
+          "c": "Solamente una solicitud formal del cliente"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 55,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "¿Cuál es el primer paso en el proceso de seguimiento de una incidencia?",
+        "opciones": {
+          "a": "Asignarla a un responsable para su resolución",
+          "b": "Registrar la incidencia con su descripción, severidad y prioridad",
+          "c": "Verificar la solución implementada"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 56,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "¿Cuál de las siguientes es una herramienta mencionada en el material para el seguimiento de incidencias?",
+        "opciones": {
+          "a": "Microsoft Word",
+          "b": "Jira",
+          "c": "Adobe Photoshop"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 57,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "¿Qué actividad de calidad se realiza en la etapa de planificación del desarrollo del sistema?",
+        "opciones": {
+          "a": "Revisión de requisitos con stakeholders",
+          "b": "Definir estándares de calidad, plan de pruebas, métricas y criterios de aceptación",
+          "c": "Code review y pruebas unitarias"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 58,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "¿Cuál es el entregable principal de la etapa de análisis según las etapas de calidad?",
+        "opciones": {
+          "a": "Plan de calidad y plan de pruebas",
+          "b": "Especificación de requisitos validada y matriz de trazabilidad",
+          "c": "Código fuente revisado e informes de análisis estático"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 59,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "¿Qué actividad de calidad se realiza en la etapa de diseño del desarrollo del sistema?",
+        "opciones": {
+          "a": "Pruebas de aceptación del usuario",
+          "b": "Revisiones de diseño (peer review), prototipado y verificación de arquitectura",
+          "c": "Monitoreo post-implementación"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 60,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "¿Qué entregable se genera en la etapa de implementación según las etapas de calidad?",
+        "opciones": {
+          "a": "Documento de diseño y diagramas UML",
+          "b": "Código fuente revisado, informes de análisis estático y pruebas unitarias",
+          "c": "Acta de puesta en producción"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 61,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "¿Qué tipo de pruebas se realizan en la etapa de instalación según las etapas de calidad?",
+        "opciones": {
+          "a": "Pruebas unitarias automatizadas",
+          "b": "Pruebas de aceptación y pruebas de regresión",
+          "c": "Análisis estático de código"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 62,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "¿Qué actividad corresponde a la etapa de mantenimiento en las etapas de calidad del desarrollo?",
+        "opciones": {
+          "a": "Code review y análisis estático",
+          "b": "Monitoreo post-implementación, gestión de incidencias y análisis de causas raíz",
+          "c": "Prototipado y validación de requisitos"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 63,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "Las revisiones técnicas (technical reviews) son:",
+        "opciones": {
+          "a": "Evaluaciones automáticas realizadas por herramientas de análisis estático",
+          "b": "Evaluaciones sistemáticas de componentes de software realizadas por pares técnicos",
+          "c": "Auditorías financieras del proyecto de software"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 64,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "¿Cuál de los siguientes es un tipo de revisión técnica informal?",
+        "opciones": {
+          "a": "Fagan inspection",
+          "b": "Pair programming",
+          "c": "Status review"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 65,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "¿Cuántas fases tiene una inspección técnica típica?",
+        "opciones": {
+          "a": "3 fases",
+          "b": "5 fases",
+          "c": "7 fases"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 66,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "¿Qué dimensión de la calidad del software mide la capacidad de responder dentro de tiempos aceptables con los recursos adecuados?",
+        "opciones": {
+          "a": "Confiabilidad (Reliability)",
+          "b": "Desempeño (Performance)",
+          "c": "Conformidad (Conformance)"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 67,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "¿Qué métrica está asociada a la dimensión de confiabilidad del software?",
+        "opciones": {
+          "a": "Tiempo de respuesta",
+          "b": "MTBF (Tiempo medio entre fallos)",
+          "c": "Throughput"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 68,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "La dimensión de conformidad (Conformance) se refiere a:",
+        "opciones": {
+          "a": "La capacidad del software para funcionar sin fallos durante un período determinado",
+          "b": "El grado en que el software cumple con los estándares, normas y regulaciones aplicables",
+          "c": "La facilidad con la que el software puede ser reparado y actualizado"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 69,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "¿Qué dimensión de la calidad evalúa la facilidad con la que el software puede ser reparado, actualizado y mantenido?",
+        "opciones": {
+          "a": "Durabilidad (Durability)",
+          "b": "Servicio (Serviceability)",
+          "c": "Percepción (Perceived Quality)"
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 70,
+        "tema": "Monitoreo y Seguimiento de Incidencias",
+        "pregunta": "¿Cómo se mide la dimensión de percepción (Perceived Quality) de la calidad del software?",
+        "opciones": {
+          "a": "A través del MTBF (tiempo medio entre fallos)",
+          "b": "Mediante la satisfacción del usuario (CSAT) y el Net Promoter Score (NPS)",
+          "c": "A través del tiempo de respuesta del sistema"
+        },
+        "respuesta_correcta": "b"
+      }
+    ]
+  }
+}

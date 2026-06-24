@@ -23,5 +23,10 @@
     "nombre": "Mantenimiento y Reparación de Dispositivos Periféricos",
     "archivo": "Dispositivos_Perifericos.json",
     "duracion_minutos": 120
+  },
+  "SGC01": {
+    "nombre": "Sistemas de Gestión de Calidad del Software (Temas 1-4)",
+    "archivo": "Sistemas de Gestion de Calidad del Software.json",
+    "duracion_minutos": 120
   }
 }
