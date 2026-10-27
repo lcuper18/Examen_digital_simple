@@ -11,6 +11,21 @@
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
+  <!-- Cambio de contraseña obligatorio -->
+  <div class="login-overlay" id="change-overlay">
+    <div class="login-container">
+      <h1 class="login-title">Crea tu contraseña</h1>
+      <p class="login-subtitle">Tu docente reinició tu contraseña. Escribe la temporal y crea una nueva (mínimo 8 caracteres).</p>
+      <form class="login-form" id="change-form" onsubmit="return false;">
+        <input type="password" id="change-actual" placeholder="Contraseña temporal" autocomplete="current-password" required>
+        <input type="password" id="change-nueva" placeholder="Nueva contraseña" autocomplete="new-password" minlength="8" required>
+        <input type="password" id="change-confirmar" placeholder="Repite la nueva contraseña" autocomplete="new-password" minlength="8" required>
+        <button class="btn btn-primary" id="change-btn" onclick="performChangePassword()">Guardar contraseña</button>
+        <p id="change-error" class="error-message" style="display: none;"></p>
+      </form>
+    </div>
+  </div>
+
   <!-- Login Screen -->
   <div class="login-overlay active" id="login-overlay">
     <div class="login-container">

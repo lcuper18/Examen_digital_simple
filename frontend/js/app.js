@@ -28,13 +28,50 @@ function authFetch(url, options = {}, token = authToken) {
 
 // ========== SCREEN MANAGEMENT ==========
 function showLoginScreen() {
+  document.getElementById('change-overlay').classList.remove('active');
   document.getElementById('login-overlay').classList.add('active');
   document.getElementById('code-overlay').classList.remove('active');
   document.getElementById('results-overlay').classList.remove('active');
   document.querySelector('.exam-container').style.display = 'none';
 }
 
+function showChangePasswordScreen() {
+  document.getElementById('login-overlay').classList.remove('active');
+  document.getElementById('code-overlay').classList.remove('active');
+  document.getElementById('results-overlay').classList.remove('active');
+  document.querySelector('.exam-container').style.display = 'none';
+  document.getElementById('change-overlay').classList.add('active');
+  document.getElementById('change-actual').focus();
+}
+
+async function performChangePassword() {
+  const actual = document.getElementById('change-actual').value;
+  const nueva = document.getElementById('change-nueva').value;
+  const confirmar = document.getElementById('change-confirmar').value;
+  const errorEl = document.getElementById('change-error');
+  const mostrar = (msg) => { errorEl.textContent = msg; errorEl.style.display = 'block'; };
+
+  if (nueva.length < 8) return mostrar('La nueva contraseña debe tener al menos 8 caracteres');
+  if (nueva !== confirmar) return mostrar('Las contraseñas nuevas no coinciden');
+
+  const response = await authFetch('/api/cambiar-password', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ password_actual: actual, password_nueva: nueva })
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) return mostrar(data.detail || 'No se pudo cambiar la contraseña');
+
+  errorEl.style.display = 'none';
+  ['change-actual', 'change-nueva', 'change-confirmar'].forEach(id => { document.getElementById(id).value = ''; });
+  estudianteActual.debe_cambiar_password = false;
+  saveSession();
+  showCodeScreen();
+}
+
 function showCodeScreen() {
+  if (estudianteActual && estudianteActual.debe_cambiar_password) return showChangePasswordScreen();
+  document.getElementById('change-overlay').classList.remove('active');
   document.getElementById('login-overlay').classList.remove('active');
   document.getElementById('code-overlay').classList.add('active');
   document.getElementById('results-overlay').classList.remove('active');
@@ -46,6 +83,7 @@ function showCodeScreen() {
 }
 
 function showExamScreen() {
+  document.getElementById('change-overlay').classList.remove('active');
   document.getElementById('login-overlay').classList.remove('active');
   document.getElementById('code-overlay').classList.remove('active');
   document.querySelector('.exam-container').style.display = 'block';
@@ -175,7 +213,8 @@ async function startExam() {
       } else if (response.status === 409) {
         errorEl.textContent = 'Ya enviaste este examen';
       } else if (response.status === 403) {
-        errorEl.textContent = 'El tiempo de este examen ya se agotó';
+        const info = await response.json().catch(() => ({}));
+        errorEl.textContent = info.detail || 'No puedes iniciar este examen ahora';
       } else {
         errorEl.textContent = 'Error al cargar el examen';
       }
@@ -1027,6 +1066,9 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Event listeners para login
+  document.getElementById('change-form').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') performChangePassword();
+  });
   document.getElementById('login-form').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') performLogin();
   });

@@ -6,6 +6,7 @@ import csv
 import hashlib
 import hmac
 import os
+import secrets
 import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
@@ -110,6 +111,14 @@ def get_db_context() -> Generator[sqlite3.Connection, None, None]:
         conn.close()
 
 
+def _agregar_columnas(cursor: sqlite3.Cursor, tabla: str, columnas: dict[str, str]) -> None:
+    """Agrega las columnas que aún no existan en la tabla."""
+    existentes = {r["name"] for r in cursor.execute(f"PRAGMA table_info({tabla})")}
+    for nombre, definicion in columnas.items():
+        if nombre not in existentes:
+            cursor.execute(f"ALTER TABLE {tabla} ADD COLUMN {nombre} {definicion}")
+
+
 def init_db() -> int:
     """
     Inicializa la base de datos creando las tablas necesarias y poblando estudiantes.
@@ -181,12 +190,42 @@ def init_db() -> int:
              for periodo in (1, 2) for nombre in nombres],
         )
 
-        # Migración: semilla del barajado e incidencias (cambios de pestaña) por intento
-        columnas = {r["name"] for r in cursor.execute("PRAGMA table_info(intentos)")}
-        if "semilla" not in columnas:
-            cursor.execute("ALTER TABLE intentos ADD COLUMN semilla INTEGER NOT NULL DEFAULT 0")
-        if "incidencias" not in columnas:
-            cursor.execute("ALTER TABLE intentos ADD COLUMN incidencias INTEGER NOT NULL DEFAULT 0")
+        # Migraciones aditivas (se aplican a bases creadas con versiones anteriores)
+        _agregar_columnas(cursor, "intentos", {
+            "semilla": "INTEGER NOT NULL DEFAULT 0",       # semilla del barajado
+            "incidencias": "INTEGER NOT NULL DEFAULT 0",   # salidas de la pestaña
+            "anulado": "INTEGER NOT NULL DEFAULT 0",       # no cuenta en notas ni reportes
+            "sospechoso": "INTEGER NOT NULL DEFAULT 0",
+            "nota_docente": "TEXT",
+            "minutos_extra": "INTEGER NOT NULL DEFAULT 0",
+            "respuestas_parciales_json": "TEXT",
+        })
+        _agregar_columnas(cursor, "estudiantes", {
+            "activo": "INTEGER NOT NULL DEFAULT 1",
+            "debe_cambiar_password": "INTEGER NOT NULL DEFAULT 0",
+            "ultimo_acceso": "TEXT",
+        })
+
+        # Configuración por examen (habilitado y ventana de disponibilidad)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS examenes_config (
+                codigo TEXT PRIMARY KEY,
+                habilitado INTEGER NOT NULL DEFAULT 1,
+                desde TEXT,
+                hasta TEXT,
+                secciones TEXT
+            )
+        """)
+
+        # Bitácora de acciones del docente
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS bitacora (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                fecha TEXT NOT NULL,
+                accion TEXT NOT NULL,
+                detalle TEXT
+            )
+        """)
 
         # Un solo intento por estudiante y examen
         cursor.execute(
@@ -234,3 +273,33 @@ def ensure_students() -> int:
 
         conn.commit()
         return insertados
+
+
+ALFABETO_TEMPORAL = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"  # sin caracteres ambiguos (0/O, 1/I/L)
+
+
+def generar_password_temporal(largo: int = 8) -> str:
+    """Contraseña temporal aleatoria y fácil de dictar."""
+    return "".join(secrets.choice(ALFABETO_TEMPORAL) for _ in range(largo))
+
+
+def crear_estudiante(
+    conn: sqlite3.Connection, cedula: str, nombre: str, apellido1: str,
+    apellido2: str, seccion: str, password: str | None = None,
+) -> tuple[int, str, str]:
+    """
+    Inserta un estudiante con contraseña temporal (debe cambiarla al entrar).
+
+    Returns:
+        (id, username, password_temporal)
+    Raises:
+        sqlite3.IntegrityError: si la cédula o el usuario ya existen.
+    """
+    username = calcular_username(nombre, apellido1)
+    password = password or generar_password_temporal()
+    cursor = conn.execute(
+        "INSERT INTO estudiantes (cedula, nombre, apellido1, apellido2, seccion, username, "
+        "password_hash, debe_cambiar_password) VALUES (?, ?, ?, ?, ?, ?, ?, 1)",
+        (cedula, nombre, apellido1, apellido2, seccion, username, hash_password(password)),
+    )
+    return cursor.lastrowid, username, password

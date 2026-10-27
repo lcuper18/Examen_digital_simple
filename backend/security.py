@@ -77,9 +77,28 @@ def _payload_from_header(authorization: str | None, role: str) -> dict[str, Any]
     return payload
 
 
-def estudiante_actual(authorization: str | None = Header(default=None)) -> int:
-    """Dependencia FastAPI: devuelve el id del estudiante autenticado."""
+def estudiante_autenticado(authorization: str | None = Header(default=None)) -> int:
+    """Dependencia FastAPI: id del estudiante según el token (sin consultar la cuenta)."""
     return int(_payload_from_header(authorization, ROLE_ESTUDIANTE)["sub"])
+
+
+def estudiante_actual(authorization: str | None = Header(default=None)) -> int:
+    """
+    Dependencia FastAPI: id del estudiante autenticado, con cuenta activa y sin
+    cambio de contraseña pendiente.
+    """
+    from backend import database  # import diferido: database no depende de security
+
+    estudiante_id = estudiante_autenticado(authorization)
+    with database.get_db_context() as conn:
+        fila = conn.execute(
+            "SELECT activo, debe_cambiar_password FROM estudiantes WHERE id = ?", (estudiante_id,)
+        ).fetchone()
+    if fila is None or not fila["activo"]:
+        raise HTTPException(status_code=401, detail="Cuenta desactivada o inexistente")
+    if fila["debe_cambiar_password"]:
+        raise HTTPException(status_code=403, detail="Debes cambiar tu contraseña antes de continuar")
+    return estudiante_id
 
 
 def require_docente(authorization: str | None = Header(default=None)) -> None:

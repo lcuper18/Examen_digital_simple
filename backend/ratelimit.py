@@ -42,3 +42,16 @@ def reiniciar() -> None:
     """Vacía todo el estado (usado por los tests)."""
     _fallos.clear()
     _bloqueos.clear()
+
+
+def bloqueada_con_sufijo(sufijo: str) -> bool:
+    """True si alguna clave bloqueada termina en el sufijo (p. ej. ':usuario')."""
+    ahora = time.time()
+    return any(k.endswith(sufijo) and hasta > ahora for k, hasta in _bloqueos.items())
+
+
+def limpiar_con_sufijo(sufijo: str) -> None:
+    """Quita bloqueos y fallos de todas las claves que terminan en el sufijo."""
+    for almacen in (_fallos, _bloqueos):
+        for clave in [k for k in almacen if k.endswith(sufijo)]:
+            almacen.pop(clave, None)
