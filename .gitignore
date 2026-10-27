@@ -55,3 +55,6 @@ temp/
 
 # Datos personales de estudiantes (usar data/estudiantes.example.csv como plantilla)
 data/estudiantes.csv
+
+# Copias de revisión del docente (contienen la clave de respuestas)
+revision/

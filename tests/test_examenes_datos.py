@@ -74,3 +74,11 @@ def test_flujo_completo_con_examen_de_cuatro_opciones(client):
     token = client.post("/api/verificar-docente", json={"password": "docente2026"}).json()["token"]
     i = client.get("/api/docente/intentos", headers={"Authorization": f"Bearer {token}"}).json()["intentos"][0]
     assert (i["puntuacion"], i["total"]) == (45, 60)
+
+
+def test_adm02_incluye_20_preguntas_del_cuestionario_sin_exponer_su_origen(client):
+    preguntas = _examen(NUEVO)["preguntas"]
+    assert sum(1 for p in preguntas if "origen" in p) == 20
+    h = login(client)
+    respuesta = client.post(f"/api/examen/{NUEVO}/iniciar", headers=h).text
+    assert "origen" not in respuesta and "Cuestionario" not in respuesta
