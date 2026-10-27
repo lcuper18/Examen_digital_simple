@@ -8,7 +8,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel, Field
 
-from backend import database, security
+from backend import bitacora, database, security
 
 router = APIRouter(
     prefix="/api/docente", tags=["notas"], dependencies=[Depends(security.require_docente)]
@@ -127,6 +127,11 @@ def guardar_notas(request: GuardarNotas) -> dict[str, Any]:
     with database.get_db_context() as conn:
         materia = _materia(conn, request.materia_id)
         _guardar(conn, materia, request.notas)
+        bitacora.registrar(
+            conn, "guardar_notas",
+            f"{materia['seccion']} · P{materia['periodo']} · {materia['nombre']} ({len(request.notas)} estudiantes)",
+        )
+        conn.commit()
     return {"ok": True, "guardadas": len(request.notas)}
 
 
@@ -147,7 +152,7 @@ def importar_prueba(request: ImportarPrueba) -> dict[str, Any]:
         rows = conn.execute(
             "SELECT i.estudiante_id, i.puntuacion, i.total FROM intentos i "
             "JOIN estudiantes e ON e.id = i.estudiante_id "
-            "WHERE i.codigo_examen = ? AND i.fecha_fin IS NOT NULL AND e.seccion = ?",
+            "WHERE i.codigo_examen = ? AND i.fecha_fin IS NOT NULL AND i.anulado = 0 AND e.seccion = ?",
             (codigo, materia["seccion"]),
         ).fetchall()
         for r in rows:
@@ -158,6 +163,10 @@ def importar_prueba(request: ImportarPrueba) -> dict[str, Any]:
                 f"DO UPDATE SET {request.componente} = excluded.{request.componente}",
                 (r["estudiante_id"], materia["id"], nota),
             )
+        bitacora.registrar(
+            conn, "importar_prueba",
+            f"{materia['seccion']} · {materia['nombre']} · {request.componente} desde {codigo} ({len(rows)})",
+        )
         conn.commit()
     return {"ok": True, "importadas": len(rows)}
 

@@ -4,7 +4,10 @@
     reiniciar_password: 'Reinició contraseña', reiniciar_seccion: 'Reinició contraseñas de sección',
     desbloquear_login: 'Desbloqueó login', activar_cuenta: 'Activó cuenta', desactivar_cuenta: 'Desactivó cuenta',
     cambiar_seccion: 'Cambió de sección', crear_estudiante: 'Creó estudiante', eliminar_estudiante: 'Eliminó estudiante',
-    importar_estudiantes: 'Importó estudiantes',
+    importar_estudiantes: 'Importó estudiantes', configurar_examen: 'Configuró examen',
+    reiniciar_intento: 'Reinició intento', tiempo_extra: 'Dio tiempo extra', anular_intento: 'Anuló intento',
+    restaurar_intento: 'Restauró intento', marcar_sospechoso: 'Marcó sospechoso', quitar_sospechoso: 'Quitó marca de sospechoso',
+    cerrar_intento: 'Cerró intento', guardar_notas: 'Guardó notas', importar_prueba: 'Importó prueba a notas',
   };
 
   async function cargar() {

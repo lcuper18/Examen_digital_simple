@@ -121,6 +121,8 @@ function clearSession() {
     clearInterval(timerInterval);
     timerInterval = null;
   }
+  clearTimeout(progresoTimeout);
+  clearInterval(progresoInterval);
   authToken = null;
   intentoId = null;
   incidencias = 0;
@@ -257,8 +259,17 @@ function loadExamFromData(examenData) {
   renderExam();
   updateSimpleStats();
 
-  // Restaurar respuestas guardadas en localStorage (FASE 5.2)
-  const savedAnswers = loadFromLocalStorage();
+  // Restaurar respuestas: primero las guardadas en el servidor, si no las de localStorage
+  const delServidor = examenData.respuestas_guardadas || {};
+  let savedAnswers = null;
+  if (Object.keys(delServidor).length > 0) {
+    savedAnswers = questions.map(q => {
+      const letra = delServidor[String(q.numeroOriginal)];
+      return letra ? letra.charCodeAt(0) - 97 : null;
+    });
+  } else {
+    savedAnswers = loadFromLocalStorage();
+  }
   if (savedAnswers && savedAnswers.length === questions.length) {
     answers = savedAnswers;
     // Re-renderizar las opciones seleccionadas
@@ -390,10 +401,9 @@ async function sendExam() {
     timerInterval = null;
   }
 
-  const respuestas = {};
-  answers.forEach((ans, idx) => {
-    if (ans !== null) respuestas[String(questions[idx].numeroOriginal)] = String.fromCharCode(97 + ans);
-  });
+  clearTimeout(progresoTimeout);
+  clearInterval(progresoInterval);
+  const respuestas = respuestasPorNumero();
 
   try {
     const response = await authFetch(`/api/examen/${encodeURIComponent(codigoExamenActual)}/enviar`, {
@@ -945,6 +955,7 @@ function answer(qIdx, optIdx) {
 
   updateSimpleStats();
   saveToLocalStorage();
+  programarProgreso();
 }
 
 function updateSimpleStats() {
@@ -999,6 +1010,47 @@ function clearLocalStorage() {
 }
 
 // ========== TIMER (FASE 5.3 y 5.4) ==========
+let progresoTimeout = null;
+let progresoInterval = null;
+
+function respuestasPorNumero() {
+  const respuestas = {};
+  answers.forEach((ans, idx) => {
+    if (ans !== null) respuestas[String(questions[idx].numeroOriginal)] = String.fromCharCode(97 + ans);
+  });
+  return respuestas;
+}
+
+// Guarda el progreso en el servidor y sincroniza el tiempo restante (incluye tiempo extra)
+async function guardarProgreso() {
+  if (!authToken || !codigoExamenActual || intentoId !== null) return;
+  try {
+    const response = await authFetch(`/api/examen/${encodeURIComponent(codigoExamenActual)}/progreso`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ respuestas: respuestasPorNumero(), incidencias })
+    });
+    if (response.status === 401) return logout();
+    const data = await response.json().catch(() => ({}));
+    if (response.ok) {
+      if (typeof data.segundos_restantes === 'number') {
+        tiempoRestanteSegundos = data.segundos_restantes;
+        updateTimerDisplay();
+      }
+    } else if (response.status === 409 || response.status === 403) {
+      alert(data.detail || 'Tu examen ya no está disponible.');
+      logout();
+    }
+  } catch (e) {
+    // Sin conexión: se reintenta en el siguiente guardado; las respuestas siguen en este equipo
+  }
+}
+
+function programarProgreso() {
+  clearTimeout(progresoTimeout);
+  progresoTimeout = setTimeout(guardarProgreso, 2000);
+}
+
 function startTimer() {
   duracionMinutos = examData.duracion_minutos || 60;
   tiempoRestanteSegundos = examData.segundos_restantes ?? duracionMinutos * 60;
@@ -1019,6 +1071,9 @@ function startTimer() {
       document.getElementById('timer-display').classList.add('warning');
     }
   }, 1000);
+
+  clearInterval(progresoInterval);
+  progresoInterval = setInterval(guardarProgreso, 30000);
 }
 
 function updateTimerDisplay() {

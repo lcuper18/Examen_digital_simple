@@ -76,3 +76,4 @@
   .doc-dialogo-botones { display: none; }
   .doc-table th, .doc-table td { border-bottom: 1px solid #999; }
 }
+.doc-fila-anulada { opacity: 0.55; }
