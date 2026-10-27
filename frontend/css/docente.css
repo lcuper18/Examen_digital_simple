@@ -99,3 +99,14 @@
 .rep-firma { display: flex; gap: 48px; margin-top: 40px; }
 .rep-firma div { border-top: 1px solid var(--text-muted); padding-top: 4px; width: 200px; text-align: center; color: var(--text-secondary); }
 .rep svg { max-width: 620px; }
+
+/* ===== Tablero y encabezados ordenables ===== */
+.doc-rejilla { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 12px 0 8px; }
+@media (max-width: 800px) { .doc-rejilla { grid-template-columns: 1fr; } }
+.doc-section h2 { font-size: 1rem; margin: 16px 0 8px; }
+.doc-lista { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; font-size: 0.9rem; }
+.doc-enlace { background: none; border: 0; color: var(--accent-blue); cursor: pointer; font: inherit; text-decoration: underline; padding: 0 4px; }
+.doc-enlace:focus-visible, .doc-th:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+.doc-th { background: none; border: 0; color: inherit; font: inherit; font-weight: 600; cursor: pointer; padding: 0; }
+.doc-th:hover { color: var(--text-primary); }
+.rep-kpi small { display: block; color: var(--text-muted); font-size: 0.7rem; margin-top: 2px; }

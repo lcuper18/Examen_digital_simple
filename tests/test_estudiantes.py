@@ -109,3 +109,24 @@ def test_reiniciar_seccion_y_bitacora(client):
     assert acciones[:2] == ["reiniciar_password", "reiniciar_seccion"]
     # la bitácora nunca guarda contraseñas
     assert all("temporal" not in (e["detalle"] or "").lower() for e in client.get("/api/docente/bitacora", headers=hd).json()["entradas"])
+
+
+def test_resumen_del_tablero(client):
+    hd = _docente(client)
+    assert client.get("/api/docente/resumen").status_code == 401
+    r0 = client.get("/api/docente/resumen", headers=hd).json()
+    assert r0["estudiantes"]["total"] == 2 and r0["intentos"]["enviados"] == 0 and r0["alertas"] == []
+
+    h = login(client)
+    client.post(f"/api/examen/{CODIGO}/iniciar", headers=h)
+    client.put(f"/api/examen/{CODIGO}/progreso", headers=h, json={"respuestas": {}, "incidencias": 4})
+    client.post("/api/docente/estudiantes/2/reiniciar-password", headers=hd)
+    r = client.get("/api/docente/resumen", headers=hd).json()
+    assert r["intentos"]["en_curso"] == 1 and r["en_curso"][0]["incidencias"] == 4
+    tipos = {a["tipo"] for a in r["alertas"]}
+    assert {"salidas", "temporales"} <= tipos
+    assert r["reciente"][0]["accion"] == "reiniciar_password"
+
+    client.post(f"/api/examen/{CODIGO}/enviar", headers=h, json={"respuestas": {}})
+    r = client.get("/api/docente/resumen", headers=hd).json()
+    assert r["intentos"]["enviados"] == 1 and r["intentos"]["promedio"] == 0.0 and r["en_curso"] == []

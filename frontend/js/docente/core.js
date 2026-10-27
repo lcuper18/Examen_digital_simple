@@ -72,6 +72,41 @@ Panel.descargar = async function (url, nombre) {
   }
 };
 
+// ========== TABLAS ORDENABLES ==========
+// Orden por columnas: los encabezados <th> con <button data-orden="clave"> alternan asc/desc.
+Panel.ordenable = function (tabla, getters, estado, alCambiar) {
+  const pintar = () => tabla.querySelectorAll('th').forEach(th => {
+    const b = th.querySelector('[data-orden]');
+    if (!b) return;
+    const activo = b.dataset.orden === estado.clave;
+    th.setAttribute('aria-sort', activo ? (estado.dir === 1 ? 'ascending' : 'descending') : 'none');
+    b.querySelector('.doc-flecha').textContent = activo ? (estado.dir === 1 ? '▲' : '▼') : '';
+  });
+  tabla.addEventListener('click', e => {
+    const b = e.target.closest('[data-orden]');
+    if (!b) return;
+    estado.dir = estado.clave === b.dataset.orden ? -estado.dir : 1;
+    estado.clave = b.dataset.orden;
+    pintar();
+    alCambiar();
+  });
+  pintar();
+  return function ordenar(lista) {
+    const get = getters[estado.clave];
+    if (!get) return lista;
+    return [...lista].sort((a, b) => {
+      const x = get(a), y = get(b);
+      if (x === y) return 0;
+      if (x === null || x === undefined) return 1;   // vacíos siempre al final
+      if (y === null || y === undefined) return -1;
+      return (typeof x === 'string' ? x.localeCompare(y, 'es') : x - y) * estado.dir;
+    });
+  };
+};
+
+Panel.th = (clave, texto) =>
+  `<th scope="col" aria-sort="none"><button type="button" class="doc-th" data-orden="${clave}">${texto} <span class="doc-flecha" aria-hidden="true"></span></button></th>`;
+
 // ========== AVISOS ==========
 Panel.toast = function (mensaje, tipo = 'ok') {
   const t = document.createElement('div');

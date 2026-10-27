@@ -2,6 +2,8 @@
 (function () {
   let intentos = [];
   let el;
+  let ordenar = (l) => l;
+  const orden = { clave: 'fecha', dir: -1 };
 
   const porcentaje = (i) => (i.total ? Math.round((i.puntuacion / i.total) * 1000) / 10 : 0);
 
@@ -39,12 +41,13 @@
       (!examen || i.codigo_examen === examen) && (!seccion || i.seccion === seccion) &&
       (!estado || (estado === 'sospechoso' ? i.sospechoso : estadoDe(i) === estado)));
     const enviados = lista.filter(i => i.fecha_fin && !i.anulado);
+    const visibles = ordenar(lista);
     const promedio = enviados.length ? (enviados.reduce((s, i) => s + porcentaje(i), 0) / enviados.length).toFixed(1) : '—';
     $('res-resumen').textContent =
       `${lista.length} intentos · ${enviados.length} enviados · promedio ${promedio}` +
       (enviados.length < lista.length ? ` · ${lista.length - enviados.length} sin enviar o anulados` : '');
 
-    $('tabla-intentos').querySelector('tbody').innerHTML = lista.map(i => {
+    $('tabla-intentos').querySelector('tbody').innerHTML = visibles.map(i => {
       const est = estadoDe(i);
       const pill = { enviado: '<span class="doc-pill ok">Enviado</span>', abierto: '<span class="doc-pill wait">En curso</span>',
         anulado: '<span class="doc-pill warn">Anulado</span>' }[est];
@@ -172,13 +175,17 @@
           <table class="doc-table" id="tabla-intentos">
             <caption class="doc-solo-lectores">Intentos de examen</caption>
             <thead><tr>
-              <th scope="col">Estudiante</th><th scope="col">Sección</th><th scope="col">Examen</th>
-              <th scope="col">Nota</th><th scope="col">Estado</th><th scope="col">Tiempo usado</th>
-              <th scope="col">Salidas</th><th scope="col">Acciones</th>
+              ${Panel.th('nombre', 'Estudiante')}${Panel.th('seccion', 'Sección')}${Panel.th('examen', 'Examen')}
+              ${Panel.th('nota', 'Nota')}<th scope="col">Estado</th><th scope="col">Tiempo usado</th>
+              ${Panel.th('salidas', 'Salidas')}<th scope="col">Acciones</th>
             </tr></thead>
             <tbody></tbody>
           </table>
         </div>`;
+      ordenar = Panel.ordenable($('tabla-intentos'), {
+        nombre: i => Panel.nombre(i), seccion: i => i.seccion, examen: i => i.codigo_examen,
+        nota: i => (i.fecha_fin ? porcentaje(i) : null), salidas: i => i.incidencias, fecha: i => i.fecha_inicio,
+      }, orden, render);
       $('f-examen').addEventListener('change', render);
       $('f-seccion').addEventListener('change', render);
       $('f-estado').addEventListener('change', render);

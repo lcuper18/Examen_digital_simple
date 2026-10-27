@@ -56,6 +56,7 @@ Acceso local: http://localhost:8000 · Red: http://IP:8000
 
 Se entra con la contraseña del docente.
 
+- **Resumen:** tablero con totales, alertas que requieren atención (intentos vencidos, muchas salidas de pestaña, logins bloqueados, claves temporales pendientes), quién está presentando examen ahora y actividad reciente.
 - **Resultados:** lista de intentos con filtro por examen y sección, nota, estado (enviado / sin enviar), salidas de la pestaña y detalle pregunta por pregunta. Permite **reiniciar** un intento (el estudiante puede presentar el examen de nuevo) y exportar a CSV.
 - **Notas:** por materia (sección y periodo), tabla editable con Trabajo cotidiano 25 %, Tareas 10 %, Prueba 01 20 %, Prueba 02 25 %, Proyecto 15 % y Asistencia 5 %. La nota final se calcula al escribir (un componente vacío cuenta como 0). **Importar Prueba 01/02** copia la nota (0-100) de los intentos enviados de un examen. Exporta a CSV.
 

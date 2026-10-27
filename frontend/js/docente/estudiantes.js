@@ -1,6 +1,8 @@
 // Pestaña Estudiantes: cuentas, contraseñas temporales, altas, bajas e importación
 (function () {
   let estudiantes = [];
+  let ordenar = (l) => l;
+  const orden = { clave: 'nombre', dir: 1 };
 
   async function cargar() {
     const seccion = $('e-seccion').value;
@@ -25,7 +27,7 @@
   function render() {
     $('e-resumen').textContent = `${estudiantes.length} estudiantes · ${estudiantes.filter(e => !e.activo).length} desactivados · ` +
       `${estudiantes.filter(e => e.debe_cambiar_password).length} con clave temporal pendiente`;
-    $('tabla-estudiantes').querySelector('tbody').innerHTML = estudiantes.map(e => {
+    $('tabla-estudiantes').querySelector('tbody').innerHTML = ordenar(estudiantes).map(e => {
       const pills = [
         e.activo ? '<span class="doc-pill ok">Activo</span>' : '<span class="doc-pill warn">Desactivado</span>',
         e.debe_cambiar_password ? '<span class="doc-pill wait">Clave temporal</span>' : '',
@@ -185,12 +187,16 @@
           <table class="doc-table" id="tabla-estudiantes">
             <caption class="doc-solo-lectores">Estudiantes</caption>
             <thead><tr>
-              <th scope="col">Estudiante</th><th scope="col">Usuario</th><th scope="col">Sección</th>
-              <th scope="col">Estado</th><th scope="col">Último acceso</th><th scope="col">Enviados</th><th scope="col">Acciones</th>
+              ${Panel.th('nombre', 'Estudiante')}${Panel.th('usuario', 'Usuario')}${Panel.th('seccion', 'Sección')}
+              <th scope="col">Estado</th>${Panel.th('acceso', 'Último acceso')}${Panel.th('enviados', 'Enviados')}<th scope="col">Acciones</th>
             </tr></thead>
             <tbody></tbody>
           </table>
         </div>`;
+      ordenar = Panel.ordenable($('tabla-estudiantes'), {
+        nombre: e => Panel.nombre(e), usuario: e => e.username, seccion: e => e.seccion,
+        acceso: e => e.ultimo_acceso, enviados: e => e.enviados,
+      }, orden, render);
       const run = (fn) => (...a) => fn(...a).catch(e => Panel.toast(e.message, 'error'));
       let espera;
       $('e-buscar').addEventListener('input', () => { clearTimeout(espera); espera = setTimeout(run(cargar), 250); });
