@@ -147,6 +147,35 @@ Panel.pedir = async function (etiqueta, valor = '', { titulo = 'Dato requerido',
   });
 };
 
+// Imprime (o guarda como PDF desde el diálogo de impresión) un fragmento HTML con estilo institucional claro
+const ESTILO_IMPRESION = `
+  body { font-family: 'DM Sans', Arial, sans-serif; color: #111; margin: 24px; font-size: 12px; }
+  h1 { font-size: 18px; margin: 0 0 2px; } h2 { font-size: 14px; margin: 18px 0 6px; border-bottom: 1px solid #999; padding-bottom: 2px; }
+  .rep-meta { color: #555; margin: 0 0 10px; } .rep-vacio { color: #777; font-style: italic; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 8px; } th, td { border: 1px solid #bbb; padding: 4px 6px; text-align: left; }
+  th { background: #eee; } .num { text-align: right; } .rep-aprobado { color: #0a7a45; font-weight: 700; } .rep-reprobado { color: #b3261e; font-weight: 700; }
+  .rep-kpis { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 12px; } .rep-kpi { border: 1px solid #bbb; padding: 6px 12px; min-width: 90px; }
+  .rep-kpi strong { display: block; font-size: 16px; } .rep-firma { margin-top: 48px; display: flex; gap: 48px; }
+  .rep-firma div { border-top: 1px solid #333; padding-top: 4px; width: 200px; text-align: center; }
+  svg text { fill: #333; } @page { margin: 14mm; }`;
+
+Panel.imprimirHtml = function (titulo, html) {
+  const marco = document.createElement('iframe');
+  marco.setAttribute('aria-hidden', 'true');
+  marco.style.cssText = 'position:fixed;width:0;height:0;border:0;';
+  document.body.appendChild(marco);
+  const doc = marco.contentWindow.document;
+  doc.open();
+  doc.write(`<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>${Panel.esc(titulo)}</title>
+    <style>${ESTILO_IMPRESION}</style></head><body>${html}</body></html>`);
+  doc.close();
+  setTimeout(() => {
+    marco.contentWindow.focus();
+    marco.contentWindow.print();
+    setTimeout(() => marco.remove(), 1500);
+  }, 150);
+};
+
 // ========== SESIÓN ==========
 function expiracionToken(token) {
   try {

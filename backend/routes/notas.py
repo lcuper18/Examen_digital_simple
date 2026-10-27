@@ -25,6 +25,10 @@ PONDERACIONES = {
 }
 
 
+# Nota mínima de aprobación (0-100)
+NOTA_MINIMA = 70
+
+
 def nota_final(notas: dict[str, float | None]) -> float:
     """Nota ponderada (0-100). Un componente sin nota cuenta como 0."""
     total = sum((notas.get(c) or 0) * peso / 100 for c, peso in PONDERACIONES.items())
@@ -62,7 +66,10 @@ def listar_materias() -> dict[str, Any]:
         rows = conn.execute(
             "SELECT id, seccion, nombre, periodo FROM materias ORDER BY seccion, periodo, nombre"
         ).fetchall()
-    return {"ok": True, "materias": [dict(r) for r in rows], "ponderaciones": PONDERACIONES}
+    return {
+        "ok": True, "materias": [dict(r) for r in rows],
+        "ponderaciones": PONDERACIONES, "nota_minima": NOTA_MINIMA,
+    }
 
 
 @router.get("/notas")

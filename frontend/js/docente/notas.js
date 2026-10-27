@@ -6,6 +6,7 @@
     prueba02: 'Prueba 02', proyecto: 'Proyecto', asistencia: 'Asistencia',
   };
   let ponderaciones = {};
+  let notaMinima = 70;
   let sinGuardar = false;
 
   function calcularFinal(v) {
@@ -20,6 +21,7 @@
   async function cargarMaterias() {
     const data = await Panel.json('/api/docente/materias');
     ponderaciones = data.ponderaciones;
+    notaMinima = data.nota_minima;
     document.querySelectorAll('[data-peso]').forEach(e => { e.textContent = `${ponderaciones[e.dataset.peso]}%`; });
     const select = $('n-materia');
     const actual = select.value;
@@ -63,8 +65,8 @@
     const celda = tr.querySelector('.doc-final');
     celda.textContent = vacia ? '—' : final.toFixed(1);
     celda.classList.toggle('doc-pending', vacia);
-    celda.classList.toggle('low', !vacia && final < 70);
-    celda.classList.toggle('good', !vacia && final >= 70);
+    celda.classList.toggle('low', !vacia && final < notaMinima);
+    celda.classList.toggle('good', !vacia && final >= notaMinima);
   }
 
   function actualizarResumen() {

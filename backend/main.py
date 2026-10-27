@@ -12,7 +12,7 @@ from fastapi.responses import FileResponse
 from backend import database
 from backend.routes import (
     auth_router, bitacora_router, estudiantes_router, examenes_docente_router,
-    examenes_router, intentos_router, notas_router,
+    examenes_router, intentos_router, notas_router, reportes_router,
 )
 
 # Ruta base del proyecto
@@ -55,6 +55,7 @@ app.include_router(notas_router)
 app.include_router(estudiantes_router)
 app.include_router(bitacora_router)
 app.include_router(examenes_docente_router)
+app.include_router(reportes_router)
 
 
 @app.get("/docente")

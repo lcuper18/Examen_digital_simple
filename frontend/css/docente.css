@@ -77,3 +77,25 @@
   .doc-table th, .doc-table td { border-bottom: 1px solid #999; }
 }
 .doc-fila-anulada { opacity: 0.55; }
+
+/* ===== Reportes en pantalla (la impresión usa su propia hoja de estilo) ===== */
+.doc-toolbar-grupo { display: contents; }
+.rep-pantalla { margin-top: 8px; }
+.rep { background: var(--bg-card); border: 1px solid var(--border-medium); border-radius: var(--radius-md); padding: 20px; overflow-x: auto; }
+.rep h1 { font-size: 1.25rem; margin: 0 0 4px; }
+.rep h2 { font-size: 1rem; margin: 20px 0 8px; padding-bottom: 4px; border-bottom: 1px solid var(--border-medium); }
+.rep-meta { color: var(--text-secondary); margin: 0 0 10px; font-size: 0.9rem; }
+.rep-vacio { color: var(--text-muted); font-style: italic; }
+.rep-tabla { border-collapse: collapse; width: 100%; font-size: 0.88rem; margin-bottom: 8px; }
+.rep-tabla th, .rep-tabla td { padding: 7px 10px; border-bottom: 1px solid var(--border); text-align: left; }
+.rep-tabla th { color: var(--text-secondary); background: var(--bg-secondary); }
+.rep .num { text-align: right; }
+.rep-aprobado { color: var(--accent-primary); font-weight: 700; }
+.rep-reprobado { color: var(--accent-red); font-weight: 700; }
+.rep-kpis { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0 14px; }
+.rep-kpi { background: var(--bg-option); border-radius: var(--radius-md); padding: 10px 16px; min-width: 100px; color: var(--text-secondary); font-size: 0.8rem; }
+.rep-kpi strong { display: block; font-size: 1.3rem; color: var(--text-primary); }
+.rep svg text { fill: var(--text-secondary); }
+.rep-firma { display: flex; gap: 48px; margin-top: 40px; }
+.rep-firma div { border-top: 1px solid var(--text-muted); padding-top: 4px; width: 200px; text-align: center; color: var(--text-secondary); }
+.rep svg { max-width: 620px; }
