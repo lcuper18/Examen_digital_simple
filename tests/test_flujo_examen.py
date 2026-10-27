@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from backend import barajado, database
 from backend.routes import examenes
 from tests.conftest import login
 
@@ -7,9 +8,15 @@ CODIGO = "SGC01"
 
 
 def _correctas(client):
+    """Letra correcta tal como la ve el estudiante 1 (con su barajado)."""
     from backend.routes.examenes import _get_examen
     _, ex = _get_examen(CODIGO)
-    return {str(p["numero"]): p["respuesta_correcta"] for p in ex["preguntas"]}
+    with database.get_db_context() as conn:
+        semilla = conn.execute("SELECT semilla FROM intentos WHERE estudiante_id = 1").fetchone()[0]
+    return {
+        str(p["numero"]): barajado.letra_correcta_mostrada(p)
+        for p in barajado.barajar(ex["preguntas"], semilla)
+    }
 
 
 def test_login_devuelve_token_y_rechaza_malas_credenciales(client):
@@ -49,7 +56,7 @@ def test_califica_en_servidor_e_impide_segundo_envio(client):
     intentos = client.get("/api/docente/intentos", headers=hd).json()["intentos"]
     assert intentos[0]["puntuacion"] == len(mitad)
     detalle = client.get(f"/api/docente/intentos/{intentos[0]['id']}", headers=hd).json()["intento"]
-    assert detalle["respuestas_correctas"] == {k: v.lower() for k, v in correctas.items()}
+    assert detalle["respuestas_correctas"] == correctas
 
 
 def test_envio_sin_iniciar(client):
@@ -76,3 +83,19 @@ def test_rutas_docente_exigen_token_de_docente(client):
     assert client.get("/api/docente/intentos").status_code == 401
     assert client.get("/api/docente/intentos", headers=login(client)).status_code == 401
     assert client.post("/api/verificar-docente", json={"password": "mala"}).json()["ok"] is False
+
+
+def test_incidencias_se_guardan(client):
+    h = login(client)
+    client.post(f"/api/examen/{CODIGO}/iniciar", headers=h)
+    client.post(f"/api/examen/{CODIGO}/enviar", headers=h, json={"respuestas": {}, "incidencias": 3})
+    dt = client.post("/api/verificar-docente", json={"password": "docente2026"}).json()
+    lista = client.get("/api/docente/intentos", headers={"Authorization": f"Bearer {dt['token']}"}).json()
+    assert lista["intentos"][0]["incidencias"] == 3
+
+
+def test_cada_estudiante_ve_un_orden_distinto(client):
+    a = client.post(f"/api/examen/{CODIGO}/iniciar", headers=login(client)).json()["examen"]["preguntas"]
+    b = client.post(f"/api/examen/{CODIGO}/iniciar", headers=login(client, "luis.mora", "LUI5678")).json()["examen"]["preguntas"]
+    assert sorted(p["numero"] for p in a) == sorted(p["numero"] for p in b)
+    assert [p["numero"] for p in a] != [p["numero"] for p in b]

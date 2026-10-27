@@ -6,16 +6,21 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 cd "$PROJECT_ROOT"
 
-# Activar venv si existe
-if [ -f "$PROJECT_ROOT/venv/bin/activate" ]; then
-    source venv/bin/activate
-fi
+# Activar venv si existe (.venv o venv)
+for VENV in .venv venv; do
+    if [ -f "$PROJECT_ROOT/$VENV/bin/activate" ]; then
+        source "$PROJECT_ROOT/$VENV/bin/activate"
+        break
+    fi
+done
 
 # Verificar dependencias
-pip install -q -r requirements.txt 2>/dev/null
+pip install -q -r requirements.txt || { echo "Error instalando dependencias"; exit 1; }
 
 # Obtener IP de red para acceso desde otros dispositivos
-IP=$(hostname -I | awk '{print $1}')
+IP=$(hostname -I 2>/dev/null | awk '{print $1}')
+[ -z "$IP" ] && IP=$(ipconfig getifaddr en0 2>/dev/null)
+[ -z "$IP" ] && IP=localhost
 
 echo "=============================================="
 echo "  SERVIDOR EXAMEN DIGITAL v2"
@@ -27,4 +32,4 @@ echo ""
 echo "  Presiona Ctrl+C para detener"
 echo "=============================================="
 
-uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn backend.main:app --host 0.0.0.0 --port 8000

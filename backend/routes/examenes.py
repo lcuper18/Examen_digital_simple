@@ -10,7 +10,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 
-from backend import database, security
+import secrets
+
+from backend import barajado, database, security
 
 router = APIRouter(prefix="/api", tags=["examenes"])
 
@@ -61,6 +63,7 @@ GRACE_SECONDS = 120
 class EnviarRequest(BaseModel):
     """Respuestas del estudiante: número de pregunta -> letra elegida (a, b, c)."""
     respuestas: dict[str, str] = {}
+    incidencias: int = 0  # veces que el estudiante salió de la pestaña del examen
 
 
 def _get_examen(codigo: str) -> tuple[dict[str, str], dict[str, Any]]:
@@ -95,7 +98,7 @@ def iniciar_examen(codigo: str, estudiante_id: int = Depends(security.estudiante
     with database.get_db_context() as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT id, fecha_inicio, fecha_fin FROM intentos "
+            "SELECT id, fecha_inicio, fecha_fin, semilla FROM intentos "
             "WHERE estudiante_id = ? AND codigo_examen = ?",
             (estudiante_id, codigo),
         )
@@ -103,16 +106,18 @@ def iniciar_examen(codigo: str, estudiante_id: int = Depends(security.estudiante
 
         if intento is None:
             fecha_inicio = _now().isoformat()
+            semilla = secrets.randbits(31) + 1
             cursor.execute(
                 "INSERT INTO intentos (estudiante_id, codigo_examen, respuestas_json, "
-                "puntuacion, total, fecha_inicio) VALUES (?, ?, '{}', 0, ?, ?)",
-                (estudiante_id, codigo, len(preguntas), fecha_inicio),
+                "puntuacion, total, fecha_inicio, semilla) VALUES (?, ?, '{}', 0, ?, ?, ?)",
+                (estudiante_id, codigo, len(preguntas), fecha_inicio, semilla),
             )
             conn.commit()
         elif intento["fecha_fin"] is not None:
             raise HTTPException(status_code=409, detail="Ya enviaste este examen")
         else:
             fecha_inicio = intento["fecha_inicio"]
+            semilla = intento["semilla"]
 
     restante = _remaining_seconds(fecha_inicio, duracion)
     if restante <= -GRACE_SECONDS:
@@ -132,7 +137,7 @@ def iniciar_examen(codigo: str, estudiante_id: int = Depends(security.estudiante
             "segundos_restantes": max(restante, 0),
             "preguntas": [
                 {k: p[k] for k in ("numero", "tema", "pregunta", "opciones")}
-                for p in preguntas
+                for p in barajado.barajar(preguntas, semilla)
             ],
         },
     })
@@ -153,7 +158,7 @@ def enviar_examen(
     with database.get_db_context() as conn:
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT id, fecha_inicio, fecha_fin FROM intentos "
+            "SELECT id, fecha_inicio, fecha_fin, semilla FROM intentos "
             "WHERE estudiante_id = ? AND codigo_examen = ?",
             (estudiante_id, codigo),
         )
@@ -165,20 +170,23 @@ def enviar_examen(
         if _remaining_seconds(intento["fecha_inicio"], duracion) <= -GRACE_SECONDS:
             raise HTTPException(status_code=403, detail="El tiempo del examen se agotó")
 
-        validas = {str(p["numero"]) for p in preguntas}
+        barajadas = {
+            str(p["numero"]): p for p in barajado.barajar(preguntas, intento["semilla"])
+        }
         respuestas = {
             n: letra.lower() for n, letra in request.respuestas.items()
-            if n in validas and letra.lower() in ("a", "b", "c")
+            if n in barajadas and letra.lower() in barajadas[n]["opciones"]
         }
         puntuacion = sum(
-            1 for p in preguntas
-            if respuestas.get(str(p["numero"])) == p["respuesta_correcta"].lower()
+            1 for n, letra in respuestas.items()
+            if letra == barajado.letra_correcta_mostrada(barajadas[n])
         )
 
         cursor.execute(
-            "UPDATE intentos SET respuestas_json = ?, puntuacion = ?, total = ?, fecha_fin = ? "
-            "WHERE id = ?",
-            (json.dumps(respuestas), puntuacion, len(preguntas), _now().isoformat(), intento["id"]),
+            "UPDATE intentos SET respuestas_json = ?, puntuacion = ?, total = ?, fecha_fin = ?, "
+            "incidencias = ? WHERE id = ?",
+            (json.dumps(respuestas), puntuacion, len(preguntas), _now().isoformat(),
+             max(request.incidencias, 0), intento["id"]),
         )
         conn.commit()
 

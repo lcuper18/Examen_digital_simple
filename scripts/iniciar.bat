@@ -1,4 +1,5 @@
 @echo off
+setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
 title Examen Digital - Servidor
 
@@ -86,4 +87,4 @@ echo ==============================================
 echo.
 
 REM Iniciar el servidor
-uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
+uvicorn backend.main:app --host 0.0.0.0 --port 8000

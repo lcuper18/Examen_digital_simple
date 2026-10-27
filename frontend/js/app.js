@@ -12,6 +12,14 @@ let estudianteNombre = '';
 let estudianteSeccion = '';
 let authToken = null;
 let intentoId = null;
+let incidenciasDocente = null; // se llena al abrir el detalle como docente
+let incidencias = 0; // veces que el estudiante salió de la pestaña durante el examen
+
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, c => (
+    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
+  ));
+}
 
 function authFetch(url, options = {}, token = authToken) {
   const headers = Object.assign({}, options.headers, { Authorization: `Bearer ${token}` });
@@ -77,6 +85,7 @@ function clearSession() {
   }
   authToken = null;
   intentoId = null;
+  incidencias = 0;
   sessionStorage.removeItem('estudianteActual');
   sessionStorage.removeItem('authToken');
 }
@@ -234,25 +243,6 @@ function loadExamFromData(examenData) {
   startTimer();
 }
 
-// Esta función ya no se usa para cargar del API (FASE 2)
-// El examen se carga mediante startExam() -> loadExamFromData()
-async function loadQuestions() {
-  console.warn('loadQuestions() está obsoleto. Usa startExam() para cargar un examen del API.');
-}
-
-function validateJSONStructure(data) {
-  if (!data || typeof data !== 'object') throw new Error('El archivo JSON no es un objeto válido');
-  if (!data.examen || typeof data.examen !== 'object') throw new Error('Falta el objeto "examen" en el JSON');
-
-  const exam = data.examen;
-  const requiredFields = ['titulo', 'institucion', 'nivel', 'total_preguntas', 'preguntas'];
-  for (const field of requiredFields) {
-    if (!exam[field]) throw new Error(`Falta el campo obligatorio: ${field}`);
-  }
-  if (!Array.isArray(exam.preguntas)) throw new Error('El campo "preguntas" debe ser un array');
-  if (exam.preguntas.length === 0) throw new Error('No hay preguntas en el archivo JSON');
-}
-
 function validateAndTransformQuestions(preguntasJSON) {
   const transformedQuestions = [];
 
@@ -319,7 +309,7 @@ function updateExamMetadata() {
 
   if (examData.instrucciones) {
     document.getElementById('exam-instructions').innerHTML =
-      `<strong>Instrucciones:</strong> ${examData.instrucciones}`;
+      `<strong>Instrucciones:</strong> ${escapeHtml(examData.instrucciones)}`;
   } else {
     document.getElementById('exam-instructions').innerHTML = '<strong>Instrucciones:</strong> Sin instrucciones';
   }
@@ -327,32 +317,6 @@ function updateExamMetadata() {
   document.getElementById('pending-count').textContent = questions.length;
   document.getElementById('progress-text').textContent = `0 / ${questions.length}`;
   document.getElementById('results-total').textContent = questions.length;
-}
-
-function showLoading(show) {
-  const loadingEl = document.getElementById('loading-indicator');
-  const contentEl = document.getElementById('exam-content');
-  const navEl = document.getElementById('question-nav');
-
-  if (show) {
-    loadingEl.style.display = 'block';
-    contentEl.style.display = 'none';
-    navEl.style.display = 'none';
-  } else {
-    loadingEl.style.display = 'none';
-    contentEl.style.display = 'block';
-    navEl.style.display = 'flex';
-  }
-}
-
-function showError(message) {
-  const errorEl = document.getElementById('error-message');
-  document.getElementById('error-text').textContent = message;
-  errorEl.style.display = 'block';
-}
-
-function hideError() {
-  document.getElementById('error-message').style.display = 'none';
 }
 
 function submitExam() {
@@ -396,7 +360,7 @@ async function sendExam() {
     const response = await authFetch(`/api/examen/${encodeURIComponent(codigoExamenActual)}/enviar`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ respuestas })
+      body: JSON.stringify({ respuestas, incidencias })
     });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
@@ -460,6 +424,7 @@ async function loadTeacherDetail(teacherToken) {
   const response = await authFetch(`/api/docente/intentos/${intentoId}`, {}, teacherToken);
   if (!response.ok) return;
   const { intento } = await response.json();
+  incidenciasDocente = intento.incidencias;
   questions.forEach((q, idx) => {
     const key = String(q.numeroOriginal);
     q.ans = intento.respuestas_correctas[key].charCodeAt(0) - 97;
@@ -549,15 +514,19 @@ function showDetailedResults() {
     <div class="result-student-card">
       <div class="result-student-info">
         <span class="result-student-label">Estudiante:</span>
-        <span class="result-student-name">${estudianteNombre}</span>
+        <span class="result-student-name">${escapeHtml(estudianteNombre)}</span>
       </div>
       <div class="result-student-info">
         <span class="result-student-label">Sección:</span>
-        <span class="result-student-value">${estudianteSeccion}</span>
+        <span class="result-student-value">${escapeHtml(estudianteSeccion)}</span>
       </div>
       <div class="result-student-info">
         <span class="result-student-label">Código Examen:</span>
-        <span class="result-student-value">${codigoExamenActual || 'N/A'}</span>
+        <span class="result-student-value">${escapeHtml(codigoExamenActual || 'N/A')}</span>
+      </div>
+      <div class="result-student-info">
+        <span class="result-student-label">Salidas de la pestaña:</span>
+        <span class="result-student-value">${escapeHtml(incidenciasDocente ?? 'N/A')}</span>
       </div>
     </div>
   `;
@@ -587,7 +556,7 @@ function showDetailedResults() {
     const pct = row.total > 0 ? Math.round((row.correctas / row.total) * 100) : 0;
     topicTableHtml += `
       <tr>
-        <td class="topic-name">${row.tema}</td>
+        <td class="topic-name">${escapeHtml(row.tema)}</td>
         <td class="topic-correctas">${row.correctas}</td>
         <td class="topic-incorrectas">${row.incorrectas}</td>
         <td class="topic-total">${row.total}</td>
@@ -618,7 +587,7 @@ function showDetailedResults() {
       const isCorrect = userAnswer === q.ans;
       resultClass = isCorrect ? 'correct' : 'wrong';
       const correctAnswerText = q.opts[q.ans];
-      correctAnswerHtml = `<span class="correct-answer">Correcta: ${String.fromCharCode(97 + q.ans)}) ${correctAnswerText}</span>`;
+      correctAnswerHtml = `<span class="correct-answer">Correcta: ${String.fromCharCode(97 + q.ans)}) ${escapeHtml(correctAnswerText)}</span>`;
       statusHtml = `<span class="result-status">${isCorrect ? '✓' : '✗'}</span>`;
     }
 
@@ -629,11 +598,11 @@ function showDetailedResults() {
     resultItem.innerHTML = `
       <div class="result-question-header">
         <span class="result-question-num">${q.numeroOriginal}.</span>
-        <span class="result-question-topic">[${q.tema}]</span>
+        <span class="result-question-topic">[${escapeHtml(q.tema)}]</span>
       </div>
-      <div class="result-question-text">${q.q}</div>
+      <div class="result-question-text">${escapeHtml(q.q)}</div>
       <div class="result-details">
-        <span class="user-answer">Tu respuesta: ${userAnswerLabel}</span>
+        <span class="user-answer">Tu respuesta: ${escapeHtml(userAnswerLabel)}</span>
         ${correctAnswerHtml}
         ${statusHtml}
       </div>
@@ -671,11 +640,6 @@ function generateTopicBreakdown() {
     incorrectas: data.incorrectas,
     total: data.total
   }));
-}
-
-// Función para el PDF (genera datos de temas)
-function generateTopicBreakdownForPDF() {
-  return generateTopicBreakdown();
 }
 
 function generatePDF() {
@@ -752,7 +716,7 @@ function createPDF() {
 
   y += 8;
   // Tabla de temas
-  const topicData = generateTopicBreakdownForPDF();
+  const topicData = generateTopicBreakdown();
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
 
@@ -886,7 +850,7 @@ function renderExam() {
           </svg>
         </div>
         <div>
-          <div class="theme-title">${tema}</div>
+          <div class="theme-title">${escapeHtml(tema)}</div>
           <div class="theme-subtitle">${preguntasEnTema.length} preguntas</div>
         </div>
       </div>
@@ -902,13 +866,13 @@ function renderExam() {
       let optsHtml = q.opts.map((o, j) => `
         <div class="option-item" id="opt-${q.idx}-${j}" onclick="answer(${q.idx}, ${j})">
           <span class="option-key">${keys[j]}</span>
-          <span class="option-text">${o}</span>
+          <span class="option-text">${escapeHtml(o)}</span>
         </div>
       `).join('');
       card.innerHTML = `
         <div class="question-header">
           <div class="question-number">${q.numeroOriginal}</div>
-          <div class="question-text">${q.q}</div>
+          <div class="question-text">${escapeHtml(q.q)}</div>
         </div>
         <div class="options-list">${optsHtml}</div>
       `;
@@ -920,7 +884,6 @@ function renderExam() {
 }
 
 function answer(qIdx, optIdx) {
-  const wasAnswered = answers[qIdx] !== null;
   answers[qIdx] = optIdx;
 
   const card = document.getElementById('q' + qIdx);
@@ -1043,6 +1006,10 @@ function forceSubmit() {
 }
 
 // Init
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && timerInterval) incidencias++;
+});
+
 document.addEventListener('DOMContentLoaded', () => {
   // Verificar si hay sesión guardada
   if (loadSession()) {

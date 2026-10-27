@@ -1,15 +1,13 @@
 """
 Auth routes - Login and teacher password verification.
 """
-import hashlib
-import hmac
 import os
 from typing import Any
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
 from pydantic import BaseModel
 
-from backend import database, security
+from backend import database, ratelimit, security
 
 router = APIRouter(prefix="/api", tags=["auth"])
 
@@ -46,13 +44,8 @@ class VerificarDocenteResponse(BaseModel):
     error: str | None = None
 
 
-def hash_password(password: str) -> str:
-    """Genera hash SHA-256 de una contraseña."""
-    return hashlib.sha256(password.encode()).hexdigest()
-
-
 @router.post("/login", response_model=LoginResponse)
-async def login(request: LoginRequest) -> LoginResponse:
+def login(request: LoginRequest, http: Request) -> LoginResponse:
     """
     Endpoint para autenticación de estudiantes.
 
@@ -62,6 +55,10 @@ async def login(request: LoginRequest) -> LoginResponse:
     Returns:
         LoginResponse: Resultado del login con datos del estudiante o error.
     """
+    ip = http.client.host if http.client else "?"
+    clave = f"login:{ip}:{request.username.lower()}"
+    ratelimit.verificar(clave)
+
     with database.get_db_context() as conn:
         cursor = conn.cursor()
 
@@ -73,13 +70,19 @@ async def login(request: LoginRequest) -> LoginResponse:
         )
         row = cursor.fetchone()
 
-        if row is None:
+        if row is None or not database.verify_password(request.password, row["password_hash"]):
+            ratelimit.registrar_fallo(clave)
             return LoginResponse(ok=False, error="Credenciales inválidas")
 
-        # Verificar password hasheado
-        password_hash = hash_password(request.password)
-        if not hmac.compare_digest(password_hash, row["password_hash"]):
-            return LoginResponse(ok=False, error="Credenciales inválidas")
+        ratelimit.limpiar(clave)
+
+        # Migrar hashes SHA-256 antiguos a bcrypt de forma transparente
+        if database.is_legacy_hash(row["password_hash"]):
+            cursor.execute(
+                "UPDATE estudiantes SET password_hash = ? WHERE id = ?",
+                (database.hash_password(request.password), row["id"]),
+            )
+            conn.commit()
 
         # Login exitoso - devolver datos del estudiante (sin password)
         estudiante = {
@@ -97,7 +100,7 @@ async def login(request: LoginRequest) -> LoginResponse:
 
 
 @router.post("/verificar-docente", response_model=VerificarDocenteResponse)
-async def verificar_docente(request: VerificarDocenteRequest) -> VerificarDocenteResponse:
+def verificar_docente(request: VerificarDocenteRequest, http: Request) -> VerificarDocenteResponse:
     """
     Endpoint para verificar la contraseña del docente.
 
@@ -107,8 +110,11 @@ async def verificar_docente(request: VerificarDocenteRequest) -> VerificarDocent
     Returns:
         VerificarDocenteResponse: Resultado de la verificación.
     """
-    hash_input = hashlib.sha256(request.password.encode()).hexdigest()
-    if hmac.compare_digest(hash_input, TEACHER_PASSWORD_HASH):
+    clave = f"docente:{http.client.host if http.client else '?'}"
+    ratelimit.verificar(clave)
+    if database.verify_password(request.password, TEACHER_PASSWORD_HASH):
+        ratelimit.limpiar(clave)
         token = security.create_token("docente", security.ROLE_DOCENTE, security.TOKEN_TTL_DOCENTE)
         return VerificarDocenteResponse(ok=True, token=token)
+    ratelimit.registrar_fallo(clave, maximo=10)
     return VerificarDocenteResponse(ok=False, error="Contraseña incorrecta")

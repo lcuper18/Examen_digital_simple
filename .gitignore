@@ -52,3 +52,6 @@ temp/
 
 # Clave de firma de sesiones
 .secret_key
+
+# Datos personales de estudiantes (usar data/estudiantes.example.csv como plantilla)
+data/estudiantes.csv

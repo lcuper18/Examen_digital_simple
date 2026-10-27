@@ -2,52 +2,56 @@
 Database module for Examen Digital.
 Provides SQLite connection and table creation.
 """
-import sqlite3
+import csv
 import hashlib
+import hmac
+import os
+import sqlite3
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Generator
+
+import bcrypt
 
 # Database path - project root (parent of backend/)
 PROJECT_ROOT = Path(__file__).parent.parent
 DATABASE_PATH = PROJECT_ROOT / "examen_db.sqlite"
 
-# Student data for auto-population
-ESTUDIANTES = [
-    # Sección 11-1
-    ("1-2050-0131", "WESLY ABDRIEL", "ALVARADO", "MORA", "11-1"),
-    ("7-0457-0912", "MARIA", "ARTAVIA", "MONDRAGON", "11-1"),
-    ("7-0344-0360", "KARINA YULIETH", "CARRILLO", "AGUIRRE", "11-1"),
-    ("7-0345-0802", "DIANA FIORELLA", "CASTRO", "LEON", "11-1"),
-    ("1-2055-0786", "BRENAN SOFIA", "CENTENO", "SALAS", "11-1"),
-    ("4-0276-0494", "YARELIS ILDANIA", "GARCIA", "JAIME", "11-1"),
-    ("7-0345-0108", "KIARA", "JIMENEZ", "OPORTA", "11-1"),
-    ("7-0348-0137", "EVONY SIDALI", "MARTINEZ", "ROMERO", "11-1"),
-    ("7-0343-0576", "ANDERSON FABIAN", "MATARRITA", "ARTAVIA", "11-1"),
-    ("7-0343-0144", "YOJAIRA", "NAVARRO", "CORRALES", "11-1"),
-    ("7-0344-0226", "FABIOLA", "PORRAS", "CASTRILLO", "11-1"),
-    ("4-0284-0531", "JIMENA TATIANA", "ROSALES", "CAMPOS", "11-1"),
-    ("7-0349-0570", "JAYLIN VANESSA", "TORRES", "TORRES", "11-1"),
-    # Sección 11-2
-    ("1-2054-0014", "ASHLY", "CALDERON", "ALVARADO", "11-2"),
-    ("7-0347-0484", "CALET", "CHAVES", "MORA", "11-2"),
-    ("1-2013-0714", "JARED", "CHAVES", "MORA", "11-2"),
-    ("7-0347-0617", "HANNA", "ELIZONDO", "FERNANDEZ", "11-2"),
-    ("7-0345-0003", "STACEY SOFIA", "GAMBOA", "VARGAS", "11-2"),
-    ("1-2057-0035", "CHENOA", "JIMENEZ", "ARIAS", "11-2"),
-    ("7-0349-0706", "JOSEBETH", "LEIVA", "LAZO", "11-2"),
-    ("1-2066-0846", "DYLAN ANDRES", "MENA", "JUAREZ", "11-2"),
-    ("1-2047-0722", "YEIKOL ANDREY", "MONTIEL", "VARELA", "11-2"),
-    ("7-0344-0049", "KEVIN", "MORENO", "MORALES", "11-2"),
-    ("7-0347-0025", "MILEY SUSANA", "RODRIGUEZ", "QUIROS", "11-2"),
-    ("7-0347-0598", "MIJAIL", "SALAS", "RODRIGUEZ", "11-2"),
-    ("7-0349-0603", "SUYEN DE JESUS", "SIBAJA", "MADRIGAL", "11-2"),
-]
+# Listado de estudiantes (datos personales: fuera de git). Ver data/estudiantes.example.csv
+ESTUDIANTES_CSV = Path(os.environ.get("ESTUDIANTES_CSV", PROJECT_ROOT / "data" / "estudiantes.csv"))
+
+
+def cargar_estudiantes() -> list[tuple[str, str, str, str, str]]:
+    """Lee el CSV de estudiantes: cedula, nombre, apellido1, apellido2, seccion."""
+    if not ESTUDIANTES_CSV.exists():
+        print(f"[AVISO] No existe {ESTUDIANTES_CSV}; no se cargarán estudiantes")
+        return []
+    with open(ESTUDIANTES_CSV, newline="", encoding="utf-8") as f:
+        return [
+            (r["cedula"], r["nombre"], r["apellido1"], r["apellido2"], r["seccion"])
+            for r in csv.DictReader(f)
+        ]
 
 
 def hash_password(password: str) -> str:
-    """Genera hash SHA-256 de una contraseña."""
-    return hashlib.sha256(password.encode()).hexdigest()
+    """Genera un hash bcrypt (con sal) de una contraseña."""
+    rounds = int(os.environ.get("BCRYPT_ROUNDS", "12"))
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt(rounds)).decode()
+
+
+def is_legacy_hash(hashed: str) -> bool:
+    """Los hashes antiguos eran SHA-256 hexadecimal sin sal (64 caracteres)."""
+    return len(hashed) == 64 and all(c in "0123456789abcdef" for c in hashed)
+
+
+def verify_password(password: str, hashed: str) -> bool:
+    """Verifica una contraseña contra un hash bcrypt o, por compatibilidad, SHA-256."""
+    if is_legacy_hash(hashed):
+        return hmac.compare_digest(hashlib.sha256(password.encode()).hexdigest(), hashed)
+    try:
+        return bcrypt.checkpw(password.encode(), hashed.encode())
+    except ValueError:
+        return False
 
 
 def calcular_username(nombre: str, apellido1: str) -> str:
@@ -130,6 +134,13 @@ def init_db() -> int:
             )
         """)
 
+        # Migración: semilla del barajado e incidencias (cambios de pestaña) por intento
+        columnas = {r["name"] for r in cursor.execute("PRAGMA table_info(intentos)")}
+        if "semilla" not in columnas:
+            cursor.execute("ALTER TABLE intentos ADD COLUMN semilla INTEGER NOT NULL DEFAULT 0")
+        if "incidencias" not in columnas:
+            cursor.execute("ALTER TABLE intentos ADD COLUMN incidencias INTEGER NOT NULL DEFAULT 0")
+
         # Un solo intento por estudiante y examen
         cursor.execute(
             "CREATE UNIQUE INDEX IF NOT EXISTS idx_intento_unico "
@@ -158,7 +169,7 @@ def ensure_students() -> int:
 
         # Poblar estudiantes
         insertados = 0
-        for cedula, nombre, apellido1, apellido2, seccion in ESTUDIANTES:
+        for cedula, nombre, apellido1, apellido2, seccion in cargar_estudiantes():
             username = calcular_username(nombre, apellido1)
             password_texto = calcular_password(cedula, nombre, apellido1)
             password_hash = hash_password(password_texto)
@@ -171,7 +182,7 @@ def ensure_students() -> int:
                     (cedula, nombre, apellido1, apellido2, seccion, username, password_hash)
                 )
                 insertados += 1
-            except Exception:
+            except sqlite3.IntegrityError:
                 pass  # Ignorar duplicados
 
         conn.commit()

@@ -2,10 +2,10 @@
 Examen Digital Simple v2 - Backend FastAPI
 Plataforma de examen digital con login de estudiantes y registro de intentos.
 """
+from contextlib import asynccontextmanager
 from pathlib import Path
 
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
@@ -15,20 +15,21 @@ from backend.routes import auth_router, examenes_router, intentos_router
 # Ruta base del proyecto
 PROJECT_ROOT = Path(__file__).parent.parent
 
-# Crear aplicación FastAPI
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    """Inicializa la base de datos al arrancar el servidor."""
+    inserted = database.init_db()
+    if inserted > 0:
+        print(f"[INFO] Base de datos poblada con {inserted} estudiantes")
+    yield
+
+
+# Crear aplicación FastAPI (el frontend se sirve desde el mismo origen: no se requiere CORS)
 app = FastAPI(
     title="Examen Digital Simple v2",
     description="API para plataforma de examen digital",
     version="2.0.0",
-)
-
-# Configurar CORS para desarrollo local
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # En producción, especificar orígenes exactos
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    lifespan=lifespan,
 )
 
 # Montar archivos estáticos desde frontend/
@@ -55,25 +56,7 @@ async def root():
     return FileResponse(str(FRONTEND_DIR / "index.html"))
 
 
-@app.on_event("startup")
-async def startup_event():
-    """Inicializa la base de datos al arrancar el servidor."""
-    inserted = database.init_db()
-    if inserted > 0:
-        print(f"[INFO] Base de datos poblada con {inserted} estudiantes")
-
-
 if __name__ == "__main__":
     import uvicorn
 
-    # Inicializar BD antes de iniciar servidor
-    inserted = database.init_db()
-    if inserted > 0:
-        print(f"[INFO] Base de datos poblada con {inserted} estudiantes")
-
-    uvicorn.run(
-        "backend.main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True,
-    )
+    uvicorn.run("backend.main:app", host="0.0.0.0", port=8000)
