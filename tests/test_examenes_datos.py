@@ -48,6 +48,25 @@ def test_examen_adm02_cobertura_y_equilibrio():
     assert mas_larga <= 0.35 * len(preguntas), mas_larga
 
 
+def test_examen_gcs02_cobertura_y_equilibrio():
+    ex = _examen("GCS02")
+    preguntas = ex["preguntas"]
+    assert len(preguntas) == 60 and CODIGOS["GCS02"]["duracion_minutos"] == 80
+    assert all(len(p["opciones"]) == 4 for p in preguntas)
+    # puntos de selección única de la tabla de especificaciones x 3
+    por_tema = Counter(p["tema"].split(" · ")[0] for p in preguntas)
+    assert sorted(por_tema.values()) == [3, 3, 6, 6, 6, 6, 6, 12, 12]
+    assert sum(1 for p in preguntas if "origen" in p) == 20
+    posiciones = Counter(p["respuesta_correcta"] for p in preguntas)
+    assert all(12 <= posiciones[l] <= 18 for l in "abcd"), posiciones
+    mas_larga = sum(
+        1 for p in preguntas
+        if len(p["opciones"][p["respuesta_correcta"]]) > max(
+            len(v) for k, v in p["opciones"].items() if k != p["respuesta_correcta"])
+    )
+    assert mas_larga <= 0.35 * len(preguntas), mas_larga
+
+
 def test_barajado_con_cuatro_opciones_conserva_la_correcta():
     for p in barajado.barajar(_examen(NUEVO)["preguntas"], 12345):
         assert set(p["opciones"]) == set("abcd")

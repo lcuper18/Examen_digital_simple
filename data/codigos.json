@@ -38,5 +38,10 @@
     "nombre": "Administración y Soporte de Computadoras · II Periodo (en clase)",
     "archivo": "Administracion_Soporte_II_Periodo.json",
     "duracion_minutos": 80
+  },
+  "GCS02": {
+    "nombre": "Gestión y Control de la Calidad del Software · II Periodo (en clase)",
+    "archivo": "Gestion_Calidad_II_Periodo.json",
+    "duracion_minutos": 80
   }
 }
