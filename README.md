@@ -69,7 +69,7 @@ Las materias se siembran en `backend/database.py` (`MATERIAS`).
 
 ## Códigos de examen
 
-Se definen en `data/codigos.json` (código → archivo JSON, nombre y duración).
+Se definen en `data/codigos.json` (código → archivo JSON, nombre y duración). Cada pregunta puede tener 3 o 4 opciones (a-c o a-d).
 Vigentes: ver ese archivo; los exámenes antiguos quedan como histórico.
 
 ## Tests

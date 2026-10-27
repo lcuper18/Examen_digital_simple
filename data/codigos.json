@@ -33,5 +33,10 @@
     "nombre": "Mantenimiento y Reparación de Dispositivos Periféricos (Prueba 02)",
     "archivo": "Dispositivos_Perifericos_Prueba02.json",
     "duracion_minutos": 120
+  },
+  "ADM02": {
+    "nombre": "Administración y Soporte de Computadoras · II Periodo (en clase)",
+    "archivo": "Administracion_Soporte_II_Periodo.json",
+    "duracion_minutos": 80
   }
 }

@@ -304,15 +304,14 @@ function validateAndTransformQuestions(preguntasJSON) {
 
     if (typeof pregunta.opciones !== 'object') throw new Error(`Pregunta ${index + 1}: "opciones" debe ser un objeto`);
 
-    const expectedKeys = ['a', 'b', 'c'];
-    for (const key of expectedKeys) {
-      if (!pregunta.opciones[key]) throw new Error(`Pregunta ${index + 1}: falta la opción "${key}"`);
-    }
+    // Las opciones son a, b, c y, en algunos exámenes, d (siempre consecutivas desde la a)
+    const keys = ['a', 'b', 'c', 'd'].filter(k => pregunta.opciones[k]);
+    if (keys.length < 3) throw new Error(`Pregunta ${index + 1}: debe tener al menos 3 opciones`);
 
     transformedQuestions.push({
       tema: pregunta.tema,
       q: pregunta.pregunta,
-      opts: [pregunta.opciones.a, pregunta.opciones.b, pregunta.opciones.c],
+      opts: keys.map(k => pregunta.opciones[k]),
       ans: null, // la respuesta correcta solo la conoce el servidor
       numeroOriginal: pregunta.numero
     });
@@ -911,7 +910,7 @@ function renderExam() {
       // Staggered animation
       card.style.animationDelay = `${0.1 + qIndex * 0.05}s`;
 
-      const keys = ['a', 'b', 'c'];
+      const keys = ['a', 'b', 'c', 'd'];
       let optsHtml = q.opts.map((o, j) => `
         <div class="option-item" id="opt-${q.idx}-${j}" onclick="answer(${q.idx}, ${j})">
           <span class="option-key">${keys[j]}</span>
@@ -932,6 +931,10 @@ function renderExam() {
   updateSimpleStats();
 }
 
+function cantidadOpciones(qIdx) {
+  return questions[qIdx].opts.length;
+}
+
 function answer(qIdx, optIdx) {
   answers[qIdx] = optIdx;
 
@@ -945,7 +948,7 @@ function answer(qIdx, optIdx) {
       el.classList.add('selected');
       // Ripple effect
       const rect = el.getBoundingClientRect();
-      const x = ((optIdx / 3) * 100);
+      const x = ((optIdx / cantidadOpciones(qIdx)) * 100);
       el.style.setProperty('--ripple-x', x + '%');
       el.style.setProperty('--ripple-y', '50%');
     }

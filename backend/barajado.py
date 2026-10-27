@@ -6,12 +6,12 @@ convertir las letras que ve el estudiante a las letras originales del examen.
 import random
 from typing import Any
 
-LETRAS = ("a", "b", "c")
+LETRAS = ("a", "b", "c", "d")  # los exámenes tienen 3 o 4 opciones (siempre desde la a)
 
 
 def barajar(preguntas: list[dict[str, Any]], semilla: int) -> list[dict[str, Any]]:
     """
-    Devuelve las preguntas barajadas. Cada una trae `opciones` re-etiquetadas a/b/c y
+    Devuelve las preguntas barajadas. Cada una trae `opciones` re-etiquetadas a/b/c(/d) y
     `_mapa` (letra mostrada -> letra original). Los temas conservan su orden.
     """
     rng = random.Random(semilla)
@@ -35,7 +35,7 @@ def barajar(preguntas: list[dict[str, Any]], semilla: int) -> list[dict[str, Any
 
 
 def letra_correcta_mostrada(pregunta_barajada: dict[str, Any]) -> str:
-    """Letra (a/b/c) que ocupa la respuesta correcta en la presentación barajada."""
+    """Letra (a-d) que ocupa la respuesta correcta en la presentación barajada."""
     for mostrada, orig in pregunta_barajada["_mapa"].items():
         if orig == pregunta_barajada["respuesta_correcta"].lower():
             return mostrada

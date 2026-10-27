@@ -1,0 +1,734 @@
+{
+  "examen": {
+    "titulo": "Administración y Soporte de Computadoras · Examen II Periodo (en clase)",
+    "institucion": "CTP Las Palmitas",
+    "especialidad": "Configuración y soporte a redes de comunicación y sistemas operativos | Administración y soporte de computadoras",
+    "nivel": "Undécimo",
+    "curso_lectivo": 2026,
+    "profesor": "Luis Cuper Fallas Rivas",
+    "instrucciones": "Selecciona la opción correcta en cada pregunta (cada una vale 1 punto). El examen cubre el II Período: escáneres, relaciones públicas y supuestos del razonamiento (U2), y componentes de servidores, informes y diagnóstico, respaldos, discos y formateo e instalación de sistemas operativos y software (U3).",
+    "total_preguntas": 60,
+    "preguntas": [
+      {
+        "numero": 1,
+        "tema": "U2 RA 5 · Scanner",
+        "pregunta": "¿Qué función cumple el motor paso a paso de un escáner de cama plana?",
+        "opciones": {
+          "a": "Generar la luz que ilumina el documento sobre el vidrio.",
+          "b": "Enviar los datos digitalizados a la computadora por USB o red.",
+          "c": "Convertir la luz reflejada por el documento en señales eléctricas.",
+          "d": "Desplazar el carro del sensor por todo el documento."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 2,
+        "tema": "U2 RA 5 · Scanner",
+        "pregunta": "¿En qué se diferencia el funcionamiento de un escáner con sensor CCD del que tiene sensor CIS?",
+        "opciones": {
+          "a": "El CCD recibe la luz mediante un sistema de espejos y lentes; el CIS la capta directamente sobre el sensor.",
+          "b": "El CCD funciona sin fuente de luz y el CIS necesita una lámpara.",
+          "c": "El CCD entrega la imagen en papel y el CIS la entrega en pantalla.",
+          "d": "El CCD solo digitaliza en blanco y negro y el CIS solo en color de 24 bits."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 3,
+        "tema": "U2 RA 5 · Scanner",
+        "pregunta": "¿Cuál de estas secuencias describe correctamente el funcionamiento de un escáner?",
+        "opciones": {
+          "a": "El ADC ilumina el documento, el sensor las transforma en datos y la lámpara los guarda en la placa lógica.",
+          "b": "La luz ilumina el documento, el sensor convierte la luz reflejada en señales eléctricas y el conversor ADC las transforma en datos digitales.",
+          "c": "La placa lógica ilumina el documento y el motor convierte la luz reflejada directamente en una imagen.",
+          "d": "El sensor ilumina el documento, la lámpara convierte la luz en señales eléctricas y el motor las envía a la computadora."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 4,
+        "tema": "U2 RA 5 · Scanner",
+        "pregunta": "En un escáner de cama plana, ¿qué componentes transmiten el movimiento del motor al carro del sensor?",
+        "opciones": {
+          "a": "La lámpara y el espejo.",
+          "b": "Las poleas y la faja.",
+          "c": "Los cables flex.",
+          "d": "El conversor analógico-digital."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 5,
+        "tema": "U2 RA 5 · Scanner",
+        "pregunta": "En un escáner con alimentador automático de documentos, ¿qué componentes toman y hacen avanzar las hojas?",
+        "opciones": {
+          "a": "Las ruedas y los rodillos.",
+          "b": "Los sensores de posición del carro.",
+          "c": "Las poleas del motor del carro.",
+          "d": "La placa lógica y sus cables flex."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 6,
+        "tema": "U2 RA 6 · Relaciones públicas",
+        "pregunta": "Un taller compra repuestos a un proveedor de otro país y debe mantener buena comunicación con él. ¿A qué clasificación de las relaciones públicas corresponde esto?",
+        "opciones": {
+          "a": "Relaciones públicas internas.",
+          "b": "Atención a clientes actuales.",
+          "c": "Atención a clientes potenciales.",
+          "d": "Relaciones internacionales."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 7,
+        "tema": "U2 RA 6 · Relaciones públicas",
+        "pregunta": "¿Cuál de estas acciones fortalece las relaciones públicas internas de una empresa de servicio técnico?",
+        "opciones": {
+          "a": "Responder con rapidez las consultas de personas que aún no son clientes del taller.",
+          "b": "Informar con claridad al personal sobre tareas, cambios y objetivos mediante canales de comunicación definidos.",
+          "c": "Llamar a cada cliente después de la entrega para ofrecerle promociones y pedirle su opinión sobre el servicio recibido.",
+          "d": "Aprender inglés técnico para poder leer los manuales de los fabricantes."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 8,
+        "tema": "U2 RA 6 · Relaciones públicas",
+        "pregunta": "¿Cuál es el objetivo de la atención a clientes actuales y potenciales?",
+        "opciones": {
+          "a": "Mantener la imagen y los negocios en un entorno multicultural.",
+          "b": "Generar confianza, satisfacción y lealtad.",
+          "c": "Reducir el costo de los repuestos importados.",
+          "d": "Fomentar el trabajo en equipo entre los empleados."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 9,
+        "tema": "U2 RA 6 · Relaciones públicas",
+        "pregunta": "Una empresa de soporte da servicio a clientes extranjeros y compra repuestos fuera del país. ¿Qué exigen sus relaciones internacionales?",
+        "opciones": {
+          "a": "Respeto a la diversidad cultural, dominio del idioma (inglés técnico) y comunicación clara y puntual.",
+          "b": "Evitar los trámites de aduanas y garantías para acelerar los envíos.",
+          "c": "Aplicar en todos los países las mismas costumbres de trato y de negociación.",
+          "d": "Atender únicamente a los clientes que hablen el mismo idioma que el técnico."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 10,
+        "tema": "U2 RA 6 · Relaciones públicas",
+        "pregunta": "Un técnico saluda con cordialidad, escucha los síntomas que describe la persona y registra los datos del equipo en la orden de servicio. ¿A qué clasificación de relaciones públicas corresponde su actuación?",
+        "opciones": {
+          "a": "Relaciones públicas internas.",
+          "b": "Relaciones internacionales.",
+          "c": "A ninguna, porque la recepción del equipo no forma parte de las relaciones públicas.",
+          "d": "Atención a clientes actuales y potenciales."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 11,
+        "tema": "U2 RA 7 · Supuestos del razonamiento",
+        "pregunta": "Un usuario dice: «mi equipo anda raro». El técnico pregunta desde cuándo ocurre, en qué programas y si pasa siempre o a ratos. ¿Qué supuesto del razonamiento está aplicando?",
+        "opciones": {
+          "a": "Precisión.",
+          "b": "Exactitud.",
+          "c": "Relevancia.",
+          "d": "Claridad."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 12,
+        "tema": "U2 RA 7 · Supuestos del razonamiento",
+        "pregunta": "Antes de reemplazar una fuente de poder, el técnico mide con un multímetro su voltaje de salida y compara el resultado con el valor esperado. ¿Qué supuesto del razonamiento aplica?",
+        "opciones": {
+          "a": "Relevancia, porque prioriza el síntoma más molesto para el cliente.",
+          "b": "Claridad, porque formula preguntas específicas al usuario.",
+          "c": "Exactitud, porque se basa en datos objetivos y verificables.",
+          "d": "Precisión, porque describe el síntoma con muchos adjetivos."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 13,
+        "tema": "U2 RA 7 · Supuestos del razonamiento",
+        "pregunta": "¿Cuál de estos reportes de falla es el más preciso?",
+        "opciones": {
+          "a": "La laptop falla desde hace días y el cliente cree que se trata de un problema del sistema operativo o de un virus.",
+          "b": "La laptop no enciende: el LED de carga no se activa con el cargador; posible falla del adaptador.",
+          "c": "La laptop tiene un problema eléctrico que hay que revisar.",
+          "d": "La laptop no sirve desde ayer y el cliente está molesto."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 14,
+        "tema": "U2 RA 7 · Supuestos del razonamiento",
+        "pregunta": "Un monitor no muestra imagen. El técnico revisa primero la conexión del cable en lugar de actualizar el controlador de video, porque se enfoca en lo que realmente importa para resolver la falla. ¿Qué supuesto del razonamiento aplica?",
+        "opciones": {
+          "a": "Precisión.",
+          "b": "Claridad.",
+          "c": "Exactitud.",
+          "d": "Relevancia."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 15,
+        "tema": "U2 RA 7 · Supuestos del razonamiento",
+        "pregunta": "¿Cuál de estas parejas relaciona correctamente cada supuesto del razonamiento con su definición?",
+        "opciones": {
+          "a": "Exactitud: basarse en datos objetivos y verificables.",
+          "b": "Relevancia: medir con un multímetro antes de llegar a una conclusión.",
+          "c": "Claridad: ser específico hasta localizar el subsistema exacto de la falla.",
+          "d": "Precisión: comprender el problema sin ambigüedades."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 16,
+        "tema": "U3 RA 1 · Componentes de servidores",
+        "pregunta": "Un técnico explica que, en la placa base de un servidor, un circuito integrado se encarga de coordinar la comunicación entre el procesador, la memoria, el almacenamiento y los periféricos. ¿De qué elemento habla?",
+        "opciones": {
+          "a": "Del chipset.",
+          "b": "Del oscilador de cuarzo.",
+          "c": "Del socket.",
+          "d": "Del filtro de interferencia."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 17,
+        "tema": "U3 RA 1 · Componentes de servidores",
+        "pregunta": "Un servidor de bases de datos críticas debe evitar que un error de un bit en la memoria corrompa la información. ¿Qué tipo de memoria conviene instalar?",
+        "opciones": {
+          "a": "Memoria caché de disco.",
+          "b": "Memoria ECC.",
+          "c": "Memoria ROM.",
+          "d": "Memoria virtual."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 18,
+        "tema": "U3 RA 1 · Componentes de servidores",
+        "pregunta": "¿Cómo se denomina la memoria de servidor que incorpora un registro para manejar más módulos de forma estable?",
+        "opciones": {
+          "a": "TDP, es decir, memoria de diseño térmico.",
+          "b": "BIOS, es decir, memoria del firmware.",
+          "c": "SSD, es decir, memoria de estado sólido.",
+          "d": "RDIMM, es decir, memoria registrada."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 19,
+        "tema": "U3 RA 1 · Componentes de servidores",
+        "pregunta": "¿Qué puerto, que transmite los datos bit a bit, se usa en las consolas de administración de equipos de red y de servidores?",
+        "opciones": {
+          "a": "El puerto paralelo.",
+          "b": "El puerto HDMI.",
+          "c": "El puerto serie (RS-232).",
+          "d": "El puerto infrarrojo."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 20,
+        "tema": "U3 RA 1 · Componentes de servidores",
+        "pregunta": "¿Cuál de estos puertos transmite varios bits a la vez y hoy está en desuso por ser propio de impresoras antiguas?",
+        "opciones": {
+          "a": "El puerto RJ45.",
+          "b": "El puerto paralelo.",
+          "c": "El puerto USB.",
+          "d": "El puerto serie RS-232."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 21,
+        "tema": "U3 RA 1 · Componentes de servidores",
+        "pregunta": "¿Por qué los puertos inalámbricos, como Bluetooth y Wi-Fi, son poco habituales en los servidores?",
+        "opciones": {
+          "a": "Por razones de seguridad.",
+          "b": "Porque los servidores no necesitan conectarse a ninguna red.",
+          "c": "Porque no pueden transmitir datos a más de un metro.",
+          "d": "Porque el chipset no admite ninguna señal inalámbrica."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 22,
+        "tema": "U3 RA 1 · Componentes de servidores",
+        "pregunta": "¿Para qué se utiliza el puerto USB en un servidor?",
+        "opciones": {
+          "a": "Para sustituir el procesador de gestión remota.",
+          "b": "Para conectar los cables de fibra óptica de la red.",
+          "c": "Para conectar teclados, discos externos y medios de instalación.",
+          "d": "Para suministrar energía a las fuentes redundantes."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 23,
+        "tema": "U3 RA 1 · Componentes de servidores",
+        "pregunta": "¿Para qué se usan los jumpers (puentes) de la placa de un servidor?",
+        "opciones": {
+          "a": "Para aumentar la cantidad de núcleos del procesador.",
+          "b": "Para filtrar las interferencias de la red eléctrica.",
+          "c": "Para configurar opciones, como borrar la configuración del BIOS o definir el modo de un disco.",
+          "d": "Para almacenar el sistema operativo de forma permanente."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 24,
+        "tema": "U3 RA 1 · Componentes de servidores",
+        "pregunta": "¿Cuál de estas opciones se configura en el BIOS o UEFI de un servidor?",
+        "opciones": {
+          "a": "La frecuencia de los respaldos programados.",
+          "b": "Los permisos de las carpetas compartidas.",
+          "c": "El tamaño de los archivos de cada usuario.",
+          "d": "El orden de arranque, la virtualización y el arranque seguro."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 25,
+        "tema": "U3 RA 1 · Componentes de servidores",
+        "pregunta": "¿Qué riesgo implica una falla durante la actualización del BIOS de una placa base?",
+        "opciones": {
+          "a": "Puede inutilizar la placa.",
+          "b": "Se reduce la velocidad de la red de forma temporal.",
+          "c": "Se desactiva el antivirus del sistema operativo.",
+          "d": "Solo se pierden las fotos guardadas en el disco."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 26,
+        "tema": "U3 RA 2 · Informes y diagnóstico",
+        "pregunta": "¿Cuál de estas actividades forma parte de la revisión preliminar de un servidor?",
+        "opciones": {
+          "a": "Formatear los discos para descartar fallas del software.",
+          "b": "Actualizar el BIOS sin consultar al usuario sobre los síntomas.",
+          "c": "Reemplazar los componentes sospechosos antes de observar el equipo.",
+          "d": "Verificar el estado físico, las conexiones y los indicadores luminosos, y consultar la bitácora y los registros."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 27,
+        "tema": "U3 RA 2 · Informes y diagnóstico",
+        "pregunta": "Durante la revisión preliminar, ¿qué debe hacer el técnico antes de intervenir el servidor?",
+        "opciones": {
+          "a": "Reiniciar todos los servicios para ver cuál falla.",
+          "b": "Apagar el equipo sin avisar a los usuarios conectados.",
+          "c": "Aplicar las normas de seguridad y pedir autorización.",
+          "d": "Borrar los registros para empezar con una bitácora limpia."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 28,
+        "tema": "U3 RA 2 · Informes y diagnóstico",
+        "pregunta": "¿Para qué sirve el inventario de componentes de un servidor?",
+        "opciones": {
+          "a": "Para reparar los sectores dañados de los discos.",
+          "b": "Para comparar el estado actual con el original, planear ampliaciones y controlar la garantía.",
+          "c": "Para reemplazar la bitácora de mantenimiento.",
+          "d": "Para aumentar de forma automática la velocidad del procesador."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 29,
+        "tema": "U3 RA 2 · Informes y diagnóstico",
+        "pregunta": "¿Qué datos de red debe incluir el inventario de un servidor?",
+        "opciones": {
+          "a": "El precio de la última factura de electricidad del local.",
+          "b": "Solo el nombre del técnico que lo revisó.",
+          "c": "La contraseña de todos los usuarios.",
+          "d": "El nombre del equipo y sus direcciones IP y MAC."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 30,
+        "tema": "U3 RA 2 · Informes y diagnóstico",
+        "pregunta": "¿Cuál de estos datos de software se registra en el inventario de un servidor?",
+        "opciones": {
+          "a": "El sistema operativo y su versión, los roles instalados y las licencias.",
+          "b": "El número de personas que trabajan en la oficina.",
+          "c": "La temperatura del cuarto durante la última semana.",
+          "d": "El color y el modelo de la carcasa del servidor."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 31,
+        "tema": "U3 RA 2 · Informes y diagnóstico",
+        "pregunta": "¿Qué herramienta de Windows muestra en tiempo real el uso de procesador, memoria, disco y red?",
+        "opciones": {
+          "a": "El comando chmod.",
+          "b": "El comando lsblk.",
+          "c": "El Administrador de tareas o el Monitor de recursos.",
+          "d": "El Visor de eventos de seguridad."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 32,
+        "tema": "U3 RA 2 · Informes y diagnóstico",
+        "pregunta": "¿Qué herramienta permite consultar en Linux el estado SMART, es decir, la salud de un disco?",
+        "opciones": {
+          "a": "free.",
+          "b": "smartctl.",
+          "c": "ping.",
+          "d": "traceroute."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 33,
+        "tema": "U3 RA 2 · Informes y diagnóstico",
+        "pregunta": "¿Qué herramienta de Linux se usa para consultar los registros del sistema y de los servicios?",
+        "opciones": {
+          "a": "journalctl.",
+          "b": "lsblk.",
+          "c": "mkfs.",
+          "d": "chmod."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 34,
+        "tema": "U3 RA 2 · Informes y diagnóstico",
+        "pregunta": "Un técnico necesita ver en tiempo real los procesos que más procesador consumen en un servidor Linux. ¿Qué comando usa?",
+        "opciones": {
+          "a": "top.",
+          "b": "passwd.",
+          "c": "mkfs.",
+          "d": "lsblk."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 35,
+        "tema": "U3 RA 2 · Informes y diagnóstico",
+        "pregunta": "¿Para qué se utilizan sistemas como Nagios, Zabbix o PRTG?",
+        "opciones": {
+          "a": "Para reparar de forma automática los discos dañados.",
+          "b": "Para cifrar los respaldos antes de enviarlos a la nube.",
+          "c": "Para instalar el sistema operativo en varios servidores a la vez.",
+          "d": "Para el monitoreo centralizado de equipos, con alertas y gráficos."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 36,
+        "tema": "U3 RA 3 · Respaldos de seguridad",
+        "pregunta": "¿Qué medio de respaldo se caracteriza por su gran capacidad, bajo costo por dato y acceso secuencial?",
+        "opciones": {
+          "a": "La cinta magnética (LTO).",
+          "b": "La memoria RAM.",
+          "c": "El disco duro interno del mismo servidor.",
+          "d": "El disco óptico."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 37,
+        "tema": "U3 RA 3 · Respaldos de seguridad",
+        "pregunta": "Una empresa necesita respaldos diarios muy rápidos que ocupen poco espacio, aunque restaurar exija el respaldo completo y todos los respaldos posteriores. ¿Qué tipo de respaldo usa?",
+        "opciones": {
+          "a": "Diferencial.",
+          "b": "Imagen del sistema.",
+          "c": "Incremental.",
+          "d": "Completo."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 38,
+        "tema": "U3 RA 3 · Respaldos de seguridad",
+        "pregunta": "¿Qué tipo de respaldo permite recuperar un equipo completo, con sistema, aplicaciones y datos, mediante una copia exacta del disco o volumen?",
+        "opciones": {
+          "a": "La imagen del sistema.",
+          "b": "La copia de los documentos de los usuarios.",
+          "c": "El respaldo incremental.",
+          "d": "La instantánea (snapshot) como único respaldo externo."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 39,
+        "tema": "U3 RA 3 · Respaldos de seguridad",
+        "pregunta": "¿Qué tipo de respaldo ofrece la restauración más simple, aunque toma más tiempo y ocupa más espacio?",
+        "opciones": {
+          "a": "El respaldo incremental.",
+          "b": "El respaldo diferencial.",
+          "c": "El respaldo completo.",
+          "d": "La instantánea (snapshot)."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 40,
+        "tema": "U3 RA 3 · Respaldos de seguridad",
+        "pregunta": "¿Qué ventaja tiene el respaldo diferencial al momento de restaurar?",
+        "opciones": {
+          "a": "Permite restaurar sin haber hecho nunca un respaldo completo.",
+          "b": "No requiere ninguna copia anterior para restaurar.",
+          "c": "Ocupa siempre el mismo espacio que un respaldo incremental.",
+          "d": "Solo requiere dos copias: el respaldo completo y el último diferencial."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 41,
+        "tema": "U3 RA 3 · Respaldos de seguridad",
+        "pregunta": "¿Cuál es una desventaja de usar la nube como medio de respaldo?",
+        "opciones": {
+          "a": "No ofrece ninguna forma de cifrado.",
+          "b": "No permite guardar copias fuera del sitio principal, por lo que no protege ante un incendio.",
+          "c": "Depende de la conexión a internet y del proveedor del servicio.",
+          "d": "Solo admite respaldos de bases de datos."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 42,
+        "tema": "U3 RA 3 · Respaldos de seguridad",
+        "pregunta": "Un técnico programa respaldos y verifica su integridad, pero nunca ha restaurado una copia. ¿Qué le falta para considerar confiable su respaldo?",
+        "opciones": {
+          "a": "Eliminar los respaldos más recientes.",
+          "b": "Aumentar la frecuencia del respaldo sin verificarlo.",
+          "c": "Probar la restauración periódicamente.",
+          "d": "Guardar todas las copias en el mismo disco del servidor."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 43,
+        "tema": "U3 RA 3 · Respaldos de seguridad",
+        "pregunta": "¿Qué nivel de RAID reparte datos y paridad entre todos los discos y requiere como mínimo tres discos?",
+        "opciones": {
+          "a": "RAID 5.",
+          "b": "RAID 1.",
+          "c": "RAID 0.",
+          "d": "RAID 10."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 44,
+        "tema": "U3 RA 3 · Respaldos de seguridad",
+        "pregunta": "¿Qué ocurre con los datos de un arreglo RAID 0 cuando falla uno de sus discos?",
+        "opciones": {
+          "a": "Los datos se recuperan solos con un disco de paridad.",
+          "b": "El arreglo sigue funcionando con normalidad.",
+          "c": "Solo se pierde la mitad más antigua de los datos.",
+          "d": "Se pierde toda la información del arreglo."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 45,
+        "tema": "U3 RA 3 · Respaldos de seguridad",
+        "pregunta": "¿Qué es un disco de repuesto en caliente (hot spare) en un arreglo RAID?",
+        "opciones": {
+          "a": "Un disco que guarda el respaldo diario del arreglo en otra ubicación fuera del servidor.",
+          "b": "Un disco que reemplaza a la controladora cuando esta se daña.",
+          "c": "Un disco que inicia solo la reconstrucción cuando falla otro disco del arreglo.",
+          "d": "Un disco que se instala solo para aumentar la velocidad de lectura."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 46,
+        "tema": "U3 RA 4 · Discos y formateo",
+        "pregunta": "¿Cuáles son las características del estilo de partición MBR?",
+        "opciones": {
+          "a": "Es obligatorio para el arranque UEFI en discos de 8 TB.",
+          "b": "Admite hasta 128 particiones y guarda una copia de su tabla.",
+          "c": "Admite discos de hasta 2 TB y cuatro particiones primarias.",
+          "d": "No permite particiones lógicas ni extendidas."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 47,
+        "tema": "U3 RA 4 · Discos y formateo",
+        "pregunta": "¿Qué estilo de partición admite hasta 128 particiones y guarda una copia de su tabla para ser más resistente?",
+        "opciones": {
+          "a": "FAT32.",
+          "b": "GPT.",
+          "c": "LVM.",
+          "d": "MBR."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 48,
+        "tema": "U3 RA 4 · Discos y formateo",
+        "pregunta": "¿Qué limitación tiene el sistema de archivos FAT32?",
+        "opciones": {
+          "a": "Solo permite una partición por disco.",
+          "b": "No admite archivos individuales de más de 4 GB.",
+          "c": "No es reconocido por ninguna versión de Windows.",
+          "d": "No puede usarse en medios extraíbles."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 49,
+        "tema": "U3 RA 4 · Discos y formateo",
+        "pregunta": "¿Qué sistema de archivos de Windows ofrece permisos, cifrado, cuotas y registro de cambios (journaling)?",
+        "opciones": {
+          "a": "exFAT.",
+          "b": "ext4.",
+          "c": "NTFS.",
+          "d": "FAT32."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 50,
+        "tema": "U3 RA 4 · Discos y formateo",
+        "pregunta": "¿Qué comando de Linux se utiliza para crear un sistema de archivos en una partición?",
+        "opciones": {
+          "a": "mkfs.",
+          "b": "top.",
+          "c": "lsblk.",
+          "d": "journalctl."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 51,
+        "tema": "U3 RA 4 · Discos y formateo",
+        "pregunta": "¿Qué sistema de archivos ofrece alto rendimiento con archivos grandes y es el predeterminado en varias distribuciones empresariales de Linux?",
+        "opciones": {
+          "a": "exFAT.",
+          "b": "XFS.",
+          "c": "FAT32.",
+          "d": "NTFS."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 52,
+        "tema": "U3 RA 4 · Discos y formateo",
+        "pregunta": "En un servidor Linux, ¿qué directorios se acostumbra ubicar en particiones propias?",
+        "opciones": {
+          "a": "/tmp, /mnt y /media.",
+          "b": "/bin, /lib y /sbin.",
+          "c": "/dev, /proc y /sys.",
+          "d": "/var, /home y /boot."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 53,
+        "tema": "U3 RA 4 · Discos y formateo",
+        "pregunta": "¿Qué ventaja ofrecen los volúmenes dinámicos o LVM?",
+        "opciones": {
+          "a": "Convierten un disco MBR en un disco biométrico.",
+          "b": "Eliminan la necesidad de formatear los discos antes de instalar cualquier sistema operativo.",
+          "c": "Impiden cualquier tipo de borrado accidental.",
+          "d": "Permiten ampliar o reducir volúmenes con mayor flexibilidad."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 54,
+        "tema": "U3 RA 4 · Discos y formateo",
+        "pregunta": "¿Qué tipo de formateo define las pistas y los sectores del disco y lo realiza el fabricante, no el usuario?",
+        "opciones": {
+          "a": "El formateo rápido.",
+          "b": "El borrado seguro.",
+          "c": "El formateo de bajo nivel.",
+          "d": "El formateo completo."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 55,
+        "tema": "U3 RA 4 · Discos y formateo",
+        "pregunta": "Después de instalar un disco nuevo en un servidor, ¿qué se verifica primero?",
+        "opciones": {
+          "a": "Que el sistema operativo ya haya sido reinstalado.",
+          "b": "Que la controladora lo detecte y, si corresponde, que el arreglo inicie la reconstrucción.",
+          "c": "Que existan menos de cuatro particiones primarias.",
+          "d": "Que el disco tenga el mismo color que los demás."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 56,
+        "tema": "U3 RA 5 · Instalación de SO y software",
+        "pregunta": "¿Qué protocolo usa Windows para compartir carpetas e impresoras en la red, y qué software lo ofrece en Linux?",
+        "opciones": {
+          "a": "RDP, que en Linux ofrece Samba.",
+          "b": "NFS, que en Linux ofrece SSH.",
+          "c": "SMB, que en Linux ofrece Samba.",
+          "d": "DHCP, que en Linux ofrece cron."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 57,
+        "tema": "U3 RA 5 · Instalación de SO y software",
+        "pregunta": "¿Qué principio consiste en conceder a cada usuario solo los permisos que necesita?",
+        "opciones": {
+          "a": "El principio de mínimo privilegio.",
+          "b": "El principio de abstracción.",
+          "c": "El principio de redundancia.",
+          "d": "El principio de la regla 3-2-1."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 58,
+        "tema": "U3 RA 5 · Instalación de SO y software",
+        "pregunta": "¿Qué medida de seguridad corresponde después de instalar un sistema operativo en un servidor?",
+        "opciones": {
+          "a": "Dejar las contraseñas de fábrica para facilitar el soporte y activar todos los servicios disponibles.",
+          "b": "Cambiar las contraseñas predeterminadas y desactivar los servicios innecesarios.",
+          "c": "Activar todos los servicios por si se necesitan después.",
+          "d": "Instalar el sistema sin actualizaciones para que no cambie."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 59,
+        "tema": "U3 RA 5 · Instalación de SO y software",
+        "pregunta": "¿Para qué se verifica el hash de una imagen ISO descargada antes de instalar un sistema operativo?",
+        "opciones": {
+          "a": "Para particionar el disco de forma automática.",
+          "b": "Para comprobar que la imagen está íntegra y no ha sido alterada.",
+          "c": "Para activar la licencia sin una clave.",
+          "d": "Para aumentar la velocidad de la instalación."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 60,
+        "tema": "U3 RA 5 · Instalación de SO y software",
+        "pregunta": "¿Cuál de estos elementos forma parte de los requerimientos técnicos y de plataforma que se comparan antes de instalar un servidor?",
+        "opciones": {
+          "a": "La cantidad de fotografías almacenadas en el disco.",
+          "b": "El color de la caja del servidor y la marca del monitor.",
+          "c": "El nombre de la persona que firmará la factura.",
+          "d": "El tipo de arranque (UEFI o BIOS), el arranque seguro y la compatibilidad de los controladores."
+        },
+        "respuesta_correcta": "d"
+      }
+    ]
+  }
+}
