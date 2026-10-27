@@ -50,7 +50,16 @@ Acceso local: http://localhost:8000 · Red: http://IP:8000
 1. El estudiante inicia sesión y escribe el código del examen.
 2. El servidor crea el intento, baraja preguntas (dentro de cada tema) y opciones, y calcula el tiempo restante. **Nunca envía las respuestas correctas.**
 3. Al enviar, el servidor califica y cierra el intento (uno por estudiante y examen).
-4. El docente ve nota y detalle con su contraseña ("Acceso docente"), o por `GET /api/docente/intentos`.
+4. El docente ve nota y detalle en el panel docente (`/docente`) o con "Acceso docente" al terminar el examen.
+
+## Panel docente (`/docente`)
+
+Se entra con la contraseña del docente.
+
+- **Resultados:** lista de intentos con filtro por examen y sección, nota, estado (enviado / sin enviar), salidas de la pestaña y detalle pregunta por pregunta. Permite **reiniciar** un intento (el estudiante puede presentar el examen de nuevo) y exportar a CSV.
+- **Notas:** por materia (sección y periodo), tabla editable con Trabajo cotidiano 25 %, Tareas 10 %, Prueba 01 20 %, Prueba 02 25 %, Proyecto 15 % y Asistencia 5 %. La nota final se calcula al escribir (un componente vacío cuenta como 0). **Importar Prueba 01/02** copia la nota (0-100) de los intentos enviados de un examen. Exporta a CSV.
+
+Las materias se siembran en `backend/database.py` (`MATERIAS`).
 
 ## Códigos de examen
 

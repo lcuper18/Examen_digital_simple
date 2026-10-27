@@ -21,6 +21,21 @@ DATABASE_PATH = PROJECT_ROOT / "examen_db.sqlite"
 ESTUDIANTES_CSV = Path(os.environ.get("ESTUDIANTES_CSV", PROJECT_ROOT / "data" / "estudiantes.csv"))
 
 
+# Materias por sección (se crean para los periodos 1 y 2)
+MATERIAS = {
+    "11-1": [
+        "Emprendimiento e Innovación",
+        "Administración y Soporte a las Computadoras",
+        "Configuración y Soporte a Redes",
+    ],
+    "11-2": [
+        "Emprendimiento e Innovación",
+        "Pruebas de SQA",
+        "Gestión y Control de la Calidad del Software",
+    ],
+}
+
+
 def cargar_estudiantes() -> list[tuple[str, str, str, str, str]]:
     """Lee el CSV de estudiantes: cedula, nombre, apellido1, apellido2, seccion."""
     if not ESTUDIANTES_CSV.exists():
@@ -133,6 +148,38 @@ def init_db() -> int:
                 FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id)
             )
         """)
+
+        # Materias (sección, nombre, periodo) y notas del docente por estudiante y materia
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS materias (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                seccion TEXT NOT NULL,
+                nombre TEXT NOT NULL,
+                periodo INTEGER NOT NULL,
+                UNIQUE (seccion, nombre, periodo)
+            )
+        """)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS notas (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                estudiante_id INTEGER NOT NULL,
+                materia_id INTEGER NOT NULL,
+                trabajo_cotidiano REAL,
+                tareas REAL,
+                prueba01 REAL,
+                prueba02 REAL,
+                proyecto REAL,
+                asistencia REAL,
+                UNIQUE (estudiante_id, materia_id),
+                FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id),
+                FOREIGN KEY (materia_id) REFERENCES materias(id)
+            )
+        """)
+        cursor.executemany(
+            "INSERT OR IGNORE INTO materias (seccion, nombre, periodo) VALUES (?, ?, ?)",
+            [(sec, nombre, periodo) for sec, nombres in MATERIAS.items()
+             for periodo in (1, 2) for nombre in nombres],
+        )
 
         # Migración: semilla del barajado e incidencias (cambios de pestaña) por intento
         columnas = {r["name"] for r in cursor.execute("PRAGMA table_info(intentos)")}

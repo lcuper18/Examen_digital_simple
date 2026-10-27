@@ -20,8 +20,8 @@ def client(tmp_path, monkeypatch):
         for i, (user, pwd) in enumerate([("ana.perez", "ANA1234"), ("luis.mora", "LUI5678")], 1):
             conn.execute(
                 "INSERT INTO estudiantes (id, cedula, nombre, apellido1, apellido2, seccion, "
-                "username, password_hash) VALUES (?, ?, 'N', 'A', '', '12-1', ?, ?)",
-                (i, f"c{i}", user, database.hash_password(pwd)),
+                "username, password_hash) VALUES (?, ?, 'N', 'A', '', ?, ?, ?)",
+                (i, f"c{i}", "11-1" if i == 1 else "11-2", user, database.hash_password(pwd)),
             )
         conn.commit()
     return TestClient(app)

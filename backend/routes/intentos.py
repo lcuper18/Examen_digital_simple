@@ -1,10 +1,12 @@
 """
 Intentos routes - Consulta de resultados (solo docente).
 """
+import csv
+import io
 import json
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Response
 
 from backend import barajado, database, security
 from backend.routes.examenes import _get_examen
@@ -57,6 +59,10 @@ def detalle_intento(intento_id: int) -> dict[str, Any]:
                 "seccion": row["seccion"],
             },
             "respuestas": json.loads(row["respuestas_json"]),
+            "preguntas": [
+                {k: p[k] for k in ("numero", "tema", "pregunta", "opciones")}
+                for p in barajado.barajar(examen["preguntas"], row["semilla"])
+            ],
             # Letras tal como las vio el estudiante (con el barajado de su intento)
             "respuestas_correctas": {
                 str(p["numero"]): barajado.letra_correcta_mostrada(p)
@@ -64,3 +70,37 @@ def detalle_intento(intento_id: int) -> dict[str, Any]:
             },
         },
     }
+
+
+@router.delete("/intentos/{intento_id}")
+def reiniciar_intento(intento_id: int) -> dict[str, Any]:
+    """Elimina un intento para que el estudiante pueda volver a presentar el examen."""
+    with database.get_db_context() as conn:
+        cursor = conn.execute("DELETE FROM intentos WHERE id = ?", (intento_id,))
+        conn.commit()
+    if cursor.rowcount == 0:
+        raise HTTPException(status_code=404, detail="Intento no encontrado")
+    return {"ok": True}
+
+
+@router.get("/intentos-exportar")
+def exportar_intentos() -> Response:
+    """Todos los intentos en CSV."""
+    datos = listar_intentos()["intentos"]
+    buffer = io.StringIO()
+    writer = csv.writer(buffer)
+    writer.writerow(["Apellido 1", "Apellido 2", "Nombre", "Sección", "Examen", "Puntuación",
+                     "Total", "Nota (0-100)", "Inicio", "Fin", "Salidas de pestaña"])
+    for i in datos:
+        enviado = i["fecha_fin"] is not None
+        writer.writerow([
+            i["apellido1"], i["apellido2"], i["nombre"], i["seccion"], i["codigo_examen"],
+            i["puntuacion"] if enviado else "", i["total"],
+            round(i["puntuacion"] / i["total"] * 100, 1) if enviado and i["total"] else "",
+            i["fecha_inicio"], i["fecha_fin"] or "", i["incidencias"],
+        ])
+    return Response(
+        content="\ufeff" + buffer.getvalue(),
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": 'attachment; filename="intentos.csv"'},
+    )

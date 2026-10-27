@@ -10,7 +10,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
 from backend import database
-from backend.routes import auth_router, examenes_router, intentos_router
+from backend.routes import auth_router, examenes_router, intentos_router, notas_router
 
 # Ruta base del proyecto
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -48,6 +48,13 @@ app.mount("/css", StaticFiles(directory=str(CSS_DIR)), name="css")
 app.include_router(auth_router)
 app.include_router(examenes_router)
 app.include_router(intentos_router)
+app.include_router(notas_router)
+
+
+@app.get("/docente")
+async def panel_docente():
+    """Sirve el panel del docente (resultados y notas)."""
+    return FileResponse(str(FRONTEND_DIR / "docente.html"))
 
 
 @app.get("/")

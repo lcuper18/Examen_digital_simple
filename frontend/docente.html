@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel docente</title>
+  <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+  <link rel="stylesheet" href="/fonts/fonts.css">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/docente.css">
+</head>
+<body class="docente-body">
+  <!-- Acceso -->
+  <section id="doc-login" class="doc-login">
+    <div class="doc-card">
+      <h1>Panel docente</h1>
+      <p class="doc-muted">Ingresa la contraseña del docente</p>
+      <input type="password" id="doc-password" placeholder="Contraseña" autocomplete="current-password">
+      <button class="btn btn-primary" id="doc-login-btn">Entrar</button>
+      <p id="doc-login-error" class="error-message" style="display:none;"></p>
+    </div>
+  </section>
+
+  <!-- Panel -->
+  <main id="doc-panel" class="doc-panel" style="display:none;">
+    <header class="doc-header">
+      <h1>Panel docente</h1>
+      <nav class="doc-tabs">
+        <button class="doc-tab active" data-tab="resultados">Resultados</button>
+        <button class="doc-tab" data-tab="notas">Notas</button>
+      </nav>
+      <button class="btn btn-secondary" id="doc-logout">Salir</button>
+    </header>
+
+    <!-- Resultados -->
+    <section id="tab-resultados" class="doc-section">
+      <div class="doc-toolbar">
+        <label>Examen
+          <select id="f-examen"><option value="">Todos</option></select>
+        </label>
+        <label>Sección
+          <select id="f-seccion"><option value="">Todas</option></select>
+        </label>
+        <button class="btn btn-secondary" id="btn-refrescar">Actualizar</button>
+        <button class="btn btn-primary" id="btn-exportar-intentos">Exportar CSV</button>
+      </div>
+      <p id="res-resumen" class="doc-muted"></p>
+      <div class="doc-table-wrap">
+        <table class="doc-table" id="tabla-intentos">
+          <thead>
+            <tr>
+              <th>Estudiante</th><th>Sección</th><th>Examen</th><th>Nota</th>
+              <th>Estado</th><th>Salidas</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Notas -->
+    <section id="tab-notas" class="doc-section" style="display:none;">
+      <div class="doc-toolbar">
+        <label>Materia
+          <select id="n-materia"></select>
+        </label>
+        <button class="btn btn-secondary" id="btn-importar-p01">Importar Prueba 01</button>
+        <button class="btn btn-secondary" id="btn-importar-p02">Importar Prueba 02</button>
+        <button class="btn btn-secondary" id="btn-exportar-notas">Exportar CSV</button>
+        <button class="btn btn-primary" id="btn-guardar-notas">Guardar notas</button>
+      </div>
+      <p id="notas-resumen" class="doc-muted"></p>
+      <div class="doc-table-wrap">
+        <table class="doc-table" id="tabla-notas">
+          <thead>
+            <tr>
+              <th>Estudiante</th>
+              <th title="Trabajo cotidiano">TC <small data-peso="trabajo_cotidiano"></small></th>
+              <th>Tareas <small data-peso="tareas"></small></th>
+              <th>Prueba 01 <small data-peso="prueba01"></small></th>
+              <th>Prueba 02 <small data-peso="prueba02"></small></th>
+              <th>Proyecto <small data-peso="proyecto"></small></th>
+              <th>Asistencia <small data-peso="asistencia"></small></th>
+              <th>Nota final</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Detalle de un intento -->
+  <div class="results-overlay" id="detalle-overlay">
+    <div class="results-modal">
+      <div class="results-header">
+        <h2 class="results-title" id="detalle-titulo"></h2>
+        <p class="results-subtitle" id="detalle-sub"></p>
+      </div>
+      <div class="results-list" id="detalle-lista"></div>
+      <div class="results-actions">
+        <button class="btn btn-secondary" id="detalle-cerrar">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/docente.js"></script>
+</body>
+</html>
