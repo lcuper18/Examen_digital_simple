@@ -49,3 +49,6 @@ temp/
 # Archivos de sesión del servidor
 *.sock
 *.pid
+
+# Clave de firma de sesiones
+.secret_key

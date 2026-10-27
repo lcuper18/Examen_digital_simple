@@ -130,6 +130,12 @@ def init_db() -> int:
             )
         """)
 
+        # Un solo intento por estudiante y examen
+        cursor.execute(
+            "CREATE UNIQUE INDEX IF NOT EXISTS idx_intento_unico "
+            "ON intentos (estudiante_id, codigo_examen)"
+        )
+
         conn.commit()
 
     # Poblar estudiantes si la tabla está vacía

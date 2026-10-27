@@ -2,17 +2,22 @@
 Auth routes - Login and teacher password verification.
 """
 import hashlib
+import hmac
+import os
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from pydantic import BaseModel
 
-from backend import database
+from backend import database, security
 
 router = APIRouter(prefix="/api", tags=["auth"])
 
-# Hash SHA-256 de la contraseña del docente
-TEACHER_PASSWORD_HASH = "849018898d5676cde9c6723b4604bd196d65e33c25304ec6e71fd7cc56af9a98"
+# Hash SHA-256 de la contraseña del docente (sobrescribible con DOCENTE_PASSWORD_HASH)
+TEACHER_PASSWORD_HASH = os.environ.get(
+    "DOCENTE_PASSWORD_HASH",
+    "849018898d5676cde9c6723b4604bd196d65e33c25304ec6e71fd7cc56af9a98",
+)
 
 
 class LoginRequest(BaseModel):
@@ -25,6 +30,7 @@ class LoginResponse(BaseModel):
     """Modelo para respuesta de login."""
     ok: bool
     estudiante: dict[str, Any] | None = None
+    token: str | None = None
     error: str | None = None
 
 
@@ -36,6 +42,7 @@ class VerificarDocenteRequest(BaseModel):
 class VerificarDocenteResponse(BaseModel):
     """Modelo para respuesta de verificación de docente."""
     ok: bool
+    token: str | None = None
     error: str | None = None
 
 
@@ -71,7 +78,7 @@ async def login(request: LoginRequest) -> LoginResponse:
 
         # Verificar password hasheado
         password_hash = hash_password(request.password)
-        if password_hash != row["password_hash"]:
+        if not hmac.compare_digest(password_hash, row["password_hash"]):
             return LoginResponse(ok=False, error="Credenciales inválidas")
 
         # Login exitoso - devolver datos del estudiante (sin password)
@@ -83,7 +90,10 @@ async def login(request: LoginRequest) -> LoginResponse:
             "username": row["username"],
             "seccion": row["seccion"],
         }
-        return LoginResponse(ok=True, estudiante=estudiante)
+        token = security.create_token(
+            str(row["id"]), security.ROLE_ESTUDIANTE, security.TOKEN_TTL_ESTUDIANTE
+        )
+        return LoginResponse(ok=True, estudiante=estudiante, token=token)
 
 
 @router.post("/verificar-docente", response_model=VerificarDocenteResponse)
@@ -98,6 +108,7 @@ async def verificar_docente(request: VerificarDocenteRequest) -> VerificarDocent
         VerificarDocenteResponse: Resultado de la verificación.
     """
     hash_input = hashlib.sha256(request.password.encode()).hexdigest()
-    if hash_input == TEACHER_PASSWORD_HASH:
-        return VerificarDocenteResponse(ok=True)
+    if hmac.compare_digest(hash_input, TEACHER_PASSWORD_HASH):
+        token = security.create_token("docente", security.ROLE_DOCENTE, security.TOKEN_TTL_DOCENTE)
+        return VerificarDocenteResponse(ok=True, token=token)
     return VerificarDocenteResponse(ok=False, error="Contraseña incorrecta")

@@ -1,71 +1,63 @@
 """
-Intentos routes - Create exam attempts.
+Intentos routes - Consulta de resultados (solo docente).
 """
 import json
-from typing import Any, List
+from typing import Any
 
-from fastapi import APIRouter, HTTPException
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends, HTTPException
 
-from backend import database
+from backend import database, security
+from backend.routes.examenes import _get_examen
 
-router = APIRouter(prefix="/api", tags=["intentos"])
-
-
-class IntentoRequest(BaseModel):
-    """Modelo para registro de intento de examen."""
-    estudiante_id: int
-    codigo_examen: str
-    respuestas: List[Any] = []
-    puntuacion: int
-    total: int
-    fecha_inicio: str | None = None
-    fecha_fin: str | None = None
+router = APIRouter(
+    prefix="/api/docente", tags=["intentos"], dependencies=[Depends(security.require_docente)]
+)
 
 
-@router.post("/intentos")
-async def crear_intento(request: IntentoRequest) -> JSONResponse:
-    """
-    Registra un intento de examen en la base de datos.
-
-    Args:
-        request: Datos del intento (estudiante_id, codigo_examen, respuestas, etc.).
-
-    Returns:
-        JSONResponse: Confirmación con el ID del intento creado.
-    """
+@router.get("/intentos")
+def listar_intentos() -> dict[str, Any]:
+    """Lista todos los intentos con el estudiante y la nota (los no enviados llevan fecha_fin nula)."""
     with database.get_db_context() as conn:
-        cursor = conn.cursor()
+        rows = conn.execute(
+            "SELECT i.id, i.codigo_examen, i.puntuacion, i.total, i.fecha_inicio, i.fecha_fin, "
+            "e.nombre, e.apellido1, e.apellido2, e.seccion "
+            "FROM intentos i JOIN estudiantes e ON e.id = i.estudiante_id "
+            "ORDER BY i.fecha_inicio DESC"
+        ).fetchall()
+    return {"ok": True, "intentos": [dict(r) for r in rows]}
 
-        # Verificar que el estudiante existe
-        cursor.execute("SELECT id FROM estudiantes WHERE id = ?", (request.estudiante_id,))
-        if cursor.fetchone() is None:
-            raise HTTPException(
-                status_code=404,
-                detail=f"Estudiante con ID {request.estudiante_id} no encontrado"
-            )
 
-        # Insertar intento
-        respuestas_json = json.dumps(request.__dict__.get('respuestas', []), ensure_ascii=False)
-        cursor.execute(
-            """
-            INSERT INTO intentos
-            (estudiante_id, codigo_examen, respuestas_json, puntuacion, total, fecha_inicio, fecha_fin)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-            """,
-            (
-                request.estudiante_id,
-                request.codigo_examen,
-                respuestas_json,
-                request.puntuacion,
-                request.total,
-                request.fecha_inicio,
-                request.fecha_fin,
-            )
-        )
-        conn.commit()
+@router.get("/intentos/{intento_id}")
+def detalle_intento(intento_id: int) -> dict[str, Any]:
+    """Detalle de un intento con las respuestas del estudiante y las correctas."""
+    with database.get_db_context() as conn:
+        row = conn.execute(
+            "SELECT i.*, e.nombre, e.apellido1, e.apellido2, e.seccion "
+            "FROM intentos i JOIN estudiantes e ON e.id = i.estudiante_id WHERE i.id = ?",
+            (intento_id,),
+        ).fetchone()
+    if row is None:
+        raise HTTPException(status_code=404, detail="Intento no encontrado")
 
-        intento_id = cursor.lastrowid
-
-    return JSONResponse(content={"ok": True, "id": intento_id})
+    _, examen = _get_examen(row["codigo_examen"])
+    return {
+        "ok": True,
+        "intento": {
+            "id": row["id"],
+            "codigo_examen": row["codigo_examen"],
+            "puntuacion": row["puntuacion"],
+            "total": row["total"],
+            "fecha_inicio": row["fecha_inicio"],
+            "fecha_fin": row["fecha_fin"],
+            "estudiante": {
+                "nombre": row["nombre"],
+                "apellido1": row["apellido1"],
+                "apellido2": row["apellido2"],
+                "seccion": row["seccion"],
+            },
+            "respuestas": json.loads(row["respuestas_json"]),
+            "respuestas_correctas": {
+                str(p["numero"]): p["respuesta_correcta"].lower() for p in examen["preguntas"]
+            },
+        },
+    }

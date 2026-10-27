@@ -1,12 +1,16 @@
 """
-Examenes routes - Get exam by code.
+Examenes routes - Iniciar un examen (sin respuestas correctas) y enviarlo para calificar.
 """
 import json
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
+from pydantic import BaseModel
+
+from backend import database, security
 
 router = APIRouter(prefix="/api", tags=["examenes"])
 
@@ -50,48 +54,132 @@ def load_examen_data(archivo: str) -> dict[str, Any]:
         return json.load(f)
 
 
-@router.get("/examen/{codigo}")
-async def get_examen(codigo: str) -> JSONResponse:
-    """
-    Obtiene las preguntas de un examen por su código.
+# Tolerancia (segundos) para envíos que llegan justo al vencer el tiempo
+GRACE_SECONDS = 120
 
-    Args:
-        codigo: Código del examen (CCS01, EMP01, ADM01, RED01, PER01).
 
-    Returns:
-        JSONResponse: Datos del examen.
+class EnviarRequest(BaseModel):
+    """Respuestas del estudiante: número de pregunta -> letra elegida (a, b, c)."""
+    respuestas: dict[str, str] = {}
 
-    Raises:
-        HTTPException: Si el código no existe o el archivo no se encuentra.
-    """
-    # Cargar mapeo de códigos
+
+def _get_examen(codigo: str) -> tuple[dict[str, str], dict[str, Any]]:
     codigos = load_codigos()
-
     if codigo not in codigos:
         raise HTTPException(status_code=404, detail=f"Código de examen '{codigo}' no encontrado")
+    info = codigos[codigo]
+    return info, load_examen_data(info["archivo"])["examen"]
 
-    examen_info = codigos[codigo]
 
-    # Cargar datos del examen
-    examen_data = load_examen_data(examen_info["archivo"])
+def _now() -> datetime:
+    return datetime.now(timezone.utc)
 
-    # Extraer preguntas
-    preguntas = examen_data["examen"]["preguntas"]
 
-    # Construir respuesta
-    response_data = {
-        "titulo": examen_data["examen"]["titulo"],
-        "institucion": examen_data["examen"].get("institucion", ""),
-        "nivel": examen_data["examen"].get("nivel", ""),
-        "especialidad": examen_data["examen"].get("especialidad", ""),
-        "profesor": examen_data["examen"].get("profesor", ""),
-        "instrucciones": examen_data["examen"].get("instrucciones", ""),
-        "total_preguntas": len(preguntas),
-        "duracion_minutos": examen_info.get("duracion_minutos", 60),
-        "preguntas": preguntas,
-    }
+def _remaining_seconds(fecha_inicio: str, duracion_minutos: int) -> int:
+    inicio = datetime.fromisoformat(fecha_inicio)
+    fin = inicio + timedelta(minutes=duracion_minutos)
+    return int((fin - _now()).total_seconds())
+
+
+@router.post("/examen/{codigo}/iniciar")
+def iniciar_examen(codigo: str, estudiante_id: int = Depends(security.estudiante_actual)) -> JSONResponse:
+    """
+    Inicia (o retoma) el intento del estudiante autenticado. Devuelve las preguntas
+    SIN la respuesta correcta y el tiempo restante calculado por el servidor.
+    """
+    codigo = codigo.upper()
+    info, examen = _get_examen(codigo)
+    duracion = info.get("duracion_minutos", 60)
+    preguntas = examen["preguntas"]
+
+    with database.get_db_context() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id, fecha_inicio, fecha_fin FROM intentos "
+            "WHERE estudiante_id = ? AND codigo_examen = ?",
+            (estudiante_id, codigo),
+        )
+        intento = cursor.fetchone()
+
+        if intento is None:
+            fecha_inicio = _now().isoformat()
+            cursor.execute(
+                "INSERT INTO intentos (estudiante_id, codigo_examen, respuestas_json, "
+                "puntuacion, total, fecha_inicio) VALUES (?, ?, '{}', 0, ?, ?)",
+                (estudiante_id, codigo, len(preguntas), fecha_inicio),
+            )
+            conn.commit()
+        elif intento["fecha_fin"] is not None:
+            raise HTTPException(status_code=409, detail="Ya enviaste este examen")
+        else:
+            fecha_inicio = intento["fecha_inicio"]
+
+    restante = _remaining_seconds(fecha_inicio, duracion)
+    if restante <= -GRACE_SECONDS:
+        raise HTTPException(status_code=403, detail="El tiempo del examen se agotó")
 
     return JSONResponse(content={
         "ok": True,
-        "examen": response_data
+        "examen": {
+            "titulo": examen["titulo"],
+            "institucion": examen.get("institucion", ""),
+            "nivel": examen.get("nivel", ""),
+            "especialidad": examen.get("especialidad", ""),
+            "profesor": examen.get("profesor", ""),
+            "instrucciones": examen.get("instrucciones", ""),
+            "total_preguntas": len(preguntas),
+            "duracion_minutos": duracion,
+            "segundos_restantes": max(restante, 0),
+            "preguntas": [
+                {k: p[k] for k in ("numero", "tema", "pregunta", "opciones")}
+                for p in preguntas
+            ],
+        },
     })
+
+
+@router.post("/examen/{codigo}/enviar")
+def enviar_examen(
+    codigo: str,
+    request: EnviarRequest,
+    estudiante_id: int = Depends(security.estudiante_actual),
+) -> JSONResponse:
+    """Califica en el servidor y cierra el intento. No devuelve nota ni respuestas correctas."""
+    codigo = codigo.upper()
+    info, examen = _get_examen(codigo)
+    duracion = info.get("duracion_minutos", 60)
+    preguntas = examen["preguntas"]
+
+    with database.get_db_context() as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id, fecha_inicio, fecha_fin FROM intentos "
+            "WHERE estudiante_id = ? AND codigo_examen = ?",
+            (estudiante_id, codigo),
+        )
+        intento = cursor.fetchone()
+        if intento is None:
+            raise HTTPException(status_code=404, detail="No has iniciado este examen")
+        if intento["fecha_fin"] is not None:
+            raise HTTPException(status_code=409, detail="Ya enviaste este examen")
+        if _remaining_seconds(intento["fecha_inicio"], duracion) <= -GRACE_SECONDS:
+            raise HTTPException(status_code=403, detail="El tiempo del examen se agotó")
+
+        validas = {str(p["numero"]) for p in preguntas}
+        respuestas = {
+            n: letra.lower() for n, letra in request.respuestas.items()
+            if n in validas and letra.lower() in ("a", "b", "c")
+        }
+        puntuacion = sum(
+            1 for p in preguntas
+            if respuestas.get(str(p["numero"])) == p["respuesta_correcta"].lower()
+        )
+
+        cursor.execute(
+            "UPDATE intentos SET respuestas_json = ?, puntuacion = ?, total = ?, fecha_fin = ? "
+            "WHERE id = ?",
+            (json.dumps(respuestas), puntuacion, len(preguntas), _now().isoformat(), intento["id"]),
+        )
+        conn.commit()
+
+    return JSONResponse(content={"ok": True, "intento_id": intento["id"]})

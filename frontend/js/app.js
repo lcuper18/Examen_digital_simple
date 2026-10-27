@@ -10,6 +10,13 @@ let tiempoRestanteSegundos = 0;
 let timerInterval = null;
 let estudianteNombre = '';
 let estudianteSeccion = '';
+let authToken = null;
+let intentoId = null;
+
+function authFetch(url, options = {}, token = authToken) {
+  const headers = Object.assign({}, options.headers, { Authorization: `Bearer ${token}` });
+  return fetch(url, Object.assign({}, options, { headers }));
+}
 
 // ========== SCREEN MANAGEMENT ==========
 function showLoginScreen() {
@@ -41,6 +48,7 @@ function showExamScreen() {
 function saveSession() {
   if (estudianteActual) {
     sessionStorage.setItem('estudianteActual', JSON.stringify(estudianteActual));
+    sessionStorage.setItem('authToken', authToken || '');
   }
 }
 
@@ -49,7 +57,8 @@ function loadSession() {
   if (saved) {
     try {
       estudianteActual = JSON.parse(saved);
-      return true;
+      authToken = sessionStorage.getItem('authToken') || null;
+      return !!authToken;
     } catch (e) {
       sessionStorage.removeItem('estudianteActual');
     }
@@ -66,7 +75,10 @@ function clearSession() {
     clearInterval(timerInterval);
     timerInterval = null;
   }
+  authToken = null;
+  intentoId = null;
   sessionStorage.removeItem('estudianteActual');
+  sessionStorage.removeItem('authToken');
 }
 
 function logout() {
@@ -104,6 +116,7 @@ async function performLogin() {
 
     if (data.ok && data.estudiante) {
       estudianteActual = data.estudiante;
+      authToken = data.token;
       saveSession();
       errorEl.classList.remove('active');
       document.getElementById('login-username').value = '';
@@ -142,11 +155,18 @@ async function startExam() {
   errorEl.classList.remove('active');
 
   try {
-    const response = await fetch(`/api/examen/${encodeURIComponent(codigo)}`);
+    const response = await authFetch(`/api/examen/${encodeURIComponent(codigo)}/iniciar`, { method: 'POST' });
 
     if (!response.ok) {
-      if (response.status === 404) {
+      if (response.status === 401) {
+        logout();
+        return;
+      } else if (response.status === 404) {
         errorEl.textContent = 'El código ingresado no existe';
+      } else if (response.status === 409) {
+        errorEl.textContent = 'Ya enviaste este examen';
+      } else if (response.status === 403) {
+        errorEl.textContent = 'El tiempo de este examen ya se agotó';
       } else {
         errorEl.textContent = 'Error al cargar el examen';
       }
@@ -237,8 +257,7 @@ function validateAndTransformQuestions(preguntasJSON) {
   const transformedQuestions = [];
 
   preguntasJSON.forEach((pregunta, index) => {
-    // Campos requeridos del API (incluye respuesta_correcta)
-    const requiredFields = ['numero', 'tema', 'pregunta', 'opciones', 'respuesta_correcta'];
+    const requiredFields = ['numero', 'tema', 'pregunta', 'opciones'];
     for (const field of requiredFields) {
       if (!pregunta[field]) throw new Error(`Pregunta ${index + 1}: falta el campo "${field}"`);
     }
@@ -250,14 +269,11 @@ function validateAndTransformQuestions(preguntasJSON) {
       if (!pregunta.opciones[key]) throw new Error(`Pregunta ${index + 1}: falta la opción "${key}"`);
     }
 
-    // Convertir respuesta_correcta (a,b,c) a índice (0,1,2)
-    const ansIndex = pregunta.respuesta_correcta.charCodeAt(0) - 97;
-
     transformedQuestions.push({
       tema: pregunta.tema,
       q: pregunta.pregunta,
       opts: [pregunta.opciones.a, pregunta.opciones.b, pregunta.opciones.c],
-      ans: ansIndex,
+      ans: null, // la respuesta correcta solo la conoce el servidor
       numeroOriginal: pregunta.numero
     });
   });
@@ -352,9 +368,7 @@ function submitExam() {
       `Tienes ${unanswered} preguntas sin contestar. ¿Deseas enviar el examen de todas formas?`;
     document.getElementById('warning-overlay').classList.add('active');
   } else {
-    // Limpiar localStorage al enviar
-    clearLocalStorage();
-    showPasswordModal();
+    sendExam();
   }
 }
 
@@ -364,9 +378,37 @@ function closeWarningModal() {
 
 function confirmSubmit() {
   closeWarningModal();
-  // Limpiar localStorage al enviar
-  clearLocalStorage();
-  showPasswordModal();
+  sendExam();
+}
+
+async function sendExam() {
+  if (timerInterval) {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+
+  const respuestas = {};
+  answers.forEach((ans, idx) => {
+    if (ans !== null) respuestas[String(questions[idx].numeroOriginal)] = String.fromCharCode(97 + ans);
+  });
+
+  try {
+    const response = await authFetch(`/api/examen/${encodeURIComponent(codigoExamenActual)}/enviar`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ respuestas })
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      alert(data.detail || 'No se pudo enviar el examen. Avisa al docente.');
+      return;
+    }
+    intentoId = data.intento_id;
+    clearLocalStorage();
+    showDetailedResults();
+  } catch (error) {
+    alert('Error de conexión al enviar el examen. Intenta de nuevo.');
+  }
 }
 
 function showPasswordModal() {
@@ -400,6 +442,7 @@ async function validatePassword() {
 
     if (data.ok) {
       closePasswordModal();
+      await loadTeacherDetail(data.token);
       showDetailedResults();
     } else {
       errorEl.textContent = data.error || 'Contraseña incorrecta';
@@ -411,6 +454,17 @@ async function validatePassword() {
     errorEl.textContent = 'Error de conexión';
     errorEl.style.display = 'block';
   }
+}
+
+async function loadTeacherDetail(teacherToken) {
+  const response = await authFetch(`/api/docente/intentos/${intentoId}`, {}, teacherToken);
+  if (!response.ok) return;
+  const { intento } = await response.json();
+  questions.forEach((q, idx) => {
+    const key = String(q.numeroOriginal);
+    q.ans = intento.respuestas_correctas[key].charCodeAt(0) - 97;
+    answers[idx] = intento.respuestas[key] ? intento.respuestas[key].charCodeAt(0) - 97 : null;
+  });
 }
 
 function showDetailedResults() {
@@ -474,6 +528,13 @@ function showDetailedResults() {
     subtitle.textContent = `Puntuación: ${correct}/${total} (${percentage}%) | Nota: ${nota}`;
   }
 
+  document.getElementById('teacher-access-btn').style.display = hasCorrectAnswers ? 'none' : 'flex';
+  if (!hasCorrectAnswers) {
+    document.getElementById('detailed-results').style.display = 'none';
+    document.getElementById('download-pdf-btn').style.display = 'none';
+    document.getElementById('results-overlay').classList.add('active');
+    return;
+  }
   document.getElementById('detailed-results').style.display = 'block';
   document.getElementById('download-pdf-btn').style.display = 'flex';
 
@@ -785,6 +846,7 @@ function createPDF() {
 
 function closeResults() {
   document.getElementById('results-overlay').classList.remove('active');
+  if (intentoId !== null) logout(); // el examen ya fue enviado
 }
 
 function scrollToQuestion(idx) {
@@ -937,7 +999,7 @@ function clearLocalStorage() {
 // ========== TIMER (FASE 5.3 y 5.4) ==========
 function startTimer() {
   duracionMinutos = examData.duracion_minutos || 60;
-  tiempoRestanteSegundos = duracionMinutos * 60;
+  tiempoRestanteSegundos = examData.segundos_restantes ?? duracionMinutos * 60;
 
   updateTimerDisplay();
 
@@ -977,28 +1039,7 @@ function forceSubmit() {
     timerInterval = null;
   }
 
-  // Llamar submit
-  submitExam();
-}
-
-// ========== SUBMIT EXAM ==========
-function submitExam() {
-  // Detener el timer si está corriendo
-  if (timerInterval) {
-    clearInterval(timerInterval);
-    timerInterval = null;
-  }
-
-  const unanswered = answers.filter(a => a === null).length;
-  if (unanswered > 0) {
-    document.getElementById('warning-message').textContent =
-      `Tienes ${unanswered} preguntas sin contestar. ¿Deseas enviar el examen de todas formas?`;
-    document.getElementById('warning-overlay').classList.add('active');
-  } else {
-    // Limpiar localStorage al enviar
-    clearLocalStorage();
-    showPasswordModal();
-  }
+  sendExam();
 }
 
 // Init
