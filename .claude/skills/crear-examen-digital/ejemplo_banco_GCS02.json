@@ -1,0 +1,638 @@
+{
+ "meta": {
+  "titulo": "Gestión y Control de la Calidad del Software · Examen II Periodo (en clase)",
+  "institucion": "CTP Las Palmitas",
+  "especialidad": "Control de la calidad del software | Gestión y control de la calidad del software",
+  "nivel": "Undécimo",
+  "curso_lectivo": 2026,
+  "profesor": "Luis Cuper Fallas Rivas",
+  "instrucciones": "Selecciona la opción correcta en cada pregunta (cada una vale 1 punto). El examen cubre el II Período: seguimiento de la calidad, comunicación asertiva y hábitos de vida sana (U2); normas ISO y TRL, requisitos de calidad, certificación y deuda técnica, toma de decisiones y educación inclusiva (U3); y estadística descriptiva (U4).",
+  "codigo": "GCS02",
+  "nombre": "Gestión y Control de la Calidad del Software · II Periodo (en clase)",
+  "archivo": "Gestion_Calidad_II_Periodo.json",
+  "duracion_minutos": 80,
+  "semilla": 11
+ },
+ "preguntas": [
+  {
+   "tema": "U2 RA 4 · Seguimiento de la calidad",
+   "pregunta": "¿Qué es el monitoreo en el seguimiento de la calidad del software?",
+   "correcta": "Observar de forma continua el avance y el estado del producto de software.",
+   "incorrectas": [
+    "Instalar el sistema únicamente en el entorno de producción final.",
+    "Calcular el precio final que se cobrará por el producto entregado.",
+    "Firmar el contrato final de entrega con la persona cliente."
+   ],
+   "origen": "Cuestionario 02 · P22"
+  },
+  {
+   "tema": "U2 RA 4 · Seguimiento de la calidad",
+   "pregunta": "¿Qué son las revisiones técnicas dentro del seguimiento de calidad?",
+   "correcta": "Inspecciones formales de los componentes de software para detectar defectos.",
+   "incorrectas": [
+    "Actualizaciones automáticas del sistema operativo del servidor principal.",
+    "Reuniones exclusivamente comerciales entre la empresa y el cliente final.",
+    "Campañas publicitarias del producto dirigidas al público general."
+   ],
+   "origen": "Cuestionario 02 · P23"
+  },
+  {
+   "tema": "U2 RA 4 · Seguimiento de la calidad",
+   "pregunta": "¿Qué se busca durante la etapa de Análisis en el desarrollo del sistema?",
+   "correcta": "Validar que los requisitos sean claros, completos y consistentes.",
+   "incorrectas": [
+    "Dar seguimiento a incidencias posteriores a la entrega del producto.",
+    "Verificar que el sistema funcione en el entorno final de instalación.",
+    "Aplicar estándares de codificación durante la implementación del sistema."
+   ],
+   "origen": "Cuestionario 02 · P24"
+  },
+  {
+   "tema": "U2 RA 4 · Seguimiento de la calidad",
+   "pregunta": "¿Qué dimensión de calidad se refiere al grado de cumplimiento de los estándares?",
+   "correcta": "La conformidad.",
+   "incorrectas": [
+    "El desempeño general del sistema durante su ejecución habitual.",
+    "La percepción subjetiva que tienen las personas usuarias del sistema.",
+    "La durabilidad del producto frente al paso del tiempo de uso."
+   ],
+   "origen": "Cuestionario 02 · P27"
+  },
+  {
+   "tema": "U2 RA 4 · Seguimiento de la calidad",
+   "pregunta": "¿Qué integra un plan de seguimiento de calidad efectivo?",
+   "correcta": "Las etapas de calidad con las dimensiones de calidad del software.",
+   "incorrectas": [
+    "Solamente el nombre comercial definitivo del producto desarrollado.",
+    "Solo la cantidad de personas que forman parte del equipo de ventas.",
+    "Únicamente el presupuesto disponible para todo el proyecto completo."
+   ],
+   "origen": "Cuestionario 02 · P28"
+  },
+  {
+   "tema": "U2 RA 4 · Seguimiento de la calidad",
+   "pregunta": "Un equipo escribe el código siguiendo reglas de programación y le hace pruebas a cada parte pequeña. ¿En qué etapa del desarrollo está?",
+   "correcta": "Implementación.",
+   "incorrectas": [
+    "Instalación.",
+    "Planificación.",
+    "Mantenimiento."
+   ]
+  },
+  {
+   "tema": "U2 RA 4 · Seguimiento de la calidad",
+   "pregunta": "El sistema ya fue entregado y el equipo revisa que funcione bien en las computadoras reales del cliente. ¿En qué etapa está?",
+   "correcta": "Instalación.",
+   "incorrectas": [
+    "Análisis.",
+    "Planificación.",
+    "Diseño."
+   ]
+  },
+  {
+   "tema": "U2 RA 4 · Seguimiento de la calidad",
+   "pregunta": "En la etapa de Diseño, ¿qué se revisa desde el punto de vista de la calidad?",
+   "correcta": "Que la estructura planeada del sistema (su arquitectura) cumpla con la calidad esperada.",
+   "incorrectas": [
+    "Que el código tenga pruebas unitarias.",
+    "Que los usuarios hayan reportado todas las fallas.",
+    "Que el sistema ya esté funcionando en el entorno final."
+   ]
+  },
+  {
+   "tema": "U2 RA 4 · Seguimiento de la calidad",
+   "pregunta": "Una aplicación de notas lleva cinco años funcionando bien, sin necesitar un rediseño grande. ¿Qué dimensión de la calidad se destaca?",
+   "correcta": "Durabilidad.",
+   "incorrectas": [
+    "Percepción.",
+    "Conformidad.",
+    "Servicio."
+   ]
+  },
+  {
+   "tema": "U2 RA 4 · Seguimiento de la calidad",
+   "pregunta": "Una persona reporta un problema de la aplicación y el equipo se lo resuelve rápido ese mismo día. ¿Qué dimensión de la calidad se destaca?",
+   "correcta": "Servicio.",
+   "incorrectas": [
+    "Conformidad.",
+    "Desempeño.",
+    "Durabilidad."
+   ]
+  },
+  {
+   "tema": "U2 RA 4 · Seguimiento de la calidad",
+   "pregunta": "Una usuaria dice: “Me gusta cómo se ve la aplicación y me da buena impresión”. ¿Qué dimensión de la calidad describe mejor su opinión?",
+   "correcta": "Percepción.",
+   "incorrectas": [
+    "Confiabilidad.",
+    "Conformidad.",
+    "Desempeño."
+   ]
+  },
+  {
+   "tema": "U2 RA 4 · Seguimiento de la calidad",
+   "pregunta": "¿Qué dimensión de la calidad describe qué tan bien realiza el sistema sus funciones principales?",
+   "correcta": "Desempeño.",
+   "incorrectas": [
+    "Servicio.",
+    "Percepción.",
+    "Durabilidad."
+   ]
+  },
+  {
+   "tema": "U2 RA 5 · Comunicación asertiva",
+   "pregunta": "¿Qué caracteriza el estilo de comunicación pasiva?",
+   "correcta": "Evitar expresar opiniones o necesidades para no generar conflicto.",
+   "incorrectas": [
+    "Interrumpir constantemente a la persona que está hablando en ese momento.",
+    "Imponer el propio punto de vista sin considerar los derechos de otros.",
+    "Expresar el punto de vista propio respetando el de la otra persona."
+   ],
+   "origen": "Cuestionario 02 · P30"
+  },
+  {
+   "tema": "U2 RA 5 · Comunicación asertiva",
+   "pregunta": "¿En qué consiste la técnica de la escucha activa?",
+   "correcta": "Prestar atención completa, confirmar lo comprendido y evitar interrumpir.",
+   "incorrectas": [
+    "Responder de inmediato sin dejar terminar la idea de la otra persona.",
+    "Evitar el contacto visual durante toda la conversación con el interlocutor.",
+    "Repetir la propia opinión sin considerar lo que dice la otra persona."
+   ],
+   "origen": "Cuestionario 02 · P31"
+  },
+  {
+   "tema": "U2 RA 5 · Comunicación asertiva",
+   "pregunta": "Un compañero grita: “Esa idea es una tontería, se hace como yo digo”. ¿Qué estilo de comunicación está usando?",
+   "correcta": "Agresiva.",
+   "incorrectas": [
+    "Empática.",
+    "Asertiva.",
+    "Pasiva."
+   ]
+  },
+  {
+   "tema": "U2 RA 5 · Comunicación asertiva",
+   "pregunta": "Ana dice: “Entiendo la fecha de entrega, pero necesito dos días más porque tengo otra tarea. ¿Podemos ajustarla?”. ¿Qué estilo de comunicación usa?",
+   "correcta": "Asertiva.",
+   "incorrectas": [
+    "Agresiva.",
+    "Evasiva.",
+    "Pasiva."
+   ]
+  },
+  {
+   "tema": "U2 RA 5 · Comunicación asertiva",
+   "pregunta": "¿Cuál de estas frases es un buen ejemplo de mensaje en primera persona?",
+   "correcta": "“Me preocupa que el informe llegue tarde porque no podremos revisarlo.”",
+   "incorrectas": [
+    "“Ustedes nunca hacen bien el informe.”",
+    "“Nadie en este equipo cumple con nada.”",
+    "“Usted siempre llega tarde con todo.”"
+   ]
+  },
+  {
+   "tema": "U2 RA 5 · Comunicación asertiva",
+   "pregunta": "¿En qué consiste la técnica del “disco rayado”?",
+   "correcta": "Repetir con calma la propia posición cuando la otra persona insiste, sin agresividad.",
+   "incorrectas": [
+    "Cambiar de opinión cada vez que la otra persona insista.",
+    "Dejar de hablar para evitar una discusión.",
+    "Repetir la misma queja gritando hasta que la otra persona ceda."
+   ]
+  },
+  {
+   "tema": "U2 RA 6 · Hábitos de vida sana",
+   "pregunta": "¿Qué implica el autocuidado como parte de la salud y el bienestar?",
+   "correcta": "Atender de forma consciente las propias necesidades de descanso, alimentación y actividad física.",
+   "incorrectas": [
+    "Delegar por completo la responsabilidad de la salud personal a terceros.",
+    "Aumentar el consumo de alimentos sin considerar el valor nutricional.",
+    "Evitar cualquier tipo de actividad física durante la semana laboral."
+   ],
+   "origen": "Cuestionario 02 · P33"
+  },
+  {
+   "tema": "U2 RA 6 · Hábitos de vida sana",
+   "pregunta": "Entre los pilares de una vida sana, ¿qué aporta el agua?",
+   "correcta": "Mantiene la hidratación y el buen funcionamiento del cuerpo.",
+   "incorrectas": [
+    "Mejora la condición física y reduce el estrés.",
+    "Aporta los nutrientes que necesita el cuerpo.",
+    "Regula el ciclo de sueño y ayuda a producir vitamina D."
+   ]
+  },
+  {
+   "tema": "U2 RA 6 · Hábitos de vida sana",
+   "pregunta": "¿Cuál de estas es una forma en que las TI pueden ayudar a cuidar la salud?",
+   "correcta": "Con aplicaciones que llevan el registro de la alimentación y del ejercicio.",
+   "incorrectas": [
+    "Aumentando las horas frente a la pantalla sin ningún límite.",
+    "Reemplazando el ejercicio por jugar en el celular todo el día.",
+    "Eliminando la necesidad de dormir las horas necesarias."
+   ]
+  },
+  {
+   "tema": "U3 RA 1 · Normas ISO y TRL",
+   "pregunta": "¿Qué define la norma ISO 25010?",
+   "correcta": "Un modelo de características de calidad específico para productos de software.",
+   "incorrectas": [
+    "El precio mínimo autorizado para vender un producto certificado.",
+    "El procedimiento legal para registrar una patente de software dentro del proceso de trabajo del equipo.",
+    "El horario de trabajo recomendado para un equipo de desarrollo."
+   ],
+   "origen": "Cuestionario 03 · P1"
+  },
+  {
+   "tema": "U3 RA 1 · Normas ISO y TRL",
+   "pregunta": "¿Qué mide la escala TRL?",
+   "correcta": "El grado de madurez de una tecnología, del 1 al 9.",
+   "incorrectas": [
+    "El número de personas que integran un equipo de desarrollo.",
+    "La cantidad de errores detectados en una prueba de software.",
+    "El precio final de un producto de software terminado."
+   ],
+   "origen": "Cuestionario 03 · P2"
+  },
+  {
+   "tema": "U3 RA 1 · Normas ISO y TRL",
+   "pregunta": "¿Qué caracteriza al nivel TRL 9?",
+   "correcta": "El sistema fue aprobado con éxito en operación real.",
+   "incorrectas": [
+    "Se formula por primera vez una aplicación tecnológica concreta.",
+    "Se valida el componente únicamente dentro de un laboratorio cerrado.",
+    "Se observan y reportan por primera vez los principios básicos de la tecnología."
+   ],
+   "origen": "Cuestionario 03 · P3"
+  },
+  {
+   "tema": "U3 RA 1 · Normas ISO y TRL",
+   "pregunta": "¿De qué trata la familia de normas ISO 9000?",
+   "correcta": "De los fundamentos y el vocabulario de la gestión de calidad, para cualquier organización.",
+   "incorrectas": [
+    "De la seguridad física de los edificios de una empresa.",
+    "De los lenguajes de programación que se recomiendan para cada proyecto.",
+    "De los precios a los que se debe vender un producto de software."
+   ]
+  },
+  {
+   "tema": "U3 RA 1 · Normas ISO y TRL",
+   "pregunta": "Un equipo ya probó su prototipo en un entorno operativo, pero todavía no está aprobado en operación real. ¿En qué nivel TRL se encuentra?",
+   "correcta": "TRL 7.",
+   "incorrectas": [
+    "TRL 9.",
+    "TRL 4.",
+    "TRL 1."
+   ]
+  },
+  {
+   "tema": "U3 RA 1 · Normas ISO y TRL",
+   "pregunta": "¿Cuál de estas es una característica de calidad del software que define ISO 25010?",
+   "correcta": "La mantenibilidad (qué tan fácil es corregir o mejorar el software).",
+   "incorrectas": [
+    "La rentabilidad (cuánto dinero gana la empresa).",
+    "La popularidad (cuántas personas lo conocen).",
+    "La puntualidad (si el equipo llega a tiempo)."
+   ]
+  },
+  {
+   "tema": "U3 RA 2 · Requisitos de calidad",
+   "pregunta": "¿Qué son las partes interesadas (Stakeholders) de un proyecto?",
+   "correcta": "Personas o grupos con interés legítimo en el resultado del proyecto.",
+   "incorrectas": [
+    "Solamente el personal técnico que programa el software del proyecto.",
+    "Solo las personas que usan el software una vez que ya fue entregado.",
+    "Únicamente las personas que financian directamente el proyecto completo."
+   ],
+   "origen": "Cuestionario 03 · P5"
+  },
+  {
+   "tema": "U3 RA 2 · Requisitos de calidad",
+   "pregunta": "¿Para qué sirve el gráfico de Stakeholders?",
+   "correcta": "Para ubicar a cada parte interesada según su nivel de poder e interés en el proyecto.",
+   "incorrectas": [
+    "Para documentar el código fuente final entregado al cliente según lo establecido por la organización.",
+    "Para diseñar la arquitectura técnica definitiva del sistema completo.",
+    "Para calcular de forma automática el presupuesto total del proyecto."
+   ],
+   "origen": "Cuestionario 03 · P6"
+  },
+  {
+   "tema": "U3 RA 2 · Requisitos de calidad",
+   "pregunta": "¿Cuál es una forma de identificar a las partes interesadas de un proyecto?",
+   "correcta": "Hacer entrevistas y una lluvia de ideas con el equipo.",
+   "incorrectas": [
+    "Preguntarle solamente a la persona que programa.",
+    "Adivinar quiénes son según el nombre del proyecto.",
+    "Esperar a que el proyecto termine para ver quién aparece."
+   ]
+  },
+  {
+   "tema": "U3 RA 2 · Requisitos de calidad",
+   "pregunta": "¿Qué hace el mapeo de necesidades de calidad?",
+   "correcta": "Conecta lo que las personas interesadas esperan del producto con requisitos técnicos concretos.",
+   "incorrectas": [
+    "Calcula cuánto tiempo falta para entregar el proyecto.",
+    "Registra los errores que aparecen después de entregar el software.",
+    "Reparte las tareas entre el equipo según el horario de cada persona."
+   ]
+  },
+  {
+   "tema": "U3 RA 2 · Requisitos de calidad",
+   "pregunta": "¿Para qué sirve la trazabilidad de los requisitos?",
+   "correcta": "Para seguir cada requisito desde su origen hasta que se verifica.",
+   "incorrectas": [
+    "Para cambiar los requisitos sin avisarle al cliente.",
+    "Para saber cuánto debe cobrar cada integrante del equipo.",
+    "Para borrar los requisitos que ya se cumplieron."
+   ]
+  },
+  {
+   "tema": "U3 RA 2 · Requisitos de calidad",
+   "pregunta": "¿Qué significa que un requisito de calidad sea “verificable”?",
+   "correcta": "Que se puede comprobar de forma objetiva si el software lo cumple.",
+   "incorrectas": [
+    "Que nadie puede cambiarlo después.",
+    "Que lo escribió el cliente a mano.",
+    "Que es muy largo y tiene muchos detalles."
+   ]
+  },
+  {
+   "tema": "U3 RA 3 · Certificación y deuda técnica",
+   "pregunta": "¿Qué diferencia a la certificación de la recertificación?",
+   "correcta": "La certificación se obtiene por primera vez; la recertificación renueva una vigente.",
+   "incorrectas": [
+    "La certificación no tiene ningún costo asociado para la persona interesada.",
+    "La recertificación solo aplica a proyectos de software ya cancelados.",
+    "No existe ninguna diferencia real entre ambos procesos mencionados durante la etapa correspondiente del desarrollo."
+   ],
+   "origen": "Cuestionario 03 · P7"
+  },
+  {
+   "tema": "U3 RA 3 · Certificación y deuda técnica",
+   "pregunta": "¿Qué es la deuda técnica?",
+   "correcta": "El costo futuro acumulado por decisiones de desarrollo rápidas o poco cuidadosas.",
+   "incorrectas": [
+    "El monto que debe pagar el cliente por adquirir una licencia de software.",
+    "El número de personas certificadas dentro de un equipo de trabajo de forma exclusiva en ese momento del proceso.",
+    "El tiempo que tarda un servidor en reiniciarse tras una actualización."
+   ],
+   "origen": "Cuestionario 03 · P8"
+  },
+  {
+   "tema": "U3 RA 3 · Certificación y deuda técnica",
+   "pregunta": "¿Cuál de estas situaciones puede provocar deuda técnica?",
+   "correcta": "Tener plazos muy ajustados y entregar sin hacer suficientes pruebas.",
+   "incorrectas": [
+    "Seguir los estándares de codificación del equipo.",
+    "Documentar con calma desde el inicio.",
+    "Hacer pruebas en cada etapa del proyecto."
+   ]
+  },
+  {
+   "tema": "U3 RA 3 · Certificación y deuda técnica",
+   "pregunta": "¿Cuál es una consecuencia de acumular deuda técnica sin control?",
+   "correcta": "El mantenimiento se vuelve más costoso y hay más riesgo de defectos.",
+   "incorrectas": [
+    "Las pruebas dejan de ser necesarias.",
+    "El cliente deja de reportar errores.",
+    "El software se vuelve más barato de mantener."
+   ]
+  },
+  {
+   "tema": "U3 RA 3 · Certificación y deuda técnica",
+   "pregunta": "¿Qué caracteriza al software desarrollado “con principios”?",
+   "correcta": "Sigue buenas prácticas, estándares de codificación y pruebas desde el inicio.",
+   "incorrectas": [
+    "No necesita pruebas porque lo programó una persona con experiencia.",
+    "Se entrega lo más rápido posible, sin importar la calidad.",
+    "Acumula deuda técnica para poder entregar antes."
+   ]
+  },
+  {
+   "tema": "U3 RA 3 · Certificación y deuda técnica",
+   "pregunta": "Cuando una certificación vence, ¿por qué la persona debe recertificarse?",
+   "correcta": "Para demostrar que sus conocimientos siguen actualizados.",
+   "incorrectas": [
+    "Para eliminar la deuda técnica de su equipo.",
+    "Para obtener un título universitario nuevo.",
+    "Porque una certificación solo sirve el día en que se obtiene."
+   ]
+  },
+  {
+   "tema": "U3 RA 4 · Toma de decisiones",
+   "pregunta": "¿Qué propone el modelo de racionalidad limitada?",
+   "correcta": "Decidir con la información disponible en el momento, sin analizar todas las alternativas.",
+   "incorrectas": [
+    "Analizar de forma exhaustiva absolutamente todas las alternativas posibles.",
+    "Posponer la decisión de forma indefinida hasta contar con datos perfectos.",
+    "Elegir siempre la opción que otra persona haya recomendado previamente en todas las etapas del ciclo de desarrollo."
+   ],
+   "origen": "Cuestionario 03 · P11"
+  },
+  {
+   "tema": "U3 RA 4 · Toma de decisiones",
+   "pregunta": "¿Qué tipo de herramienta sigue pasos exactos y repetibles para decidir?",
+   "correcta": "Los métodos algorítmicos.",
+   "incorrectas": [
+    "El modelo inductivo basado en patrones observados previamente.",
+    "El modelo del favorito implícito aplicado a la decisión tomada.",
+    "Los métodos heurísticos basados en reglas prácticas generales."
+   ],
+   "origen": "Cuestionario 03 · P12"
+  },
+  {
+   "tema": "U3 RA 4 · Toma de decisiones",
+   "pregunta": "Todo el equipo se reúne y cada persona da su opinión para elegir cómo repartir las tareas. ¿Qué tipo de decisión es?",
+   "correcta": "Grupal.",
+   "incorrectas": [
+    "Fundamental.",
+    "Individual.",
+    "Automática."
+   ]
+  },
+  {
+   "tema": "U3 RA 4 · Toma de decisiones",
+   "pregunta": "¿Qué hace una persona que usa el modelo racional para decidir?",
+   "correcta": "Analiza de forma ordenada todas las alternativas antes de decidir.",
+   "incorrectas": [
+    "Copia lo que se hizo en un caso parecido anterior.",
+    "Decide con la información que tiene en el momento, sin analizar todas las opciones.",
+    "Elige la opción que prefería desde el inicio y luego busca justificarla."
+   ]
+  },
+  {
+   "tema": "U3 RA 4 · Toma de decisiones",
+   "pregunta": "Carlos ya quería usar cierta herramienta desde el principio y, después, busca razones para justificar su elección. ¿Qué modelo de decisión aplica?",
+   "correcta": "El favorito implícito.",
+   "incorrectas": [
+    "La racionalidad limitada.",
+    "El modelo racional.",
+    "El modelo inductivo."
+   ]
+  },
+  {
+   "tema": "U3 RA 4 · Toma de decisiones",
+   "pregunta": "¿Qué ofrecen los métodos heurísticos para tomar decisiones?",
+   "correcta": "Soluciones razonables basadas en reglas prácticas, cuando no se conoce una solución exacta.",
+   "incorrectas": [
+    "Una solución perfecta que nunca falla.",
+    "Pasos exactos que siempre dan el mismo resultado.",
+    "Decisiones tomadas al azar, sin ningún criterio."
+   ]
+  },
+  {
+   "tema": "U3 RA 5 · Educación inclusiva",
+   "pregunta": "¿Cuál es la diferencia entre igualdad y equidad?",
+   "correcta": "La igualdad ofrece los mismos recursos a todos; la equidad los adapta según las necesidades.",
+   "incorrectas": [
+    "La equidad ofrece siempre menos recursos que la igualdad a cada persona.",
+    "No existe ninguna diferencia real entre ambos conceptos educativos.",
+    "La igualdad solo aplica a la educación virtual, nunca a la presencial."
+   ],
+   "origen": "Cuestionario 03 · P14"
+  },
+  {
+   "tema": "U3 RA 5 · Educación inclusiva",
+   "pregunta": "En un colegio, a un estudiante con baja visión se le entrega el material con letra más grande y a los demás no. ¿Qué principio se está aplicando?",
+   "correcta": "Equidad.",
+   "incorrectas": [
+    "Uniformidad.",
+    "Igualdad.",
+    "Competencia."
+   ]
+  },
+  {
+   "tema": "U3 RA 5 · Educación inclusiva",
+   "pregunta": "Después de la pandemia, ¿cuál es una clave del éxito al usar las TI en la educación?",
+   "correcta": "Capacitar al personal docente y dar acceso equitativo a dispositivos y conexión.",
+   "incorrectas": [
+    "Eliminar por completo las clases presenciales.",
+    "Que las TI reemplacen al personal docente.",
+    "Que solo el estudiantado con mejores notas reciba una computadora."
+   ]
+  },
+  {
+   "tema": "U4 RA 1 · Estadística descriptiva",
+   "pregunta": "¿Qué indica una desviación estándar pequeña en un proceso de calidad?",
+   "correcta": "Que los datos se concentran cerca del promedio, sugiriendo un proceso estable.",
+   "incorrectas": [
+    "Que el proceso analizado no cuenta con ningún dato disponible.",
+    "Que el proceso presenta una variabilidad muy alta e impredecible.",
+    "Que el proceso fue cancelado antes de completar su análisis dentro del proceso de trabajo del equipo."
+   ],
+   "origen": "Cuestionario 04 · P2"
+  },
+  {
+   "tema": "U4 RA 1 · Estadística descriptiva",
+   "pregunta": "¿Qué representa un histograma de frecuencias?",
+   "correcta": "Cuántas veces se repite cada rango de valores en un conjunto de datos.",
+   "incorrectas": [
+    "El contrato legal firmado entre el cliente y la empresa desarrolladora.",
+    "El presupuesto asignado a cada etapa del proceso de calidad.",
+    "El nombre de cada persona que participó en la recolección de datos."
+   ],
+   "origen": "Cuestionario 04 · P3"
+  },
+  {
+   "tema": "U4 RA 1 · Estadística descriptiva",
+   "pregunta": "En 4 pruebas se encontraron 2, 4, 6 y 8 defectos. ¿Cuál es la media (promedio) de defectos?",
+   "correcta": "5",
+   "incorrectas": [
+    "20",
+    "4",
+    "6"
+   ]
+  },
+  {
+   "tema": "U4 RA 1 · Estadística descriptiva",
+   "pregunta": "Los siguientes datos son los defectos de 5 revisiones: 7, 2, 9, 4 y 3. ¿Cuál es la mediana?",
+   "correcta": "4",
+   "incorrectas": [
+    "5",
+    "7",
+    "3"
+   ]
+  },
+  {
+   "tema": "U4 RA 1 · Estadística descriptiva",
+   "pregunta": "Los tiempos de carga de una página (en segundos) fueron: 2, 3, 7 y 10. ¿Cuál es la mediana?",
+   "correcta": "5",
+   "incorrectas": [
+    "7",
+    "5,5",
+    "3"
+   ]
+  },
+  {
+   "tema": "U4 RA 1 · Estadística descriptiva",
+   "pregunta": "Los defectos por sprint fueron: 3, 6, 6, 8, 9 y 12. ¿Cuál es la moda?",
+   "correcta": "6",
+   "incorrectas": [
+    "12",
+    "8",
+    "7"
+   ]
+  },
+  {
+   "tema": "U4 RA 1 · Estadística descriptiva",
+   "pregunta": "Los tiempos de respuesta de un sistema (en milisegundos) fueron: 30, 45, 25, 60 y 40. ¿Cuál es el rango?",
+   "correcta": "35",
+   "incorrectas": [
+    "25",
+    "60",
+    "40"
+   ]
+  },
+  {
+   "tema": "U4 RA 1 · Estadística descriptiva",
+   "pregunta": "Dos servidores responden en promedio en 2 segundos. El servidor A casi siempre tarda 2 segundos; el servidor B a veces tarda 0,5 y a veces 5. ¿Cuál tiene mayor desviación estándar?",
+   "correcta": "El servidor B, porque sus tiempos varían más.",
+   "incorrectas": [
+    "El servidor A, porque su promedio es más estable.",
+    "Los dos tienen la misma, porque tienen igual promedio.",
+    "Ninguno, porque la desviación estándar solo se calcula con la moda."
+   ]
+  },
+  {
+   "tema": "U4 RA 1 · Estadística descriptiva",
+   "pregunta": "En un histograma de tiempos de respuesta, ¿qué se muestra abajo y qué indica la altura de cada barra?",
+   "correcta": "Abajo van los intervalos de valores; la altura indica cuántas veces se repiten.",
+   "incorrectas": [
+    "Abajo va el promedio; la altura indica el precio del producto.",
+    "Abajo van los nombres del equipo; la altura indica el sueldo de cada persona.",
+    "Abajo va la cantidad de veces que se repiten; la altura indica el nombre del intervalo."
+   ]
+  },
+  {
+   "tema": "U4 RA 1 · Estadística descriptiva",
+   "pregunta": "¿Cuál de estas es una medida de dispersión?",
+   "correcta": "El rango.",
+   "incorrectas": [
+    "La mediana.",
+    "La media.",
+    "La moda."
+   ]
+  },
+  {
+   "tema": "U4 RA 1 · Estadística descriptiva",
+   "pregunta": "Todos los datos de un proceso son iguales (por ejemplo: 5, 5, 5, 5 y 5). ¿Cuánto vale el rango?",
+   "correcta": "0",
+   "incorrectas": [
+    "5",
+    "25",
+    "1"
+   ]
+  },
+  {
+   "tema": "U4 RA 1 · Estadística descriptiva",
+   "pregunta": "Un histograma muestra los defectos por sprint: de 0 a 2 defectos hubo 4 sprints, de 3 a 5 hubo 9 sprints y de 6 a 8 hubo 2 sprints. ¿En qué intervalo se concentran más sprints?",
+   "correcta": "De 3 a 5 defectos.",
+   "incorrectas": [
+    "En los tres intervalos por igual.",
+    "De 0 a 2 defectos.",
+    "De 6 a 8 defectos."
+   ]
+  }
+ ]
+}
