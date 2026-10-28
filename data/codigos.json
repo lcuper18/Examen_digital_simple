@@ -43,5 +43,10 @@
     "nombre": "Gestión y Control de la Calidad del Software · II Periodo (en clase)",
     "archivo": "Gestion_Calidad_II_Periodo.json",
     "duracion_minutos": 80
+  },
+  "EMP02": {
+    "nombre": "Emprendimiento e innovación · II Periodo (en clase)",
+    "archivo": "Emprendimiento_II_Periodo.json",
+    "duracion_minutos": 80
   }
 }

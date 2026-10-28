@@ -1,0 +1,753 @@
+{
+  "examen": {
+    "titulo": "Emprendimiento e innovación para sistemas de calidad · Examen II Periodo (en clase)",
+    "institucion": "CTP Las Palmitas",
+    "especialidad": "Control de la calidad del software | Emprendimiento e innovación para sistemas de calidad",
+    "nivel": "Undécimo",
+    "curso_lectivo": 2026,
+    "profesor": "Luis Cuper Fallas Rivas",
+    "instrucciones": "Selecciona la opción correcta en cada pregunta (cada una vale 1 punto). El examen cubre el II Período: tipos de empresa, plan de negocios, administración y operación de la empresa, y servicio al cliente (U3).",
+    "total_preguntas": 60,
+    "preguntas": [
+      {
+        "numero": 1,
+        "tema": "U3 RA 1 · Tipos de empresa",
+        "pregunta": "¿Qué criterio clasifica a las empresas en local, regional, nacional o internacional?",
+        "opciones": {
+          "a": "Según la forma jurídica.",
+          "b": "Según el ámbito de actividad.",
+          "c": "Según el tamaño de la empresa.",
+          "d": "Según el destino de sus beneficios."
+        },
+        "respuesta_correcta": "b",
+        "origen": "Cuestionario 03 · P1"
+      },
+      {
+        "numero": 2,
+        "tema": "U3 RA 1 · Tipos de empresa",
+        "pregunta": "¿Qué criterio distingue a la microempresa, la pequeña, la mediana y la gran empresa?",
+        "opciones": {
+          "a": "Según la forma jurídica de la empresa.",
+          "b": "Según el origen o procedencia de capital.",
+          "c": "Según el destino de sus beneficios.",
+          "d": "Según el tamaño."
+        },
+        "respuesta_correcta": "d",
+        "origen": "Cuestionario 03 · P2"
+      },
+      {
+        "numero": 3,
+        "tema": "U3 RA 1 · Tipos de empresa",
+        "pregunta": "¿Qué clasificación distingue entre empresa pública, privada y mixta?",
+        "opciones": {
+          "a": "Según el origen o procedencia de capital.",
+          "b": "Según el destino de sus beneficios obtenidos.",
+          "c": "Según el ámbito de actividad de la empresa.",
+          "d": "Según la materia que utiliza la empresa."
+        },
+        "respuesta_correcta": "a",
+        "origen": "Cuestionario 03 · P3"
+      },
+      {
+        "numero": 4,
+        "tema": "U3 RA 1 · Tipos de empresa",
+        "pregunta": "Una empresa dedicada a la extracción de materias primas se clasifica, según su actividad, como:",
+        "opciones": {
+          "a": "Extractiva.",
+          "b": "De transformación o industrial.",
+          "c": "Mixta según el capital que utiliza.",
+          "d": "De servicios profesionales."
+        },
+        "respuesta_correcta": "a",
+        "origen": "Cuestionario 03 · P4"
+      },
+      {
+        "numero": 5,
+        "tema": "U3 RA 1 · Tipos de empresa",
+        "pregunta": "¿Por qué es importante comparar ventajas y desventajas antes de seleccionar el tipo de empresa?",
+        "opciones": {
+          "a": "Porque el tipo elegido condiciona la administración y las obligaciones del negocio.",
+          "b": "Porque el tipo de empresa determina el precio final del producto o servicio ofrecido.",
+          "c": "Porque solo las sociedades anónimas pueden contratar personal de forma legal en Costa Rica.",
+          "d": "Porque la ley obliga a cambiar el tipo de empresa cada cinco años de operación en el país."
+        },
+        "respuesta_correcta": "a",
+        "origen": "Cuestionario 03 · P5"
+      },
+      {
+        "numero": 6,
+        "tema": "U3 RA 1 · Tipos de empresa",
+        "pregunta": "Una cafetería de barrio con un solo dueño y tres empleados, según su tamaño, es una:",
+        "opciones": {
+          "a": "Empresa mediana.",
+          "b": "Gran empresa.",
+          "c": "Empresa multinacional.",
+          "d": "Microempresa."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 7,
+        "tema": "U3 RA 1 · Tipos de empresa",
+        "pregunta": "Una asociación que reinvierte todo su excedente en su labor social es una empresa:",
+        "opciones": {
+          "a": "Extractiva.",
+          "b": "Sin fines de lucro.",
+          "c": "Multinacional.",
+          "d": "Con fines de lucro."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 8,
+        "tema": "U3 RA 1 · Tipos de empresa",
+        "pregunta": "Una empresa cuyo capital pertenece al Estado se clasifica, según el origen del capital, como:",
+        "opciones": {
+          "a": "Cooperativa.",
+          "b": "Familiar.",
+          "c": "Pública.",
+          "d": "Privada."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 9,
+        "tema": "U3 RA 1 · Tipos de empresa",
+        "pregunta": "¿Cuál es una ventaja de constituir una sociedad (S.A. o S.R.L.) frente a operar como persona física?",
+        "opciones": {
+          "a": "Elimina por completo el pago de impuestos del negocio y de sus dueños.",
+          "b": "Permite operar sin inscribirse en Hacienda ni en la seguridad social.",
+          "c": "Separa el patrimonio de la empresa del patrimonio personal de sus dueños.",
+          "d": "No requiere ningún trámite legal ni inscripción ante el Registro."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 10,
+        "tema": "U3 RA 1 · Tipos de empresa",
+        "pregunta": "Una fábrica que convierte la madera en muebles se clasifica, según su actividad, como:",
+        "opciones": {
+          "a": "De transformación o industrial.",
+          "b": "Pública, porque su capital pertenece por completo al Estado.",
+          "c": "Extractiva, porque saca los recursos directamente de la naturaleza.",
+          "d": "De servicios, porque atiende directamente a las personas clientes."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 11,
+        "tema": "U3 RA 1 · Tipos de empresa",
+        "pregunta": "Una empresa que vende sus productos en todo el país es de ámbito:",
+        "opciones": {
+          "a": "Regional.",
+          "b": "Nacional.",
+          "c": "Local.",
+          "d": "Internacional."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 12,
+        "tema": "U3 RA 1 · Tipos de empresa",
+        "pregunta": "Una sociedad de responsabilidad limitada (S.R.L.) se clasifica, según el criterio de forma jurídica, como una:",
+        "opciones": {
+          "a": "Empresa individual de una sola persona.",
+          "b": "Sociedad, con capital dividido en cuotas.",
+          "c": "Empresa del Estado sin dueños privados.",
+          "d": "Microempresa sin forma legal definida."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 13,
+        "tema": "U3 RA 2 · Plan de negocios",
+        "pregunta": "¿Qué elementos incluye el plan de negocios además del modelo de negocios?",
+        "opciones": {
+          "a": "Solo el horario de atención al público de la empresa.",
+          "b": "Únicamente el diseño gráfico de la marca de la empresa.",
+          "c": "Solamente la lista de proveedores autorizados por el negocio.",
+          "d": "Objetivos, metas y estudios de mercado, mercadeo, técnico, económico y financiero."
+        },
+        "respuesta_correcta": "d",
+        "origen": "Cuestionario 03 · P6"
+      },
+      {
+        "numero": 14,
+        "tema": "U3 RA 2 · Plan de negocios",
+        "pregunta": "¿Ante qué instituciones se inscribe una empresa como patrono en Costa Rica?",
+        "opciones": {
+          "a": "Únicamente el Ministerio de Educación Pública del país.",
+          "b": "Solo la municipalidad donde reside la persona propietaria.",
+          "c": "Hacienda y la Caja Costarricense de Seguro Social.",
+          "d": "Solamente el Colegio Federado de Ingenieros y Arquitectos."
+        },
+        "respuesta_correcta": "c",
+        "origen": "Cuestionario 03 · P7"
+      },
+      {
+        "numero": 15,
+        "tema": "U3 RA 2 · Plan de negocios",
+        "pregunta": "¿Qué autorización otorga el Ministerio de Salud a una empresa según su actividad?",
+        "opciones": {
+          "a": "El permiso de salud correspondiente a su actividad.",
+          "b": "El registro oficial de la marca comercial que identifica a la empresa.",
+          "c": "La inscripción como contribuyente formal ante el Ministerio de Hacienda.",
+          "d": "La patente municipal que autoriza el funcionamiento comercial del negocio."
+        },
+        "respuesta_correcta": "a",
+        "origen": "Cuestionario 03 · P8"
+      },
+      {
+        "numero": 16,
+        "tema": "U3 RA 2 · Plan de negocios",
+        "pregunta": "¿Qué busca la estructura organizativa diseñada con cadena de valor orientada al cliente?",
+        "opciones": {
+          "a": "Que solamente el área de ventas mantenga contacto directo con los clientes.",
+          "b": "Que la empresa elimine por completo todos sus departamentos administrativos.",
+          "c": "Que cada departamento opere de forma totalmente aislada sin comunicación entre sí.",
+          "d": "Que cada unidad y departamento aporte a satisfacer las necesidades del cliente."
+        },
+        "respuesta_correcta": "d",
+        "origen": "Cuestionario 03 · P9"
+      },
+      {
+        "numero": 17,
+        "tema": "U3 RA 2 · Plan de negocios",
+        "pregunta": "¿Qué estudio del plan de negocios analiza los costos, los ingresos y la inversión inicial?",
+        "opciones": {
+          "a": "El estudio técnico de procesos.",
+          "b": "El estudio de mercadeo del producto.",
+          "c": "El estudio económico y financiero.",
+          "d": "El estudio de mercado de clientes."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 18,
+        "tema": "U3 RA 2 · Plan de negocios",
+        "pregunta": "¿Qué estudio del plan de negocios analiza quiénes son los clientes y cuánta competencia existe?",
+        "opciones": {
+          "a": "El estudio financiero.",
+          "b": "El estudio del organigrama.",
+          "c": "El estudio técnico.",
+          "d": "El estudio de mercado."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 19,
+        "tema": "U3 RA 2 · Plan de negocios",
+        "pregunta": "¿Qué estudio define los equipos, el local y los procesos necesarios para producir el bien o servicio?",
+        "opciones": {
+          "a": "El estudio técnico.",
+          "b": "El estudio de mercado.",
+          "c": "El estudio económico.",
+          "d": "El estudio de mercadeo."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 20,
+        "tema": "U3 RA 2 · Plan de negocios",
+        "pregunta": "¿Qué permiso otorga el Ministerio de Salud para que un negocio funcione cumpliendo condiciones sanitarias?",
+        "opciones": {
+          "a": "El permiso de salud de funcionamiento.",
+          "b": "La inscripción como patrono en la CCSS.",
+          "c": "La inscripción en Hacienda.",
+          "d": "La patente municipal."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 21,
+        "tema": "U3 RA 2 · Plan de negocios",
+        "pregunta": "¿Qué autorización da la municipalidad para ejercer una actividad comercial en el cantón?",
+        "opciones": {
+          "a": "El registro de la marca.",
+          "b": "El permiso sanitario.",
+          "c": "La patente.",
+          "d": "La póliza de riesgos del trabajo."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 22,
+        "tema": "U3 RA 2 · Plan de negocios",
+        "pregunta": "¿Para qué sirve el organigrama de una empresa?",
+        "opciones": {
+          "a": "Para registrar en un cuaderno las ventas que se hacen cada día.",
+          "b": "Para calcular los impuestos que el negocio debe pagar cada mes.",
+          "c": "Para definir el precio al que se venderán todos los productos.",
+          "d": "Para mostrar los departamentos, los niveles de autoridad y sus relaciones."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 23,
+        "tema": "U3 RA 2 · Plan de negocios",
+        "pregunta": "¿Cuál es el propósito principal de un plan de negocios?",
+        "opciones": {
+          "a": "Reemplazar todos los permisos legales que necesita el negocio.",
+          "b": "Sustituir por completo el estudio de mercado de la idea.",
+          "c": "Comprobar que la idea es viable y guiar su puesta en marcha.",
+          "d": "Garantizar que el negocio tendrá ganancias desde el primer mes."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 24,
+        "tema": "U3 RA 2 · Plan de negocios",
+        "pregunta": "En el plan de negocios, ¿qué diferencia hay entre un objetivo y una meta?",
+        "opciones": {
+          "a": "El objetivo es un trámite legal y la meta es un permiso municipal.",
+          "b": "No existe ninguna diferencia entre un objetivo y una meta.",
+          "c": "El objetivo dice qué se quiere lograr; la meta dice cuánto y para cuándo.",
+          "d": "El objetivo dice cuánto se vende; la meta dice qué se compra."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 25,
+        "tema": "U3 RA 2 · Plan de negocios",
+        "pregunta": "¿Ante qué institución se hace la constitución legal de una sociedad, es decir, su inscripción formal?",
+        "opciones": {
+          "a": "El Registro Nacional.",
+          "b": "El Banco Central de Costa Rica.",
+          "c": "El Ministerio de Salud.",
+          "d": "La Caja Costarricense de Seguro Social."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 26,
+        "tema": "U3 RA 2 · Plan de negocios",
+        "pregunta": "Un proceso, dentro de la estructura de un negocio, es:",
+        "opciones": {
+          "a": "Un estudio que calcula cuánto dinero ganará el negocio.",
+          "b": "Una secuencia de pasos que se repite para producir un resultado.",
+          "c": "Un tipo de sociedad reconocida por la legislación nacional.",
+          "d": "Un permiso que entrega la municipalidad para abrir el negocio."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 27,
+        "tema": "U3 RA 2 · Plan de negocios",
+        "pregunta": "Una pequeña tienda en línea quiere abrir su sitio. Antes de invertir, ¿qué estudio le dice si habrá personas dispuestas a comprar?",
+        "opciones": {
+          "a": "El estudio técnico del local.",
+          "b": "El estudio de mercado.",
+          "c": "El organigrama de la empresa.",
+          "d": "La patente de la municipalidad."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 28,
+        "tema": "U3 RA 3 · Administración y operación",
+        "pregunta": "¿Qué guían los principios de la administración en la empresa de práctica?",
+        "opciones": {
+          "a": "Solamente la negociación con los proveedores externos del negocio.",
+          "b": "Solo el pago puntual de los impuestos correspondientes al negocio.",
+          "c": "Únicamente el diseño de la marca gráfica que usará la empresa de práctica.",
+          "d": "Planear, organizar, dirigir y controlar la operación del negocio."
+        },
+        "respuesta_correcta": "d",
+        "origen": "Cuestionario 03 · P11"
+      },
+      {
+        "numero": 29,
+        "tema": "U3 RA 3 · Administración y operación",
+        "pregunta": "¿Qué papel cumple la tecnología en la operación de la empresa de práctica?",
+        "opciones": {
+          "a": "Reemplaza los trámites legales de formalización que exige la empresa ante el Estado.",
+          "b": "Es un aliado estratégico que automatiza transacciones y apoya la toma de decisiones.",
+          "c": "Elimina la obligación de registrar las transacciones comerciales realizadas por la empresa.",
+          "d": "Sustituye por completo la necesidad de contar con personal dentro de la empresa de práctica."
+        },
+        "respuesta_correcta": "b",
+        "origen": "Cuestionario 03 · P12"
+      },
+      {
+        "numero": 30,
+        "tema": "U3 RA 3 · Administración y operación",
+        "pregunta": "¿Qué representa el Centro de Operaciones dentro de la empresa de práctica?",
+        "opciones": {
+          "a": "El área encargada exclusivamente del diseño de los productos nuevos de la empresa.",
+          "b": "El documento que certifica la inscripción legal de la empresa ante el Registro.",
+          "c": "El trámite que autoriza el funcionamiento sanitario del local comercial.",
+          "d": "El punto donde se coordinan las actividades diarias del negocio."
+        },
+        "respuesta_correcta": "d",
+        "origen": "Cuestionario 03 · P13"
+      },
+      {
+        "numero": 31,
+        "tema": "U3 RA 3 · Administración y operación",
+        "pregunta": "¿Qué cargas debe simular la empresa de práctica como parte de su operación?",
+        "opciones": {
+          "a": "Solamente el alquiler mensual del local donde opera.",
+          "b": "Pago de impuestos, cargas sociales, y pólizas y seguros.",
+          "c": "Solo el salario del personal directivo de la empresa.",
+          "d": "Únicamente el costo de la publicidad en redes sociales."
+        },
+        "respuesta_correcta": "b",
+        "origen": "Cuestionario 03 · P14"
+      },
+      {
+        "numero": 32,
+        "tema": "U3 RA 3 · Administración y operación",
+        "pregunta": "¿Cuál es la función de «organizar» dentro del proceso administrativo?",
+        "opciones": {
+          "a": "Motivar al equipo y guiar su trabajo de cada día en la empresa.",
+          "b": "Revisar si los resultados coinciden con lo que se había planeado.",
+          "c": "Fijar los objetivos y las metas que el negocio quiere lograr.",
+          "d": "Distribuir tareas, personas y recursos para cumplir los objetivos."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 33,
+        "tema": "U3 RA 3 · Administración y operación",
+        "pregunta": "¿Cuál es la función de «controlar» dentro del proceso administrativo?",
+        "opciones": {
+          "a": "Comparar los resultados con lo planeado y corregir las desviaciones.",
+          "b": "Contratar a las personas que van a trabajar en la empresa.",
+          "c": "Definir los objetivos y las metas que el negocio quiere lograr.",
+          "d": "Asignar las tareas a cada una de las personas del equipo."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 34,
+        "tema": "U3 RA 3 · Administración y operación",
+        "pregunta": "Un equipo de estudiantes usa una hoja de cálculo para controlar el inventario de su empresa. Esto es un ejemplo de:",
+        "opciones": {
+          "a": "Tecnología usada como aliada para operar de forma más eficiente.",
+          "b": "Un gasto innecesario para una empresa nueva que apenas empieza.",
+          "c": "Un requisito legal para inscribir la empresa ante el Estado.",
+          "d": "Una carga social que se paga mensualmente a la CCSS."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 35,
+        "tema": "U3 RA 3 · Administración y operación",
+        "pregunta": "¿Qué documento respalda una compra o una venta y sirve para justificar los impuestos?",
+        "opciones": {
+          "a": "El organigrama de la empresa.",
+          "b": "El estudio de mercado inicial.",
+          "c": "La factura electrónica.",
+          "d": "El plan de negocios completo."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 36,
+        "tema": "U3 RA 3 · Administración y operación",
+        "pregunta": "Una empresa de práctica deposita el pago de un proveedor en su cuenta del banco. Esto es una:",
+        "opciones": {
+          "a": "Póliza de riesgos del trabajo.",
+          "b": "Patente municipal del negocio.",
+          "c": "Transacción bancaria.",
+          "d": "Carga social de la empresa."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 37,
+        "tema": "U3 RA 3 · Administración y operación",
+        "pregunta": "¿Qué son las cargas sociales?",
+        "opciones": {
+          "a": "El salario mensual que se le paga a la persona dueña del negocio.",
+          "b": "Los aportes que se pagan a la CCSS por cada persona trabajadora.",
+          "c": "El costo de los equipos y muebles que compra la empresa.",
+          "d": "Los impuestos que se pagan por cada producto que el negocio vende."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 38,
+        "tema": "U3 RA 3 · Administración y operación",
+        "pregunta": "¿A cuál institución paga la persona patrona las cargas sociales de su personal?",
+        "opciones": {
+          "a": "A la municipalidad del cantón donde está el negocio.",
+          "b": "Al Ministerio de Salud, que da los permisos sanitarios.",
+          "c": "A la Caja Costarricense de Seguro Social (CCSS).",
+          "d": "Al Registro Nacional, que inscribe las sociedades."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 39,
+        "tema": "U3 RA 3 · Administración y operación",
+        "pregunta": "¿Para qué sirve una póliza de riesgos del trabajo?",
+        "opciones": {
+          "a": "Para reemplazar el salario mensual de cada persona trabajadora.",
+          "b": "Para pagar los impuestos que se generan por las ventas.",
+          "c": "Para proteger a las personas trabajadoras y a la empresa ante accidentes laborales.",
+          "d": "Para cubrir únicamente el robo de la mercadería del negocio."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 40,
+        "tema": "U3 RA 3 · Administración y operación",
+        "pregunta": "Una persona trabajadora se lesiona la mano en el taller. ¿Qué cubre ese accidente si la empresa tiene al día su póliza?",
+        "opciones": {
+          "a": "La patente municipal del negocio.",
+          "b": "La póliza de riesgos del trabajo.",
+          "c": "El organigrama de la empresa.",
+          "d": "El permiso sanitario de salud."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 41,
+        "tema": "U3 RA 3 · Administración y operación",
+        "pregunta": "Una tienda revisa sus datos de ventas y ve que un producto casi no se vende. ¿Qué decisión informada puede tomar?",
+        "opciones": {
+          "a": "Subir el precio de todos los productos sin analizarlos.",
+          "b": "Reducir la compra de ese producto y reforzar los que sí se venden.",
+          "c": "Cerrar el negocio de inmediato porque ese producto no se vende.",
+          "d": "Comprar más unidades de ese producto sin revisar los datos."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 42,
+        "tema": "U3 RA 3 · Administración y operación",
+        "pregunta": "En el proceso administrativo, «dirigir» significa:",
+        "opciones": {
+          "a": "Definir los objetivos que el negocio quiere lograr.",
+          "b": "Revisar los resultados del negocio al final de cada mes.",
+          "c": "Repartir los recursos entre los departamentos de la empresa.",
+          "d": "Guiar y motivar al equipo para que cumpla sus tareas."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 43,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "¿Cuál es la diferencia entre atención al cliente y servicio al cliente?",
+        "opciones": {
+          "a": "El servicio se limita solo al precio; la atención, solo a la publicidad del producto.",
+          "b": "La atención es el trato directo; el servicio es más amplio e integral.",
+          "c": "No existe ninguna diferencia real entre ambos conceptos en la práctica cotidiana.",
+          "d": "La atención ocurre solo después de la venta; el servicio, únicamente antes de ella."
+        },
+        "respuesta_correcta": "b",
+        "origen": "Cuestionario 03 · P16"
+      },
+      {
+        "numero": 44,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "¿Qué representa el triángulo del servicio?",
+        "opciones": {
+          "a": "La relación entre la inversión inicial, el financiamiento y las ganancias esperadas.",
+          "b": "La relación entre el precio, la promoción y la plaza de venta del producto.",
+          "c": "La relación entre la estrategia de servicio, el personal y los sistemas de apoyo.",
+          "d": "La relación entre la oferta, la demanda y el precio de equilibrio del mercado."
+        },
+        "respuesta_correcta": "c",
+        "origen": "Cuestionario 03 · P17"
+      },
+      {
+        "numero": 45,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "¿Qué buscan los acuerdos de niveles de servicio?",
+        "opciones": {
+          "a": "Reducir la variedad de productos ofrecidos por la empresa.",
+          "b": "Eliminar cualquier tipo de comunicación directa con los clientes.",
+          "c": "Definir tiempos y condiciones de respuesta que la empresa se compromete a cumplir.",
+          "d": "Aumentar el precio final del producto sin previo aviso."
+        },
+        "respuesta_correcta": "c",
+        "origen": "Cuestionario 03 · P18"
+      },
+      {
+        "numero": 46,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "¿Qué logra un buen manejo de quejas, reclamos y sugerencias?",
+        "opciones": {
+          "a": "Justificar siempre el error cometido por la empresa frente al cliente afectado.",
+          "b": "Evitar por completo que el cliente exprese alguna inconformidad con el servicio recibido.",
+          "c": "Trasladar la responsabilidad del error cometido a otra área de la empresa.",
+          "d": "Convertir una experiencia negativa en una oportunidad de mejora y fidelización."
+        },
+        "respuesta_correcta": "d",
+        "origen": "Cuestionario 03 · P19"
+      },
+      {
+        "numero": 47,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "¿Para qué se usan los sistemas de gestión de relaciones con los clientes (CRM)?",
+        "opciones": {
+          "a": "Para organizar la información de cada cliente y personalizar la atención.",
+          "b": "Para diseñar la identidad gráfica y el logotipo definitivo de la empresa.",
+          "c": "Para calcular de forma automática todos los impuestos que debe pagar el negocio.",
+          "d": "Para tramitar los permisos sanitarios correspondientes ante el Ministerio de Salud."
+        },
+        "respuesta_correcta": "a",
+        "origen": "Cuestionario 03 · P20"
+      },
+      {
+        "numero": 48,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "¿Qué busca la retención y fidelización de clientes?",
+        "opciones": {
+          "a": "Que la empresa deje de atender a nuevos clientes potenciales.",
+          "b": "Que se reduzca la variedad de canales de comunicación disponibles.",
+          "c": "Que el cliente repita su compra y recomiende el negocio.",
+          "d": "Que el cliente pague siempre el precio más alto disponible."
+        },
+        "respuesta_correcta": "c",
+        "origen": "Cuestionario 03 · P21"
+      },
+      {
+        "numero": 49,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "Una cliente recibe un trato amable en la caja, pero nadie le avisa cuando su pedido se atrasa. ¿Qué falló?",
+        "opciones": {
+          "a": "El servicio, porque no cubrió todo lo que la cliente necesitaba.",
+          "b": "La atención, porque el trato en la caja fue poco amable.",
+          "c": "El precio, porque el producto salió más caro de lo esperado.",
+          "d": "El organigrama, porque la empresa no tenía departamentos."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 50,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "En el triángulo del servicio, ¿qué representan los sistemas?",
+        "opciones": {
+          "a": "Los clientes que compran con frecuencia en el negocio.",
+          "b": "La visión que tiene la empresa sobre cómo quiere atender.",
+          "c": "Las personas que tienen contacto directo con el cliente.",
+          "d": "Los procesos, la tecnología y las políticas que apoyan la atención."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 51,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "En el triángulo del servicio, ¿qué representa la estrategia de servicio?",
+        "opciones": {
+          "a": "La visión de la empresa sobre cómo quiere atender a sus clientes.",
+          "b": "Los precios que cobra la empresa por sus productos.",
+          "c": "Las personas que tienen contacto directo con el cliente.",
+          "d": "Los procesos y la tecnología que apoyan la atención."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 52,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "En el triángulo del servicio, ¿qué representa el personal?",
+        "opciones": {
+          "a": "Los procesos y las políticas internas de la empresa.",
+          "b": "Las personas que tienen contacto directo con el cliente.",
+          "c": "Los proveedores que entregan la mercadería al negocio.",
+          "d": "La visión de la empresa sobre cómo quiere dar el servicio."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 53,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "Cuando un cliente presenta una queja, el primer paso recomendado es:",
+        "opciones": {
+          "a": "Escucharlo con atención y respeto, sin interrumpirlo.",
+          "b": "Ofrecerle un descuento sin conocer el problema.",
+          "c": "Transferirlo a otra persona sin atenderlo.",
+          "d": "Explicarle que está equivocado."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 54,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "Un cliente se queja de que su pedido llegó frío. Después de escucharlo, ¿qué conviene hacer?",
+        "opciones": {
+          "a": "Culpar al repartidor delante del cliente que se quejó.",
+          "b": "Ignorar el reclamo para evitar una discusión con el cliente.",
+          "c": "Decirle que la próxima vez pida otra comida distinta.",
+          "d": "Disculparse y ofrecer una solución, como reponer el pedido."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 55,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "Después de resolver una queja, ¿qué ayuda a fidelizar al cliente?",
+        "opciones": {
+          "a": "Olvidar el caso para no recordarle el problema al cliente.",
+          "b": "Darle seguimiento para confirmar que quedó satisfecho.",
+          "c": "Dejar de contactar al cliente durante un tiempo largo.",
+          "d": "Cobrarle un poco más en su próxima compra para compensar."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 56,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "¿Cuál de estos valores mejora el servicio al cliente?",
+        "opciones": {
+          "a": "La improvisación.",
+          "b": "La honestidad y el respeto.",
+          "c": "La rapidez sin calidad.",
+          "d": "El ocultamiento de errores."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 57,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "Una panadería regala un café a quien compra diez veces y le pregunta su opinión. ¿Qué busca con esto?",
+        "opciones": {
+          "a": "Evitar el pago de las cargas sociales de sus empleados.",
+          "b": "Bajar el costo de los ingredientes que compra la panadería.",
+          "c": "Fidelizar al cliente para que vuelva y la recomiende.",
+          "d": "Reducir la cantidad de personal que trabaja en la panadería."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 58,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "Una empresa mide la satisfacción de sus clientes con una breve encuesta. ¿Para qué le sirve?",
+        "opciones": {
+          "a": "Para registrar la empresa ante el Estado como patrono.",
+          "b": "Para calcular el monto de las cargas sociales del mes.",
+          "c": "Para elegir la forma jurídica más conveniente del negocio.",
+          "d": "Para identificar qué aspectos del servicio debe mejorar."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 59,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "La empresa promete responder todo mensaje en menos de 24 horas. Esto es un ejemplo de:",
+        "opciones": {
+          "a": "Un estudio técnico del negocio.",
+          "b": "Una patente de la municipalidad.",
+          "c": "Una carga social de la empresa.",
+          "d": "Un acuerdo de nivel de servicio."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 60,
+        "tema": "U3 RA 4 · Servicio al cliente",
+        "pregunta": "¿Qué es mejor para una empresa cuando un cliente da una sugerencia?",
+        "opciones": {
+          "a": "Tomarla en cuenta como una oportunidad para mejorar.",
+          "b": "Tomarla como un ataque contra el trabajo del personal.",
+          "c": "Archivarla sin leerla para no perder tiempo en el negocio.",
+          "d": "Pedirle al cliente que no vuelva a dar su opinión."
+        },
+        "respuesta_correcta": "a"
+      }
+    ]
+  }
+}
