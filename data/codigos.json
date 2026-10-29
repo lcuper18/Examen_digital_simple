@@ -48,5 +48,10 @@
     "nombre": "Emprendimiento e innovación · II Periodo (en clase)",
     "archivo": "Emprendimiento_II_Periodo.json",
     "duracion_minutos": 80
+  },
+  "SQA02": {
+    "nombre": "Pruebas de SQA · II Periodo (en clase)",
+    "archivo": "Pruebas_SQA_II_Periodo.json",
+    "duracion_minutos": 80
   }
 }

@@ -1,0 +1,754 @@
+{
+  "examen": {
+    "titulo": "Pruebas de SQA · Examen II Periodo (en clase)",
+    "institucion": "CTP Las Palmitas",
+    "especialidad": "Control de la calidad del software | Pruebas de SQA",
+    "nivel": "Undécimo",
+    "curso_lectivo": 2026,
+    "profesor": "Luis Cuper Fallas Rivas",
+    "instrucciones": "Selecciona la opción correcta en cada pregunta (cada una vale 1 punto). El examen cubre el II Período: trabajo en equipo y transformación tecnológica (U3), pruebas unitarias, pruebas de integración y rendimiento, y pruebas funcionales (U4).",
+    "total_preguntas": 60,
+    "preguntas": [
+      {
+        "numero": 1,
+        "tema": "U3 RA 4 · Trabajo en equipo",
+        "pregunta": "¿Qué es un patrón de comportamiento colaborativo en un equipo de pruebas?",
+        "opciones": {
+          "a": "Un tipo de herramienta comercial utilizada exclusivamente para ejecutar pruebas de carga en sistemas grandes.",
+          "b": "Una forma habitual de actuar que facilita el trabajo conjunto, como comunicar avances de manera oportuna.",
+          "c": "Un procedimiento que elimina por completo la necesidad de comunicación entre integrantes.",
+          "d": "Un documento legal que obliga a cada integrante a firmar un contrato de exclusividad."
+        },
+        "respuesta_correcta": "b",
+        "origen": "Cuestionario 03 · P18"
+      },
+      {
+        "numero": 2,
+        "tema": "U3 RA 4 · Trabajo en equipo",
+        "pregunta": "¿Cuál es una causa frecuente de resistencia al trabajo colaborativo dentro de un equipo?",
+        "opciones": {
+          "a": "La existencia de roles perfectamente definidos y aceptados por todo el equipo.",
+          "b": "El exceso de comunicación clara y oportuna entre todos los integrantes del equipo, incluso sobre los bloqueos de cada tarea.",
+          "c": "La costumbre de reconocer públicamente el aporte individual de cada persona.",
+          "d": "El miedo a perder el control, que lleva a evitar delegar tareas por temor a que el resultado no cumpla los estándares propios."
+        },
+        "respuesta_correcta": "d",
+        "origen": "Cuestionario 03 · P19"
+      },
+      {
+        "numero": 3,
+        "tema": "U3 RA 4 · Trabajo en equipo",
+        "pregunta": "¿Qué implica delegar sin ceder el control en un equipo de pruebas bajo presión?",
+        "opciones": {
+          "a": "Asignar una tarea explicando qué se espera, dar seguimiento con puntos de revisión y confiar en el criterio de quien la recibe.",
+          "b": "Reasignar la tarea a otra persona cada vez que surge la más mínima dificultad.",
+          "c": "Asignar una tarea y dejar de dar cualquier seguimiento hasta la fecha final de entrega.",
+          "d": "Revisar cada detalle del trabajo de la otra persona para evitar cualquier posible error, aunque eso desmotive y retrase al resto del equipo."
+        },
+        "respuesta_correcta": "a",
+        "origen": "Cuestionario 03 · P22"
+      },
+      {
+        "numero": 4,
+        "tema": "U3 RA 4 · Trabajo en equipo",
+        "pregunta": "A tres días de la entrega aparecen varios defectos críticos. ¿Qué actitud ayuda más a trabajar bajo presión?",
+        "opciones": {
+          "a": "Priorizar por impacto y avisar a tiempo los riesgos al equipo.",
+          "b": "Arreglar primero los defectos más fáciles y guardar silencio sobre los demás.",
+          "c": "Esperar a la fecha de entrega para decir cuáles pruebas fallaron.",
+          "d": "Trabajar solo toda la noche para no molestar a nadie del equipo."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 5,
+        "tema": "U3 RA 4 · Trabajo en equipo",
+        "pregunta": "¿Cuál es un ejemplo de comportamiento colaborativo en un equipo de QA?",
+        "opciones": {
+          "a": "Compartir hallazgos y pedir retroalimentación al equipo.",
+          "b": "Trabajar aislado para no depender de nadie, aunque se atrase el grupo.",
+          "c": "Culpar a la persona programadora por cada error que aparece en pruebas.",
+          "d": "Ocultar un defecto para evitar una discusión con la gente de desarrollo."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 6,
+        "tema": "U3 RA 4 · Trabajo en equipo",
+        "pregunta": "Nadie sabe quién prueba el módulo de pagos, y dos personas hicieron las mismas pruebas. ¿Qué causa de resistencia al trabajo en equipo se ve aquí?",
+        "opciones": {
+          "a": "El reconocimiento público del trabajo de todos.",
+          "b": "El exceso de comunicación entre integrantes.",
+          "c": "La confianza total entre las personas del equipo.",
+          "d": "Los roles poco claros."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 7,
+        "tema": "U3 RA 5 · Transformación tecnológica",
+        "pregunta": "¿Qué implica la transformación digital de una organización, según el material?",
+        "opciones": {
+          "a": "Contratar una sola herramienta comercial de pruebas para toda la organización y capacitar al personal en su uso durante el año.",
+          "b": "Integrar tecnologías digitales en todas las áreas de trabajo, cambiando también la cultura y la forma de generar valor.",
+          "c": "Eliminar por completo cualquier proceso manual sin cambiar la cultura organizacional.",
+          "d": "Reemplazar únicamente las computadoras de escritorio por equipos portátiles más modernos."
+        },
+        "respuesta_correcta": "b",
+        "origen": "Cuestionario 03 · P23"
+      },
+      {
+        "numero": 8,
+        "tema": "U3 RA 5 · Transformación tecnológica",
+        "pregunta": "¿Qué busca una agenda digital nacional, como la que impulsan distintos países incluida Costa Rica?",
+        "opciones": {
+          "a": "Eliminar toda regulación sobre protección de datos personales y ciberseguridad.",
+          "b": "Garantizar que solo las grandes empresas puedan acceder a tecnologías digitales, dejando por fuera a las comunidades con menos recursos.",
+          "c": "Definir metas concretas para avanzar en conectividad, gobierno digital y formación de talento tecnológico.",
+          "d": "Prohibir el acceso a internet en las zonas rurales para reducir la brecha digital."
+        },
+        "respuesta_correcta": "c",
+        "origen": "Cuestionario 03 · P25"
+      },
+      {
+        "numero": 9,
+        "tema": "U3 RA 5 · Transformación tecnológica",
+        "pregunta": "Una planta instala sensores conectados que avisan cuando se desperdicia agua o energía. Esta tecnología es:",
+        "opciones": {
+          "a": "Una prueba de regresión automática.",
+          "b": "Un patrón de comportamiento colaborativo.",
+          "c": "El Internet de las cosas (IoT).",
+          "d": "Una herramienta comercial de pruebas de carga."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 10,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "¿Qué significa que el código de un componente tenga buena legibilidad?",
+        "opciones": {
+          "a": "Que resulta fácil de comprender para otra persona, gracias a nombres claros y una estructura ordenada.",
+          "b": "Que el código no necesita ningún tipo de prueba unitaria para ser confiable.",
+          "c": "Que el código ocupa la menor cantidad de líneas posible sin importar su claridad.",
+          "d": "Que el código está escrito exclusivamente en un solo lenguaje de programación, sin importar si es claro o no para otras personas."
+        },
+        "respuesta_correcta": "a",
+        "origen": "Cuestionario 04 · P3"
+      },
+      {
+        "numero": 11,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "¿En qué consiste la refactorización de un componente de software?",
+        "opciones": {
+          "a": "En eliminar todas las pruebas unitarias existentes antes de continuar con el desarrollo del resto de las funciones del sistema.",
+          "b": "En modificar la estructura interna del código sin alterar su comportamiento externo, para hacerlo más legible y simple.",
+          "c": "En reescribir por completo el sistema desde cero utilizando un lenguaje de programación distinto.",
+          "d": "En agregar nuevas funcionalidades al sistema sin modificar el código ya existente."
+        },
+        "respuesta_correcta": "b",
+        "origen": "Cuestionario 04 · P4"
+      },
+      {
+        "numero": 12,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "¿Qué relación existe entre contar con pruebas unitarias previas y refactorizar código?",
+        "opciones": {
+          "a": "No existe ninguna relación entre ambos conceptos dentro del desarrollo de software, pues se hacen en etapas totalmente distintas.",
+          "b": "Las pruebas unitarias permiten refactorizar con confianza, detectando de inmediato si un cambio rompe el comportamiento esperado.",
+          "c": "Las pruebas unitarias impiden por completo que el código pueda modificarse en el futuro.",
+          "d": "La refactorización siempre elimina automáticamente todas las pruebas unitarias existentes."
+        },
+        "respuesta_correcta": "b",
+        "origen": "Cuestionario 04 · P5"
+      },
+      {
+        "numero": 13,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "En el patrón AAA, ¿qué se hace durante la fase de organizar (Arrange)?",
+        "opciones": {
+          "a": "Se documenta el resultado final de la prueba en un manual técnico para el equipo de QA.",
+          "b": "Se compara el resultado obtenido con el resultado esperado para determinar si la prueba pasa.",
+          "c": "Se ejecuta directamente la acción o el método que es objeto de la prueba unitaria, justo antes de preparar cualquier dato.",
+          "d": "Se preparan los datos de entrada, objetos y condiciones iniciales que necesita la prueba antes de ejecutarse."
+        },
+        "respuesta_correcta": "d",
+        "origen": "Cuestionario 04 · P7"
+      },
+      {
+        "numero": 14,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "En el patrón AAA, ¿qué ocurre durante la fase de afirmar (Assert)?",
+        "opciones": {
+          "a": "Se preparan los datos de entrada y las condiciones iniciales que la prueba necesitará.",
+          "b": "Se decide qué estrategia de integración se usará para combinar los componentes.",
+          "c": "Se compara el resultado real obtenido contra el resultado esperado, determinando si la prueba pasa o falla.",
+          "d": "Se ejecuta la acción o el método que se desea probar sobre el componente de software, usando los datos ya preparados."
+        },
+        "respuesta_correcta": "c",
+        "origen": "Cuestionario 04 · P8"
+      },
+      {
+        "numero": 15,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "Una persona estudiante prueba la función sumar(a, b) de su programa sin ejecutar el resto de la aplicación. ¿Qué tipo de prueba hace?",
+        "opciones": {
+          "a": "Una prueba unitaria.",
+          "b": "Una prueba de aceptación.",
+          "c": "Una prueba de rendimiento.",
+          "d": "Una prueba de integración."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 16,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "En el patrón AAA, ¿qué se hace en la fase de actuar (Act)?",
+        "opciones": {
+          "a": "Se compara el resultado con el valor esperado.",
+          "b": "Se escribe el reporte del defecto encontrado.",
+          "c": "Se preparan los datos de entrada de la prueba.",
+          "d": "Se ejecuta la función que se quiere probar."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 17,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "En una prueba de calcularPromedio, se crea la lista [8, 10] y se espera que el resultado sea 9. ¿Qué parte del patrón AAA es crear la lista [8, 10]?",
+        "opciones": {
+          "a": "Afirmar (Assert), porque se compara el resultado.",
+          "b": "Refactorizar, porque se cambia la estructura del código.",
+          "c": "Organizar (Arrange).",
+          "d": "Actuar (Act), porque se ejecuta la función."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 18,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "En una prueba se escribe: «el resultado debe ser igual a 9». ¿A qué fase del patrón AAA corresponde esa línea?",
+        "opciones": {
+          "a": "Actuar (Act).",
+          "b": "Refactorizar el código.",
+          "c": "Organizar (Arrange).",
+          "d": "Afirmar (Assert)."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 19,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "¿En qué orden se ejecutan las fases del patrón AAA?",
+        "opciones": {
+          "a": "Organizar, actuar y afirmar.",
+          "b": "Afirmar, actuar y organizar.",
+          "c": "Organizar, afirmar y actuar.",
+          "d": "Actuar, afirmar y organizar."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 20,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "Una función tiene 200 líneas y hace cinco tareas distintas. ¿Qué conviene hacer para poder probarla mejor?",
+        "opciones": {
+          "a": "Refactorizarla en funciones más pequeñas sin cambiar su resultado.",
+          "b": "Agregarle más tareas todavía para que la función sea más completa y larga.",
+          "c": "Cambiarla a otro lenguaje de programación para que se ejecute más rápido.",
+          "d": "Borrar las pruebas unitarias para que ya no estorben al modificar el código."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 21,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "Una variable se llama x1 y otra y2 y nadie entiende qué guardan. ¿Qué mejora la legibilidad del código?",
+        "opciones": {
+          "a": "Escribir todo el programa en una sola línea para que sea compacto.",
+          "b": "Usar nombres más cortos todavía, como a y b, para ahorrar espacio.",
+          "c": "Usar nombres claros, como totalCompra y descuentoAplicado.",
+          "d": "Quitar los espacios y las líneas en blanco para ahorrar espacio."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 22,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "Después de refactorizar una función, ¿cómo se comprueba que su comportamiento no cambió?",
+        "opciones": {
+          "a": "Esperando a que el cliente reporte algún error en producción.",
+          "b": "Borrando las pruebas y confiando en que todo sigue igual que antes.",
+          "c": "Cambiando el resultado esperado de cada prueba para que pasen.",
+          "d": "Ejecutando de nuevo las pruebas unitarias existentes."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 23,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "¿Cuál de estas es una buena práctica al escribir pruebas unitarias?",
+        "opciones": {
+          "a": "Que una prueba use los datos que dejó la anterior.",
+          "b": "Que la prueba requiera pasos manuales cada vez.",
+          "c": "Que cada prueba sea independiente de las demás.",
+          "d": "Que una sola prueba revise diez funciones a la vez."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 24,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "Una prueba unitaria falla después de un cambio en el código. ¿Qué conviene hacer primero?",
+        "opciones": {
+          "a": "Culpar a la persona que escribió la prueba sin revisar más.",
+          "b": "Borrar la prueba y continuar con la siguiente tarea del día.",
+          "c": "Revisar si el defecto está en el código o en la prueba.",
+          "d": "Desactivar la prueba para que el reporte salga todo en verde."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 25,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "¿Por qué las pruebas unitarias sirven como «documentación viva»?",
+        "opciones": {
+          "a": "Porque muestran cómo debe comportarse el código.",
+          "b": "Porque explican el diseño gráfico de la interfaz.",
+          "c": "Porque reemplazan los requisitos que entrega el cliente.",
+          "d": "Porque se escriben solo al final de todo el proyecto."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 26,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "¿Qué hace una herramienta como JUnit o TestNG?",
+        "opciones": {
+          "a": "Calcula el sueldo mensual del equipo de desarrollo.",
+          "b": "Ejecuta las pruebas e informa cuáles pasaron o fallaron.",
+          "c": "Diseña la interfaz gráfica de la aplicación en el navegador.",
+          "d": "Escribe el código del programa de forma automática y completa."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 27,
+        "tema": "U4 RA 1 · Pruebas unitarias",
+        "pregunta": "Un equipo tiene todas sus pruebas unitarias en verde, pero el sistema falla al unir dos módulos. ¿Qué limitación de las pruebas unitarias se muestra?",
+        "opciones": {
+          "a": "No detectan ningún defecto que exista dentro de un solo módulo.",
+          "b": "No garantizan que los módulos funcionen bien al integrarse.",
+          "c": "Impiden que el equipo haga cambios en el código más adelante.",
+          "d": "Solo funcionan en sistemas que ya fueron publicados al público."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 28,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "¿Qué caracteriza a la estrategia de integración descendente (top-down)?",
+        "opciones": {
+          "a": "Se integran todos los componentes del sistema al mismo tiempo, sin ningún orden previo y probando solo el conjunto final.",
+          "b": "Se prueban los componentes de forma gradual, uno o pocos a la vez, sin ningún módulo temporal.",
+          "c": "Se integran primero los módulos de nivel más bajo, usando controladores temporales (drivers).",
+          "d": "Se integran primero los módulos de nivel superior, usando módulos temporales (stubs) para simular los inferiores."
+        },
+        "respuesta_correcta": "d",
+        "origen": "Cuestionario 04 · P13"
+      },
+      {
+        "numero": 29,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "¿Qué caracteriza a la estrategia de integración ascendente (bottom-up)?",
+        "opciones": {
+          "a": "Se prueba únicamente el rendimiento del sistema bajo condiciones de carga elevada.",
+          "b": "Se integran primero los módulos de nivel más bajo, usando controladores temporales (drivers) que simulan los superiores.",
+          "c": "Se integran todos los componentes del sistema al mismo tiempo, sin un orden incremental previo ni módulos temporales de apoyo.",
+          "d": "Se integran primero los módulos de nivel superior, simulando los inferiores con módulos temporales."
+        },
+        "respuesta_correcta": "b",
+        "origen": "Cuestionario 04 · P14"
+      },
+      {
+        "numero": 30,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "¿Qué caracteriza a la estrategia de integración Big Bang?",
+        "opciones": {
+          "a": "Solo se integran los módulos de nivel superior mientras se simulan los niveles inferiores.",
+          "b": "Los componentes se integran de forma gradual, verificando cada uno antes de continuar con el siguiente.",
+          "c": "Solo se integran los módulos de nivel inferior mientras se simulan los niveles superiores.",
+          "d": "Todos los componentes del sistema se integran al mismo tiempo y se prueban en conjunto, sin un orden previo."
+        },
+        "respuesta_correcta": "d",
+        "origen": "Cuestionario 04 · P16"
+      },
+      {
+        "numero": 31,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "Antes de ejecutar pruebas de rendimiento, ¿qué se debe definir y preparar?",
+        "opciones": {
+          "a": "Solamente el nombre de la persona responsable de firmar el contrato de licencia.",
+          "b": "Criterios claros de aceptación y un entorno de ejecución similar a las condiciones reales de producción.",
+          "c": "Exclusivamente el manual de usuario final del sistema que se va a probar.",
+          "d": "Únicamente el color y el diseño visual de la interfaz gráfica del sistema, sin importar su velocidad de respuesta ni su estabilidad."
+        },
+        "respuesta_correcta": "b",
+        "origen": "Cuestionario 04 · P18"
+      },
+      {
+        "numero": 32,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "¿Cuál es la diferencia clave entre lo que miden las pruebas de integración y las de rendimiento?",
+        "opciones": {
+          "a": "El rendimiento mide solamente la cantidad de líneas de código que tiene el sistema.",
+          "b": "La integración mide únicamente el costo económico del proyecto de software completo.",
+          "c": "Ambas miden exactamente lo mismo, sin ninguna diferencia relevante entre sí, porque se ejecutan siempre en la misma etapa del proyecto.",
+          "d": "La integración mide la corrección funcional del flujo entre módulos; el rendimiento mide tiempos de respuesta y uso de recursos."
+        },
+        "respuesta_correcta": "d",
+        "origen": "Cuestionario 04 · P20"
+      },
+      {
+        "numero": 33,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "En la integración descendente, ¿para qué sirven los stubs?",
+        "opciones": {
+          "a": "Para simular módulos de nivel inferior que aún no existen.",
+          "b": "Para registrar los defectos que se encuentran.",
+          "c": "Para medir el tiempo de respuesta del sistema bajo carga alta.",
+          "d": "Para reemplazar al módulo principal de la aplicación."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 34,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "En la integración ascendente, ¿para qué sirven los drivers?",
+        "opciones": {
+          "a": "Para simular los módulos superiores que llaman a los de abajo.",
+          "b": "Para simular módulos inferiores que todavía no existen en el sistema.",
+          "c": "Para medir cuántos usuarios soporta el sistema.",
+          "d": "Para guardar los resultados de las pruebas unitarias."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 35,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "Un equipo prueba primero el menú principal de su app, simulando con stubs las pantallas que aún no existen. ¿Qué estrategia usa?",
+        "opciones": {
+          "a": "Integración ascendente, porque empieza por abajo.",
+          "b": "Prueba de rendimiento, porque mide la velocidad.",
+          "c": "Integración descendente.",
+          "d": "Integración Big Bang, porque une todo a la vez."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 36,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "Un equipo prueba primero el módulo que guarda los datos y usa drivers para simular las pantallas. ¿Qué estrategia usa?",
+        "opciones": {
+          "a": "Integración Big Bang.",
+          "b": "Prueba de regresión.",
+          "c": "Integración ascendente.",
+          "d": "Integración descendente."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 37,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "Un equipo une primero el carrito con el módulo de descuentos, lo prueba, y después agrega el módulo de pago. ¿Qué estrategia aplica?",
+        "opciones": {
+          "a": "Prueba exploratoria, porque no sigue un guion fijo.",
+          "b": "Integración incremental.",
+          "c": "Prueba de caja blanca, porque revisa el código interno.",
+          "d": "Integración Big Bang, porque une todo al mismo tiempo."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 38,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "¿Cuál es la desventaja principal de la integración Big Bang?",
+        "opciones": {
+          "a": "No permite probar el sistema completo en ningún momento.",
+          "b": "Necesita demasiados módulos temporales para funcionar bien.",
+          "c": "Es difícil saber en cuál módulo está el defecto.",
+          "d": "Solo se puede aplicar a sistemas muy pequeños de pocos módulos."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 39,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "¿Cuál es una ventaja de integrar de forma incremental, frente a hacerlo todo de una vez?",
+        "opciones": {
+          "a": "Se elimina la necesidad de planificar el orden de integración.",
+          "b": "Se integran todos los módulos al mismo tiempo para ahorrar tiempo.",
+          "c": "Es más fácil ubicar los defectos, porque entra un módulo a la vez.",
+          "d": "Se evita escribir cualquier prueba antes de entregar el sistema."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 40,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "Dos módulos funcionan bien por separado, pero uno envía la fecha como texto y el otro la espera como número. ¿Qué tipo de prueba detecta este problema?",
+        "opciones": {
+          "a": "Una prueba de rendimiento.",
+          "b": "Una prueba de integración.",
+          "c": "Una prueba unitaria de uno solo de los módulos.",
+          "d": "Una prueba exploratoria de interfaz."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 41,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "Una app de tienda debe cargar el catálogo en menos de 3 segundos con 500 personas conectadas. ¿Qué tipo de prueba verifica esto?",
+        "opciones": {
+          "a": "Una prueba de aceptación del color de la interfaz.",
+          "b": "Una prueba de rendimiento.",
+          "c": "Una prueba de regresión.",
+          "d": "Una prueba unitaria."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 42,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "¿Cuál es un ejemplo de criterio de aceptación para una prueba de rendimiento?",
+        "opciones": {
+          "a": "El color principal de la interfaz y el tipo de letra usado.",
+          "b": "El nombre de la persona que programó cada módulo del sistema web.",
+          "c": "El número de comentarios que hay dentro del código fuente.",
+          "d": "El tiempo máximo de respuesta con cierta cantidad de usuarios."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 43,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "¿Por qué el entorno de una prueba de rendimiento debe parecerse al de producción?",
+        "opciones": {
+          "a": "Porque en producción siempre se prueba todo directamente en vivo.",
+          "b": "Porque así los resultados reflejan lo que vivirán las personas reales.",
+          "c": "Porque así ya no hace falta definir los criterios de aceptación.",
+          "d": "Porque el entorno no influye para nada en los resultados de la prueba."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 44,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "¿Qué miden las pruebas de rendimiento, además del tiempo de respuesta?",
+        "opciones": {
+          "a": "El estilo que se usó para nombrar las variables y funciones del programa.",
+          "b": "La cantidad de colores que tiene la interfaz del sistema.",
+          "c": "El uso de recursos, como memoria y procesador, y la estabilidad.",
+          "d": "La cantidad de personas que integran el equipo de desarrollo."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 45,
+        "tema": "U4 RA 2 · Integración y rendimiento",
+        "pregunta": "Una app pasa todas sus pruebas de integración, pero se vuelve muy lenta cuando entran 2000 personas a la vez. ¿Qué tipo de prueba faltaba?",
+        "opciones": {
+          "a": "Una prueba exploratoria de interfaz.",
+          "b": "Una prueba unitaria de cada función.",
+          "c": "Una prueba de rendimiento.",
+          "d": "Una prueba de integración descendente."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 46,
+        "tema": "U4 RA 3 · Pruebas funcionales",
+        "pregunta": "¿Qué caracteriza a una prueba funcional o de caja negra?",
+        "opciones": {
+          "a": "Se ejecuta únicamente antes de que el componente cuente con alguna prueba unitaria.",
+          "b": "Verifica exclusivamente la estructura interna del código fuente línea por línea.",
+          "c": "Solo puede aplicarse a sistemas que no tienen ninguna interfaz visible para el usuario.",
+          "d": "Verifica el comportamiento del software desde el punto de vista del usuario, sin conocer la lógica interna del código."
+        },
+        "respuesta_correcta": "d",
+        "origen": "Cuestionario 04 · P21"
+      },
+      {
+        "numero": 47,
+        "tema": "U4 RA 3 · Pruebas funcionales",
+        "pregunta": "¿Qué verifican las pruebas de interfaz dentro de las pruebas funcionales?",
+        "opciones": {
+          "a": "Que los elementos visuales y de interacción del sistema funcionen correctamente y sean consistentes con el diseño.",
+          "b": "Que el código fuente del sistema esté libre de cualquier posible vulnerabilidad de seguridad.",
+          "c": "Que el servidor de aplicaciones tenga la capacidad suficiente para soportar miles de usuarios.",
+          "d": "Que el proveedor de la herramienta comercial ofrezca soporte técnico las 24 horas del día."
+        },
+        "respuesta_correcta": "a",
+        "origen": "Cuestionario 04 · P25"
+      },
+      {
+        "numero": 48,
+        "tema": "U4 RA 3 · Pruebas funcionales",
+        "pregunta": "¿En qué consisten las pruebas exploratorias?",
+        "opciones": {
+          "a": "Se ejecutan exclusivamente de forma automática mediante scripts programados con anticipación.",
+          "b": "Confirman únicamente que los cambios recientes no afectaron funcionalidades ya existentes.",
+          "c": "Se ejecutan sin un guion estricto previo, explorando el sistema de manera libre para descubrir defectos no anticipados.",
+          "d": "Siguen siempre un manual técnico detallado que no permite ninguna variación durante la ejecución."
+        },
+        "respuesta_correcta": "c",
+        "origen": "Cuestionario 04 · P26"
+      },
+      {
+        "numero": 49,
+        "tema": "U4 RA 3 · Pruebas funcionales",
+        "pregunta": "¿Qué confirman las pruebas de regresión?",
+        "opciones": {
+          "a": "Que los cambios recientes en el software no hayan afectado funcionalidades que ya trabajaban correctamente.",
+          "b": "Que el sistema cumple por primera vez con todos los requisitos funcionales especificados.",
+          "c": "Que la interfaz gráfica del sistema resulta agradable y sencilla para el usuario final.",
+          "d": "Que el proveedor de la herramienta ha renovado la licencia comercial correspondiente."
+        },
+        "respuesta_correcta": "a",
+        "origen": "Cuestionario 04 · P27"
+      },
+      {
+        "numero": 50,
+        "tema": "U4 RA 3 · Pruebas funcionales",
+        "pregunta": "¿Qué debe incluir el registro de una incidencia detectada durante una prueba funcional?",
+        "opciones": {
+          "a": "Exclusivamente el costo estimado de la licencia comercial de la herramienta de prueba.",
+          "b": "Únicamente el nombre de la persona que escribió el código donde se originó el defecto.",
+          "c": "Solamente la fecha en que se firmó el contrato de licencia de la herramienta utilizada.",
+          "d": "Los pasos para reproducirla, el resultado obtenido, el resultado esperado y su nivel de severidad."
+        },
+        "respuesta_correcta": "d",
+        "origen": "Cuestionario 04 · P29"
+      },
+      {
+        "numero": 51,
+        "tema": "U4 RA 3 · Pruebas funcionales",
+        "pregunta": "Una persona prueba un formulario de registro solo con lo que ve en pantalla, sin abrir el código. ¿Qué tipo de prueba aplica?",
+        "opciones": {
+          "a": "Una prueba de caja negra.",
+          "b": "Una revisión de legibilidad del código.",
+          "c": "Una prueba unitaria.",
+          "d": "Una prueba de integración ascendente."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 52,
+        "tema": "U4 RA 3 · Pruebas funcionales",
+        "pregunta": "En una prueba de caja negra, ¿en qué se basa la persona que prueba?",
+        "opciones": {
+          "a": "En la estructura interna de las funciones y de sus variables.",
+          "b": "En los requisitos y en el comportamiento que se puede observar.",
+          "c": "En el nombre de las variables y las funciones del programa.",
+          "d": "En la lectura del código fuente, línea por línea, en cada función."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 53,
+        "tema": "U4 RA 3 · Pruebas funcionales",
+        "pregunta": "Tras cambiar el módulo de descuentos, el equipo vuelve a probar el login y el carrito para ver que sigan funcionando. ¿Qué tipo de prueba es?",
+        "opciones": {
+          "a": "Una prueba de regresión.",
+          "b": "Una prueba unitaria de una sola función.",
+          "c": "Una prueba de rendimiento.",
+          "d": "Una prueba exploratoria."
+        },
+        "respuesta_correcta": "a"
+      },
+      {
+        "numero": 54,
+        "tema": "U4 RA 3 · Pruebas funcionales",
+        "pregunta": "Una persona prueba una app nueva sin guion: abre pantallas, prueba combinaciones y anota lo raro que encuentra. ¿Qué tipo de prueba es?",
+        "opciones": {
+          "a": "Una prueba de rendimiento.",
+          "b": "Una prueba de integración Big Bang.",
+          "c": "Una prueba de regresión.",
+          "d": "Una prueba exploratoria."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 55,
+        "tema": "U4 RA 3 · Pruebas funcionales",
+        "pregunta": "¿Qué verifica una prueba de interfaz?",
+        "opciones": {
+          "a": "Que el servidor soporte miles de usuarios conectados a la vez.",
+          "b": "Que los botones y menús funcionen y se vean según el diseño.",
+          "c": "Que las bases de datos tengan un buen respaldo automático.",
+          "d": "Que el código no tenga errores de sintaxis ni advertencias."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 56,
+        "tema": "U4 RA 3 · Pruebas funcionales",
+        "pregunta": "Al presionar «Pagar», la app se cierra y el cliente pierde su carrito. Para la gestión de incidencias, ¿qué severidad tiene este defecto?",
+        "opciones": {
+          "a": "Baja, porque solo afecta a un botón.",
+          "b": "Alta, porque impide completar una compra.",
+          "c": "Ninguna, porque el cliente puede volver a intentarlo.",
+          "d": "Baja, porque ocurre una sola vez."
+        },
+        "respuesta_correcta": "b"
+      },
+      {
+        "numero": 57,
+        "tema": "U4 RA 3 · Pruebas funcionales",
+        "pregunta": "En un reporte de incidencia, ¿qué es el «resultado esperado»?",
+        "opciones": {
+          "a": "El tiempo que tardó el equipo en terminar de probar todo.",
+          "b": "Lo que el sistema hizo en realidad cuando ocurrió la falla.",
+          "c": "Lo que el sistema debería hacer según los requisitos.",
+          "d": "El nombre de quien programó la función que presentó el error."
+        },
+        "respuesta_correcta": "c"
+      },
+      {
+        "numero": 58,
+        "tema": "U4 RA 3 · Pruebas funcionales",
+        "pregunta": "En un reporte de incidencia, ¿para qué sirven los pasos para reproducir el defecto?",
+        "opciones": {
+          "a": "Para evitar que el defecto se registre.",
+          "b": "Para decidir cuánto se le paga al equipo de QA.",
+          "c": "Para medir cuánta memoria usa el sistema.",
+          "d": "Para que otra persona pueda repetir el error."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 59,
+        "tema": "U4 RA 3 · Pruebas funcionales",
+        "pregunta": "¿Cuál es el mejor título para una incidencia?",
+        "opciones": {
+          "a": "«Error en la app, necesito que revisen todo el sistema de inmediato».",
+          "b": "«Problema con el sistema, es urgente que alguien lo vea hoy mismo».",
+          "c": "«No sirve, la aplicación se comporta de forma rara y no se entiende».",
+          "d": "«Al aplicar el cupón de 10 %, el total del carrito sale mayor»."
+        },
+        "respuesta_correcta": "d"
+      },
+      {
+        "numero": 60,
+        "tema": "U4 RA 3 · Pruebas funcionales",
+        "pregunta": "¿Por qué conviene registrar y dar seguimiento a las incidencias hasta que se verifiquen como resueltas?",
+        "opciones": {
+          "a": "Para saber cuáles siguen pendientes y confirmar su corrección.",
+          "b": "Para ocultar los errores al cliente hasta la fecha de entrega.",
+          "c": "Para que nadie vuelva a probar el sistema después de corregirlo.",
+          "d": "Para cobrar más por el servicio de pruebas al cliente final."
+        },
+        "respuesta_correcta": "a"
+      }
+    ]
+  }
+}
