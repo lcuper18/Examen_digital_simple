@@ -18,8 +18,8 @@ router = APIRouter(
 PONDERACIONES = {
     "trabajo_cotidiano": 25,
     "tareas": 10,
-    "prueba01": 20,
-    "prueba02": 25,
+    "prueba01": 22.5,
+    "prueba02": 22.5,
     "proyecto": 15,
     "asistencia": 5,
 }

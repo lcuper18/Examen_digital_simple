@@ -38,7 +38,7 @@ def test_nota_final_ponderada_y_guardado(client):
     data = client.get(f"/api/docente/notas?materia_id={mid}", headers=hd).json()
     por_id = {n["estudiante_id"]: n for n in data["notas"]}
     assert por_id[1]["nota_final"] == 100 and por_id[1]["completa"]
-    assert por_id[2]["nota_final"] == 10.0 and not por_id[2]["completa"]  # 50 * 20 %
+    assert por_id[2]["nota_final"] == 11.2 and not por_id[2]["completa"]  # 50 * 22.5 % = 11.25
     assert data["resumen"]["completas"] == 1 and data["resumen"]["promedio"] == 100
 
 
