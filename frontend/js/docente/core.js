@@ -4,7 +4,7 @@ const Panel = {
   modulos: [],
   moduloActivo: null,
   temporizadorSesion: null,
-  ORDEN: ['resumen', 'resultados', 'estudiantes', 'examenes', 'notas', 'reportes', 'bitacora', 'ajustes'],
+  ORDEN: ['resumen', 'resultados', 'estudiantes', 'examenes', 'asistencia', 'notas', 'reportes', 'bitacora', 'ajustes'],
 };
 
 const $ = (id) => document.getElementById(id);

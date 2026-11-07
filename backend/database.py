@@ -280,6 +280,29 @@ def init_db() -> int:
                 FOREIGN KEY (materia_id) REFERENCES materias(id)
             )
         """)
+        # Asistencia por lección: una sesión (fecha) por materia y el estado de cada estudiante
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS sesiones (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                materia_id INTEGER NOT NULL,
+                fecha TEXT NOT NULL,
+                lecciones INTEGER NOT NULL DEFAULT 1,
+                tema TEXT,
+                UNIQUE (materia_id, fecha),
+                FOREIGN KEY (materia_id) REFERENCES materias(id)
+            )
+        """)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS asistencia (
+                sesion_id INTEGER NOT NULL,
+                estudiante_id INTEGER NOT NULL,
+                estado TEXT NOT NULL,
+                observacion TEXT,
+                PRIMARY KEY (sesion_id, estudiante_id),
+                FOREIGN KEY (sesion_id) REFERENCES sesiones(id) ON DELETE CASCADE,
+                FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id)
+            )
+        """)
         _agregar_columnas(cursor, "examenes_config", {
             "materia_id": "INTEGER",  # materia y componente (prueba01/prueba02) donde se importa la nota
             "componente": "TEXT",
