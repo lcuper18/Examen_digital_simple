@@ -26,10 +26,10 @@ echo "=============================================="
 echo "  SERVIDOR EXAMEN DIGITAL v2"
 echo "=============================================="
 echo ""
-echo "  Acceso local:   http://localhost:8000"
-echo "  Acceso red:     http://$IP:8000"
+echo "  Acceso local:   http://localhost:8001"
+echo "  Acceso red:     http://$IP:8001"
 echo ""
 echo "  Presiona Ctrl+C para detener"
 echo "=============================================="
 
-uvicorn backend.main:app --host 0.0.0.0 --port 8000
+uvicorn backend.main:app --host 0.0.0.0 --port 8001

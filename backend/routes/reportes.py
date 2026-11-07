@@ -13,16 +13,15 @@ from openpyxl.utils import get_column_letter
 
 from backend import barajado, database, security
 from backend.routes.examenes import _get_examen, load_codigos
-from backend.routes.notas import NOTA_MINIMA, PONDERACIONES, _filas
+from backend.routes.notas import COMPONENTES, ETIQUETAS as ETIQUETAS_NOTA, nota_minima, _filas
 
 router = APIRouter(
     prefix="/api/docente/reportes", tags=["reportes"], dependencies=[Depends(security.require_docente)]
 )
 
-ETIQUETAS_NOTA = {
-    "trabajo_cotidiano": "Trabajo cotidiano", "tareas": "Tareas", "prueba01": "Prueba 01",
-    "prueba02": "Prueba 02", "proyecto": "Proyecto", "asistencia": "Asistencia",
-}
+def _institucion() -> str:
+    with database.get_db_context() as conn:
+        return database.leer_ajustes(conn)["institucion"]
 
 
 def _nota(puntuacion: int, total: int) -> float:
@@ -66,6 +65,7 @@ def desglose_por_tema(preguntas: list[dict[str, Any]], semilla: int, respuestas:
 @router.get("/boleta/{estudiante_id}")
 def boleta_estudiante(estudiante_id: int) -> dict[str, Any]:
     """Boleta consolidada: exámenes presentados (con desglose por tema) y notas por materia."""
+    minima = nota_minima()
     with database.get_db_context() as conn:
         est = conn.execute("SELECT * FROM estudiantes WHERE id = ?", (estudiante_id,)).fetchone()
         if est is None:
@@ -80,28 +80,27 @@ def boleta_estudiante(estudiante_id: int) -> dict[str, Any]:
         notas = []
         for m in materias:
             fila = next((f for f in _filas(conn, m) if f["estudiante_id"] == estudiante_id), None)
-            if fila and any(fila[c] is not None for c in PONDERACIONES):
+            if fila and any(fila[c] is not None for c in COMPONENTES):
                 notas.append({
                     "materia": m["nombre"], "periodo": m["periodo"],
-                    **{c: fila[c] for c in PONDERACIONES},
+                    **{c: fila[c] for c in COMPONENTES},
                     "completa": fila["completa"], "nota_final": fila["nota_final"],
                 })
 
     codigos = load_codigos()
-    examenes, institucion = [], ""
+    examenes, institucion = [], _institucion()
     for i in intentos:
         if i["codigo_examen"] not in codigos:
             continue
         info, examen = _get_examen(i["codigo_examen"])
-        institucion = institucion or examen.get("institucion", "")
         examenes.append({
             "codigo": i["codigo_examen"], "nombre": info["nombre"], "fecha": i["fecha_fin"],
             "puntuacion": i["puntuacion"], "total": i["total"], "nota": _nota(i["puntuacion"], i["total"]),
-            "aprobado": _nota(i["puntuacion"], i["total"]) >= NOTA_MINIMA,
+            "aprobado": _nota(i["puntuacion"], i["total"]) >= minima,
             "temas": desglose_por_tema(examen["preguntas"], i["semilla"], json.loads(i["respuestas_json"])),
         })
     return {
-        "ok": True, "institucion": institucion, "nota_minima": NOTA_MINIMA,
+        "ok": True, "institucion": institucion, "nota_minima": minima,
         "estudiante": {
             "id": est["id"], "nombre": f"{est['nombre']} {est['apellido1']} {est['apellido2'] or ''}".strip(),
             "cedula": est["cedula"], "seccion": est["seccion"], "username": est["username"],
@@ -113,6 +112,7 @@ def boleta_estudiante(estudiante_id: int) -> dict[str, Any]:
 # ---------- Reporte por examen ----------
 
 def _datos_examen(codigo: str, seccion: str | None) -> dict[str, Any]:
+    minima = nota_minima()
     codigo = codigo.upper()
     info, examen = _get_examen(codigo)
     with database.get_db_context() as conn:
@@ -138,8 +138,8 @@ def _datos_examen(codigo: str, seccion: str | None) -> dict[str, Any]:
         "promedio": round(statistics.mean(notas), 1) if notas else None,
         "mediana": round(statistics.median(notas), 1) if notas else None,
         "maxima": max(notas) if notas else None, "minima": min(notas) if notas else None,
-        "aprobados": sum(n >= NOTA_MINIMA for n in notas),
-        "reprobados": sum(n < NOTA_MINIMA for n in notas),
+        "aprobados": sum(n >= minima for n in notas),
+        "reprobados": sum(n < minima for n in notas),
     }
     histograma = [{"desde": d, "hasta": d + 9 if d < 90 else 100, "cantidad": 0} for d in range(0, 100, 10)]
     for n in notas:
@@ -156,8 +156,8 @@ def _datos_examen(codigo: str, seccion: str | None) -> dict[str, Any]:
         for tema, v in acumulado.items()
     ]
     return {
-        "ok": True, "codigo": codigo, "nombre": info["nombre"], "institucion": examen.get("institucion", ""),
-        "seccion": seccion or "Todas", "nota_minima": NOTA_MINIMA,
+        "ok": True, "codigo": codigo, "nombre": info["nombre"], "institucion": _institucion(),
+        "seccion": seccion or "Todas", "nota_minima": minima,
         "resumen": resumen, "histograma": histograma, "temas": temas, "ranking": ranking,
     }
 
@@ -203,7 +203,7 @@ def _datos_criticas(codigo: str, seccion: str | None) -> dict[str, Any]:
         })
     filas.sort(key=lambda f: (-f["porcentaje_error"], -f["errores"], f["numero"]))
     return {
-        "ok": True, "codigo": codigo, "nombre": info["nombre"], "institucion": examen.get("institucion", ""),
+        "ok": True, "codigo": codigo, "nombre": info["nombre"], "institucion": _institucion(),
         "seccion": seccion or "Todas", "intentos": len(enviados), "preguntas": filas,
     }
 
@@ -216,6 +216,7 @@ def preguntas_criticas(codigo: str, seccion: str | None = None) -> dict[str, Any
 # ---------- Notas por sección y periodo ----------
 
 def _datos_seccion(seccion: str, periodo: int) -> dict[str, Any]:
+    minima = nota_minima()
     with database.get_db_context() as conn:
         materias = conn.execute(
             "SELECT * FROM materias WHERE seccion = ? AND periodo = ? ORDER BY nombre", (seccion, periodo)
@@ -235,13 +236,13 @@ def _datos_seccion(seccion: str, periodo: int) -> dict[str, Any]:
             promedios.append({
                 "materia_id": m["id"], "nombre": m["nombre"], "completas": len(finales),
                 "promedio": round(sum(finales) / len(finales), 1) if finales else None,
-                "aprobados": sum(n >= NOTA_MINIMA for n in finales),
+                "aprobados": sum(n >= minima for n in finales),
             })
     for e in estudiantes.values():
         completas = [v["nota_final"] for v in e["notas"].values() if v["completa"]]
         e["promedio_general"] = round(sum(completas) / len(completas), 1) if completas else None
     return {
-        "ok": True, "seccion": seccion, "periodo": periodo, "nota_minima": NOTA_MINIMA,
+        "ok": True, "seccion": seccion, "periodo": periodo, "nota_minima": minima,
         "materias": [{"id": m["id"], "nombre": m["nombre"]} for m in materias],
         "promedios": promedios, "estudiantes": list(estudiantes.values()),
     }
@@ -285,7 +286,7 @@ def excel_examen(codigo: str, seccion: str | None = None) -> Response:
             ["Indicador", "Valor"], ["Examen", f"{d['codigo']} · {d['nombre']}"], ["Sección", d["seccion"]],
             ["Enviados", r["enviados"]], ["Sin enviar", r["sin_enviar"]], ["Promedio", r["promedio"]],
             ["Mediana", r["mediana"]], ["Nota máxima", r["maxima"]], ["Nota mínima", r["minima"]],
-            ["Aprobados", r["aprobados"]], ["Reprobados", r["reprobados"]], ["Nota mínima de aprobación", NOTA_MINIMA],
+            ["Aprobados", r["aprobados"]], ["Reprobados", r["reprobados"]], ["Nota mínima de aprobación", nota_minima()],
         ],
         "Ranking": [["Puesto", "Estudiante", "Sección", "Puntuación", "Total", "Nota (0-100)"]] + [
             [i + 1, x["nombre"], x["seccion"], x["puntuacion"], x["total"], x["nota"]] for i, x in enumerate(d["ranking"])
@@ -320,7 +321,7 @@ def excel_seccion(seccion: str, periodo: int) -> Response:
 @router.get("/boleta/{estudiante_id}/excel")
 def excel_boleta(estudiante_id: int) -> Response:
     d = boleta_estudiante(estudiante_id)
-    columnas = list(PONDERACIONES)
+    columnas = COMPONENTES
     return _xlsx(f"boleta_{d['estudiante']['username']}.xlsx", {
         "Exámenes": [["Código", "Examen", "Fecha", "Puntuación", "Total", "Nota (0-100)", "Aprobado"]] + [
             [x["codigo"], x["nombre"], x["fecha"], x["puntuacion"], x["total"], x["nota"], "sí" if x["aprobado"] else "no"]

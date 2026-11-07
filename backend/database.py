@@ -91,8 +91,9 @@ def get_db() -> sqlite3.Connection:
     Returns:
         sqlite3.Connection: Conexión activa a la base de datos.
     """
-    conn = sqlite3.connect(DATABASE_PATH)
+    conn = sqlite3.connect(DATABASE_PATH, timeout=10)
     conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA journal_mode=WAL")  # lecturas y escrituras simultáneas sin bloqueos
     return conn
 
 
@@ -109,6 +110,52 @@ def get_db_context() -> Generator[sqlite3.Connection, None, None]:
         yield conn
     finally:
         conn.close()
+
+
+# Configuración institucional y de evaluación (editable desde el panel; ver tabla `ajustes`)
+AJUSTES_DEFAULT = {
+    "institucion": "CTP Las Palmitas",
+    "direccion_regional": "Guápiles",
+    "circuito": "06",
+    "docente": "Luis Cupertino Fallas Rivas",
+    "curso_lectivo": "2026",
+    "nota_minima": "70",
+}
+
+RESPALDOS_DIR = PROJECT_ROOT / "respaldos"
+
+
+def leer_ajustes(conn: sqlite3.Connection) -> dict[str, str]:
+    """Ajustes guardados sobre los valores por defecto."""
+    ajustes = dict(AJUSTES_DEFAULT)
+    ajustes.update({r["clave"]: r["valor"] for r in conn.execute("SELECT clave, valor FROM ajustes")})
+    return ajustes
+
+
+def respaldar(destino: Path | None = None, mantener: int = 30) -> Path | None:
+    """
+    Copia consistente de la base (API de respaldo de SQLite), una por día.
+    Conserva solo los últimos `mantener` respaldos. Devuelve la ruta creada o None si ya existía el de hoy.
+    """
+    from datetime import date
+
+    destino = destino or RESPALDOS_DIR
+    destino.mkdir(parents=True, exist_ok=True)
+    archivo = destino / f"examen_db_{date.today().isoformat()}.sqlite"
+    if archivo.exists():
+        return None
+    origen = get_db()
+    try:
+        copia = sqlite3.connect(archivo)
+        try:
+            origen.backup(copia)
+        finally:
+            copia.close()
+    finally:
+        origen.close()
+    for viejo in sorted(destino.glob("examen_db_*.sqlite"))[:-mantener]:
+        viejo.unlink()
+    return archivo
 
 
 def _agregar_columnas(cursor: sqlite3.Cursor, tabla: str, columnas: dict[str, str]) -> None:
@@ -216,6 +263,27 @@ def init_db() -> int:
                 secciones TEXT
             )
         """)
+
+        # Ajustes institucionales (clave/valor) y ponderaciones por materia
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS ajustes (
+                clave TEXT PRIMARY KEY,
+                valor TEXT NOT NULL
+            )
+        """)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS ponderaciones (
+                materia_id INTEGER NOT NULL,
+                componente TEXT NOT NULL,
+                peso REAL NOT NULL,
+                PRIMARY KEY (materia_id, componente),
+                FOREIGN KEY (materia_id) REFERENCES materias(id)
+            )
+        """)
+        _agregar_columnas(cursor, "examenes_config", {
+            "materia_id": "INTEGER",  # materia y componente (prueba01/prueba02) donde se importa la nota
+            "componente": "TEXT",
+        })
 
         # Bitácora de acciones del docente
         cursor.execute("""

@@ -2,6 +2,8 @@
 Examen Digital Simple v2 - Backend FastAPI
 Plataforma de examen digital con login de estudiantes y registro de intentos.
 """
+import asyncio
+import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 
@@ -13,6 +15,7 @@ from backend import database
 from backend.routes import (
     auth_router, bitacora_router, estudiantes_router, examenes_docente_router,
     examenes_router, intentos_router, notas_router, reportes_router,
+    ajustes_router, config_router,
 )
 
 # Ruta base del proyecto
@@ -24,7 +27,21 @@ async def lifespan(_: FastAPI):
     inserted = database.init_db()
     if inserted > 0:
         print(f"[INFO] Base de datos poblada con {inserted} estudiantes")
+    tarea = asyncio.create_task(_respaldo_diario())
     yield
+    tarea.cancel()
+
+
+async def _respaldo_diario() -> None:
+    """Un respaldo por día (al arrancar y cada hora mientras el servidor siga encendido)."""
+    while True:
+        try:
+            archivo = await asyncio.to_thread(database.respaldar)
+            if archivo:
+                print(f"[INFO] Respaldo creado: {archivo.name}")
+        except Exception as error:  # un respaldo fallido no debe tumbar el servidor
+            print(f"[AVISO] No se pudo respaldar la base de datos: {error}")
+        await asyncio.sleep(3600)
 
 
 # Crear aplicación FastAPI (el frontend se sirve desde el mismo origen: no se requiere CORS)
@@ -56,6 +73,8 @@ app.include_router(estudiantes_router)
 app.include_router(bitacora_router)
 app.include_router(examenes_docente_router)
 app.include_router(reportes_router)
+app.include_router(ajustes_router)
+app.include_router(config_router)
 
 
 @app.get("/docente")
@@ -73,4 +92,4 @@ async def root():
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run("backend.main:app", host="0.0.0.0", port=8000)
+    uvicorn.run("backend.main:app", host="0.0.0.0", port=int(os.environ.get("PORT", "8001")))

@@ -14,7 +14,13 @@ router = APIRouter(
     prefix="/api/docente", tags=["notas"], dependencies=[Depends(security.require_docente)]
 )
 
-# Componente -> porcentaje de la nota final (suman 100)
+COMPONENTES = ["trabajo_cotidiano", "tareas", "prueba01", "prueba02", "proyecto", "asistencia"]
+ETIQUETAS = {
+    "trabajo_cotidiano": "Trabajo cotidiano", "tareas": "Tareas", "prueba01": "Prueba 01",
+    "prueba02": "Prueba 02", "proyecto": "Proyecto", "asistencia": "Asistencia",
+}
+
+# Componente -> puntos de la nota final por defecto (suman 100). Cada materia puede tener los suyos.
 PONDERACIONES = {
     "trabajo_cotidiano": 25,
     "tareas": 10,
@@ -25,13 +31,28 @@ PONDERACIONES = {
 }
 
 
-# Nota mínima de aprobación (0-100)
-NOTA_MINIMA = 70
+def nota_minima(conn=None) -> float:
+    """Nota mínima de aprobación (0-100), tomada de los ajustes."""
+    if conn is None:
+        with database.get_db_context() as c:
+            return nota_minima(c)
+    return float(database.leer_ajustes(conn)["nota_minima"])
 
 
-def nota_final(notas: dict[str, float | None]) -> float:
+def pesos_de(conn, materia_id: int) -> dict[str, float]:
+    """Ponderaciones de una materia: las guardadas sobre las de por defecto."""
+    pesos = dict(PONDERACIONES)
+    pesos.update({
+        r["componente"]: r["peso"] for r in conn.execute(
+            "SELECT componente, peso FROM ponderaciones WHERE materia_id = ?", (materia_id,))
+    })
+    return pesos
+
+
+def nota_final(notas: dict[str, float | None], pesos: dict[str, float] | None = None) -> float:
     """Nota ponderada (0-100). Un componente sin nota cuenta como 0."""
-    total = sum((notas.get(c) or 0) * peso / 100 for c, peso in PONDERACIONES.items())
+    pesos = pesos or PONDERACIONES
+    total = sum((notas.get(c) or 0) * peso / 100 for c, peso in pesos.items())
     return round(total, 1)
 
 
@@ -51,11 +72,12 @@ def _filas(conn, materia) -> list[dict[str, Any]]:
         "WHERE e.seccion = ? ORDER BY e.apellido1, e.apellido2, e.nombre",
         (materia["id"], materia["seccion"]),
     ).fetchall()
+    pesos = pesos_de(conn, materia["id"])
     filas = []
     for r in rows:
         fila = dict(r)
-        fila["completa"] = all(fila[c] is not None for c in PONDERACIONES)
-        fila["nota_final"] = nota_final(fila)
+        fila["completa"] = all(fila[c] is not None for c in COMPONENTES)
+        fila["nota_final"] = nota_final(fila, pesos)
         filas.append(fila)
     return filas
 
@@ -66,9 +88,11 @@ def listar_materias() -> dict[str, Any]:
         rows = conn.execute(
             "SELECT id, seccion, nombre, periodo FROM materias ORDER BY seccion, periodo, nombre"
         ).fetchall()
+        materias = [{**dict(r), "ponderaciones": pesos_de(conn, r["id"])} for r in rows]
+        minima = nota_minima(conn)
     return {
-        "ok": True, "materias": [dict(r) for r in rows],
-        "ponderaciones": PONDERACIONES, "nota_minima": NOTA_MINIMA,
+        "ok": True, "materias": materias, "componentes": COMPONENTES, "etiquetas": ETIQUETAS,
+        "ponderaciones": PONDERACIONES, "nota_minima": minima,
     }
 
 
@@ -78,6 +102,8 @@ def obtener_notas(materia_id: int) -> dict[str, Any]:
     with database.get_db_context() as conn:
         materia = _materia(conn, materia_id)
         filas = _filas(conn, materia)
+        pesos = pesos_de(conn, materia_id)
+        minima = nota_minima(conn)
     finales = [f["nota_final"] for f in filas if f["completa"]]
     resumen = {
         "estudiantes": len(filas),
@@ -86,7 +112,40 @@ def obtener_notas(materia_id: int) -> dict[str, Any]:
         "maxima": max(finales) if finales else None,
         "minima": min(finales) if finales else None,
     }
-    return {"ok": True, "materia": dict(materia), "notas": filas, "resumen": resumen}
+    return {
+        "ok": True, "materia": dict(materia), "notas": filas, "resumen": resumen,
+        "ponderaciones": pesos, "nota_minima": minima,
+    }
+
+
+class Ponderaciones(BaseModel):
+    ponderaciones: dict[str, float]
+
+
+@router.put("/materias/{materia_id}/ponderaciones")
+def guardar_ponderaciones(materia_id: int, request: Ponderaciones) -> dict[str, Any]:
+    """Define cuántos puntos de la nota final vale cada componente en una materia (deben sumar 100)."""
+    pesos = request.ponderaciones
+    if set(pesos) != set(COMPONENTES):
+        raise HTTPException(status_code=400, detail="Deben venir los seis componentes")
+    if any(p < 0 or p > 100 for p in pesos.values()):
+        raise HTTPException(status_code=400, detail="Cada peso debe estar entre 0 y 100")
+    if abs(sum(pesos.values()) - 100) > 0.001:
+        raise HTTPException(status_code=400, detail=f"Los pesos deben sumar 100 (suman {sum(pesos.values()):g})")
+    with database.get_db_context() as conn:
+        materia = _materia(conn, materia_id)
+        conn.executemany(
+            "INSERT INTO ponderaciones (materia_id, componente, peso) VALUES (?, ?, ?) "
+            "ON CONFLICT (materia_id, componente) DO UPDATE SET peso = excluded.peso",
+            [(materia_id, c, pesos[c]) for c in COMPONENTES],
+        )
+        bitacora.registrar(
+            conn, "guardar_ponderaciones",
+            f"{materia['seccion']} · P{materia['periodo']} · {materia['nombre']}: "
+            + " / ".join(f"{pesos[c]:g}" for c in COMPONENTES),
+        )
+        conn.commit()
+    return {"ok": True, "ponderaciones": pesos}
 
 
 class NotaEstudiante(BaseModel):
@@ -116,7 +175,7 @@ def _guardar(conn, materia, notas: list[NotaEstudiante]) -> None:
                 status_code=400,
                 detail=f"El estudiante {n.estudiante_id} no pertenece a la sección {materia['seccion']}",
             )
-    columnas = list(PONDERACIONES)
+    columnas = COMPONENTES
     for n in notas:
         conn.execute(
             f"INSERT INTO notas (estudiante_id, materia_id, {', '.join(columnas)}) "
@@ -144,38 +203,57 @@ def guardar_notas(request: GuardarNotas) -> dict[str, Any]:
 
 class ImportarPrueba(BaseModel):
     materia_id: int
-    componente: str  # "prueba01" | "prueba02"
-    codigo_examen: str
+    componente: str | None = None  # "prueba01" | "prueba02"; vacío = según los exámenes vinculados
+    codigo_examen: str | None = None
+
+
+def _importar(conn, materia, componente: str, codigo: str) -> int:
+    """Copia a `componente` la nota (0-100) de los intentos enviados y no anulados de un examen."""
+    rows = conn.execute(
+        "SELECT i.estudiante_id, i.puntuacion, i.total FROM intentos i "
+        "JOIN estudiantes e ON e.id = i.estudiante_id "
+        "WHERE i.codigo_examen = ? AND i.fecha_fin IS NOT NULL AND i.anulado = 0 AND e.seccion = ?",
+        (codigo, materia["seccion"]),
+    ).fetchall()
+    for r in rows:
+        nota = round(r["puntuacion"] / r["total"] * 100, 4) if r["total"] else 0
+        conn.execute(
+            f"INSERT INTO notas (estudiante_id, materia_id, {componente}) "
+            f"VALUES (?, ?, ?) ON CONFLICT (estudiante_id, materia_id) "
+            f"DO UPDATE SET {componente} = excluded.{componente}",
+            (r["estudiante_id"], materia["id"], nota),
+        )
+    bitacora.registrar(
+        conn, "importar_prueba",
+        f"{materia['seccion']} · {materia['nombre']} · {componente} desde {codigo} ({len(rows)})",
+    )
+    return len(rows)
 
 
 @router.post("/notas/importar-prueba")
 def importar_prueba(request: ImportarPrueba) -> dict[str, Any]:
-    """Copia a prueba01/prueba02 la nota (0-100) de los intentos enviados de un examen."""
-    if request.componente not in ("prueba01", "prueba02"):
-        raise HTTPException(status_code=400, detail="componente debe ser prueba01 o prueba02")
-    codigo = request.codigo_examen.upper()
+    """
+    Copia a prueba01/prueba02 la nota de un examen. Con `codigo_examen` y `componente` importa ese
+    examen; sin ellos, importa todos los exámenes vinculados a la materia (pestaña Exámenes).
+    """
     with database.get_db_context() as conn:
         materia = _materia(conn, request.materia_id)
-        rows = conn.execute(
-            "SELECT i.estudiante_id, i.puntuacion, i.total FROM intentos i "
-            "JOIN estudiantes e ON e.id = i.estudiante_id "
-            "WHERE i.codigo_examen = ? AND i.fecha_fin IS NOT NULL AND i.anulado = 0 AND e.seccion = ?",
-            (codigo, materia["seccion"]),
-        ).fetchall()
-        for r in rows:
-            nota = round(r["puntuacion"] / r["total"] * 100, 1) if r["total"] else 0
-            conn.execute(
-                f"INSERT INTO notas (estudiante_id, materia_id, {request.componente}) "
-                f"VALUES (?, ?, ?) ON CONFLICT (estudiante_id, materia_id) "
-                f"DO UPDATE SET {request.componente} = excluded.{request.componente}",
-                (r["estudiante_id"], materia["id"], nota),
-            )
-        bitacora.registrar(
-            conn, "importar_prueba",
-            f"{materia['seccion']} · {materia['nombre']} · {request.componente} desde {codigo} ({len(rows)})",
-        )
+        if request.codigo_examen:
+            if request.componente not in ("prueba01", "prueba02"):
+                raise HTTPException(status_code=400, detail="componente debe ser prueba01 o prueba02")
+            pares = [(request.componente, request.codigo_examen.upper())]
+        else:
+            pares = [
+                (r["componente"], r["codigo"]) for r in conn.execute(
+                    "SELECT codigo, componente FROM examenes_config "
+                    "WHERE materia_id = ? AND componente IN ('prueba01', 'prueba02')", (materia["id"],))
+                if request.componente in (None, r["componente"])
+            ]
+            if not pares:
+                raise HTTPException(status_code=400, detail="Esta materia no tiene exámenes vinculados")
+        importadas = sum(_importar(conn, materia, comp, codigo) for comp, codigo in pares)
         conn.commit()
-    return {"ok": True, "importadas": len(rows)}
+    return {"ok": True, "importadas": importadas, "examenes": [c for _, c in pares]}
 
 
 def _csv_response(nombre: str, encabezado: list[str], filas: list[list[Any]]) -> Response:
@@ -195,7 +273,7 @@ def exportar_notas(materia_id: int) -> Response:
     with database.get_db_context() as conn:
         materia = _materia(conn, materia_id)
         filas = _filas(conn, materia)
-    columnas = list(PONDERACIONES)
+    columnas = COMPONENTES
     return _csv_response(
         f"notas_{materia['seccion']}_P{materia['periodo']}_{materia['id']}.csv",
         ["Apellido 1", "Apellido 2", "Nombre", *columnas, "nota_final"],

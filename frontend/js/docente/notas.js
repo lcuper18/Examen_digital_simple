@@ -1,16 +1,20 @@
 // Pestaña Notas: notas ponderadas por materia
 (function () {
-  const COMPONENTES = ['trabajo_cotidiano', 'tareas', 'prueba01', 'prueba02', 'proyecto', 'asistencia'];
-  const ETIQUETAS = {
+  // Se notan en puntos (como en las hojas del docente); el servidor guarda 0-100 por componente.
+  let COMPONENTES = ['trabajo_cotidiano', 'tareas', 'prueba01', 'prueba02', 'proyecto', 'asistencia'];
+  let ETIQUETAS = {
     trabajo_cotidiano: 'TC', tareas: 'Tareas', prueba01: 'Prueba 01',
     prueba02: 'Prueba 02', proyecto: 'Proyecto', asistencia: 'Asistencia',
   };
   let ponderaciones = {};
+  const redondear = (n, d = 2) => Math.round(n * 10 ** d) / 10 ** d;
+  const aPuntos = (pct, c) => (pct === null || pct === undefined ? '' : redondear(pct * ponderaciones[c] / 100));
+  const aPorcentaje = (pts, c) => (pts === null || !ponderaciones[c] ? (pts === null ? null : 0) : redondear(pts / ponderaciones[c] * 100, 4));
   let notaMinima = 70;
   let sinGuardar = false;
 
   function calcularFinal(v) {
-    return Math.round(COMPONENTES.reduce((s, c) => s + (v[c] || 0) * ponderaciones[c] / 100, 0) * 10) / 10;
+    return Math.round(COMPONENTES.reduce((s, c) => s + (v[c] || 0), 0) * 10) / 10;
   }
 
   function marcarCambios(valor) {
@@ -20,9 +24,7 @@
 
   async function cargarMaterias() {
     const data = await Panel.json('/api/docente/materias');
-    ponderaciones = data.ponderaciones;
     notaMinima = data.nota_minima;
-    document.querySelectorAll('[data-peso]').forEach(e => { e.textContent = `${ponderaciones[e.dataset.peso]}%`; });
     const select = $('n-materia');
     const actual = select.value;
     select.innerHTML = data.materias.map(m =>
@@ -35,11 +37,14 @@
     const id = $('n-materia').value;
     if (!id) return;
     const data = await Panel.json(`/api/docente/notas?materia_id=${id}`);
+    ponderaciones = data.ponderaciones;
+    notaMinima = data.nota_minima;
+    document.querySelectorAll('[data-peso]').forEach(e => { e.textContent = `/${ponderaciones[e.dataset.peso]}`; });
     $('tabla-notas').querySelector('tbody').innerHTML = data.notas.map(n => `
       <tr data-id="${n.estudiante_id}">
         <th scope="row">${Panel.esc(Panel.nombre(n))}</th>
-        ${COMPONENTES.map(c => `<td><input type="number" min="0" max="100" step="0.1" data-c="${c}"
-          aria-label="${ETIQUETAS[c]} de ${Panel.esc(n.nombre)} ${Panel.esc(n.apellido1)}" value="${n[c] ?? ''}"></td>`).join('')}
+        ${COMPONENTES.map(c => `<td><input type="number" min="0" max="${ponderaciones[c]}" step="0.01" data-c="${c}"
+          aria-label="${ETIQUETAS[c]} de ${Panel.esc(n.nombre)} ${Panel.esc(n.apellido1)} (puntos de ${ponderaciones[c]})" value="${aPuntos(n[c], c)}"></td>`).join('')}
         <td class="doc-final"></td>
       </tr>`).join('');
     document.querySelectorAll('#tabla-notas tbody tr').forEach(actualizarFila);
@@ -52,7 +57,7 @@
     tr.querySelectorAll('input').forEach(input => {
       const v = input.value.trim();
       const num = v === '' ? null : Number(v);
-      input.classList.toggle('invalid', num !== null && (Number.isNaN(num) || num < 0 || num > 100));
+      input.classList.toggle('invalid', num !== null && (Number.isNaN(num) || num < 0 || num > ponderaciones[input.dataset.c]));
       valores[input.dataset.c] = num;
     });
     return valores;
@@ -81,9 +86,12 @@
   }
 
   async function guardar() {
-    if (document.querySelector('#tabla-notas input.invalid')) return Panel.toast('Hay notas fuera del rango 0-100', 'error');
+    if (document.querySelector('#tabla-notas input.invalid')) return Panel.toast('Hay notas que superan los puntos del componente', 'error');
     const notas = [...document.querySelectorAll('#tabla-notas tbody tr')]
-      .map(tr => ({ estudiante_id: Number(tr.dataset.id), ...valoresDeFila(tr) }));
+      .map(tr => {
+        const v = valoresDeFila(tr);
+        return { estudiante_id: Number(tr.dataset.id), ...Object.fromEntries(COMPONENTES.map(c => [c, aPorcentaje(v[c], c)])) };
+      });
     await Panel.json('/api/docente/notas', { method: 'PUT', body: { materia_id: Number($('n-materia').value), notas } });
     marcarCambios(false);
     Panel.toast('Notas guardadas');
@@ -103,11 +111,21 @@
     await cargarNotas();
   }
 
+  async function importarVinculadas() {
+    if (sinGuardar && !(await Panel.confirmar('Tienes cambios sin guardar; se descartarán al importar.', { texto: 'Importar' }))) return;
+    const data = await Panel.json('/api/docente/notas/importar-prueba', {
+      method: 'POST', body: { materia_id: Number($('n-materia').value) },
+    });
+    Panel.toast(`Se importaron ${data.importadas} notas de ${data.examenes.join(', ')}`);
+    await cargarNotas();
+  }
+
   Panel.registrar('notas', 'Notas', {
     init(el) {
       el.innerHTML = `
         <div class="doc-toolbar">
           <label>Materia <select id="n-materia"></select></label>
+          <button class="btn btn-secondary" id="btn-importar-vinc" title="Importa los exámenes vinculados a esta materia (pestaña Exámenes)">Importar exámenes vinculados</button>
           <button class="btn btn-secondary" id="btn-importar-p01">Importar Prueba 01</button>
           <button class="btn btn-secondary" id="btn-importar-p02">Importar Prueba 02</button>
           <button class="btn btn-secondary" id="btn-exportar-notas">Exportar CSV</button>
@@ -137,6 +155,7 @@
         marcarCambios(true);
       });
       $('btn-guardar-notas').addEventListener('click', run(guardar));
+      $('btn-importar-vinc').addEventListener('click', run(importarVinculadas));
       $('btn-importar-p01').addEventListener('click', run(() => importar('prueba01')));
       $('btn-importar-p02').addEventListener('click', run(() => importar('prueba02')));
       $('btn-exportar-notas').addEventListener('click', () => {

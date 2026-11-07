@@ -76,9 +76,9 @@ echo ==============================================
 echo.
 echo   SERVIDOR INICIADO EXITOSAMENTE
 echo.
-echo   Acceso local:  http://localhost:8000
+echo   Acceso local:  http://localhost:8001
 if not "%LOCAL_IP%"=="localhost" (
-    echo   Acceso red:    http://%LOCAL_IP%:8000
+    echo   Acceso red:    http://%LOCAL_IP%:8001
 )
 echo.
 echo   Presiona Ctrl+C para detener el servidor
@@ -87,4 +87,4 @@ echo ==============================================
 echo.
 
 REM Iniciar el servidor
-uvicorn backend.main:app --host 0.0.0.0 --port 8000
+uvicorn backend.main:app --host 0.0.0.0 --port 8001

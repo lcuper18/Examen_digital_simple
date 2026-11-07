@@ -296,6 +296,8 @@ def listar_examenes() -> dict[str, Any]:
             "desde": c["desde"] if c else None,
             "hasta": c["hasta"] if c else None,
             "secciones": [x for x in (c["secciones"] or "").split(",") if x] if c else [],
+            "materia_id": c["materia_id"] if c else None,
+            "componente": c["componente"] if c else None,
             "enviados": (n["enviados"] or 0) if n else 0,
             "en_curso": (n["en_curso"] or 0) if n else 0,
             "anulados": (n["anulados"] or 0) if n else 0,
@@ -308,6 +310,8 @@ class ConfigExamen(BaseModel):
     desde: str | None = None
     hasta: str | None = None
     secciones: list[str] = []
+    materia_id: int | None = None      # materia donde se importa la nota de este examen
+    componente: str | None = None      # "prueba01" | "prueba02"
 
 
 @docente_router.put("/examenes/{codigo}")
@@ -322,13 +326,23 @@ def configurar_examen(codigo: str, request: ConfigExamen) -> dict[str, Any]:
         raise HTTPException(status_code=400, detail="Fecha no válida")
     if desde and hasta and hasta <= desde:
         raise HTTPException(status_code=400, detail="La fecha final debe ser posterior a la inicial")
+    if (request.materia_id is None) != (request.componente is None):
+        raise HTTPException(status_code=400, detail="Indica la materia y el componente, o ninguno")
+    if request.componente not in (None, "prueba01", "prueba02"):
+        raise HTTPException(status_code=400, detail="componente debe ser prueba01 o prueba02")
     with database.get_db_context() as conn:
+        if request.materia_id is not None and not conn.execute(
+                "SELECT 1 FROM materias WHERE id = ?", (request.materia_id,)).fetchone():
+            raise HTTPException(status_code=404, detail="Materia no encontrada")
         conn.execute(
-            "INSERT INTO examenes_config (codigo, habilitado, desde, hasta, secciones) VALUES (?, ?, ?, ?, ?) "
+            "INSERT INTO examenes_config (codigo, habilitado, desde, hasta, secciones, materia_id, componente) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?) "
             "ON CONFLICT (codigo) DO UPDATE SET habilitado = excluded.habilitado, desde = excluded.desde, "
-            "hasta = excluded.hasta, secciones = excluded.secciones",
+            "hasta = excluded.hasta, secciones = excluded.secciones, "
+            "materia_id = excluded.materia_id, componente = excluded.componente",
             (codigo, int(request.habilitado), desde.isoformat() if desde else None,
-             hasta.isoformat() if hasta else None, ",".join(s.strip() for s in request.secciones if s.strip())),
+             hasta.isoformat() if hasta else None, ",".join(s.strip() for s in request.secciones if s.strip()),
+             request.materia_id, request.componente),
         )
         bitacora.registrar(
             conn, "configurar_examen",

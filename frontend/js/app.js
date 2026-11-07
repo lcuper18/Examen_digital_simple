@@ -848,13 +848,16 @@ function createPDF() {
     doc.setFontSize(9);
     doc.setTextColor(128);
     doc.text(`Página ${i} de ${pageCount}`, 105, 290, { align: "center" });
-    doc.text("CTP Las Palmitas - Examen Digital", 20, 290);
+    doc.text(`${institucionNombre} - Examen Digital`, 20, 290);
     doc.text(new Date().toLocaleDateString(), 170, 290);
   }
 
   const filename = `resultados-${codigoExamenActual || 'examen'}-${estudianteNombre.replace(/\s+/g, '-')}-${new Date().toISOString().slice(0,10)}.pdf`;
   doc.save(filename);
 }
+
+let institucionNombre = 'CTP Las Palmitas';
+fetch('/api/config').then(r => r.json()).then(c => { if (c.institucion) institucionNombre = c.institucion; }).catch(() => {});
 
 function closeResults() {
   document.getElementById('results-overlay').classList.remove('active');

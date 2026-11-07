@@ -28,7 +28,7 @@ Thumbs.db
 logs/
 
 # Database (generated at runtime)
-examen_db.sqlite
+examen_db.sqlite*
 
 # Exam PDFs (generated dynamically)
 data/examenes/PDF/
@@ -58,3 +58,6 @@ data/estudiantes.csv
 
 # Copias de revisión del docente (contienen la clave de respuestas)
 revision/
+
+# Respaldos diarios de la base de datos
+respaldos/
