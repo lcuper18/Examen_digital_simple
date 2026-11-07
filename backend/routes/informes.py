@@ -134,6 +134,43 @@ def registro_excel(materia_id: int) -> Response:
 
 # ---------- Informe para encargados ----------
 
+def agregar_materias(conn, materias, informes: dict[int, dict[str, Any]], minima: float) -> None:
+    """Agrega a cada informe (por estudiante) los datos de cada materia: puntos, nota, actividades y asistencia."""
+    for m in materias:
+        pesos = pesos_de(conn, m["id"])
+        filas = {f["estudiante_id"]: f for f in _filas(conn, m)}
+        asist = _resumen(conn, m)
+        asist_por = {e["estudiante_id"]: e for e in asist["estudiantes"]}
+        actividades = conn.execute("SELECT * FROM actividades WHERE materia_id = ? ORDER BY componente, id", (m["id"],)).fetchall()
+        cals = {
+            (c["actividad_id"], c["estudiante_id"]): c for c in conn.execute(
+                "SELECT c.* FROM calificaciones c JOIN actividades a ON a.id = c.actividad_id WHERE a.materia_id = ?",
+                (m["id"],))
+        }
+        for eid in informes:
+            f = filas[eid]
+            a = asist_por.get(eid)
+            informes[eid]["materias"].append({
+                "materia": m["nombre"], "periodo": m["periodo"],
+                "componentes": [{
+                    "clave": c, "etiqueta": ETIQUETAS[c], "peso": pesos[c],
+                    "puntos": None if f[c] is None else round(f[c] * pesos[c] / 100, 2),
+                } for c in COMPONENTES],
+                "nota_final": f["nota_final"], "completa": f["completa"], "aprobado": f["nota_final"] >= minima,
+                "actividades": [{
+                    "nombre": act["nombre"], "componente": ETIQUETAS[act["componente"]],
+                    "estado": c["estado"], "estado_texto": ESTADOS_ACTIVIDAD[c["estado"]],
+                    "puntos": c["puntos"], "puntos_max": act["puntos_max"], "observacion": c["observacion"] or "",
+                } for act in actividades if (c := cals.get((act["id"], eid))) and c["estado"] != "revision"],
+                "asistencia": None if not asist["lecciones_totales"] else {
+                    "lecciones": asist["lecciones_totales"], "ausencias": a["ausencias"], "tardias": a["tardias"],
+                    "justificadas": a["justificadas"], "injustificadas": a["injustificadas"],
+                    "porcentaje": a["porcentaje_ausencias"], "puntos": a["puntos"], "maximo": asist["puntos_maximos"],
+                    "detalle": a["detalle"],
+                },
+            })
+
+
 @router.get("/encargados")
 def informe_encargados(seccion: str, periodo: int, estudiante_id: int | None = None) -> dict[str, Any]:
     """
@@ -160,39 +197,7 @@ def informe_encargados(seccion: str, periodo: int, estudiante_id: int | None = N
             eid: {"estudiante": {"id": eid, "cedula": e["cedula"], "nombre": _nombre_acta(e)}, "materias": []}
             for eid, e in estudiantes.items()
         }
-        for m in materias:
-            pesos = pesos_de(conn, m["id"])
-            filas = {f["estudiante_id"]: f for f in _filas(conn, m)}
-            asist = _resumen(conn, m)
-            asist_por = {e["estudiante_id"]: e for e in asist["estudiantes"]}
-            actividades = conn.execute("SELECT * FROM actividades WHERE materia_id = ? ORDER BY componente, id", (m["id"],)).fetchall()
-            cals = {
-                (c["actividad_id"], c["estudiante_id"]): c for c in conn.execute(
-                    "SELECT c.* FROM calificaciones c JOIN actividades a ON a.id = c.actividad_id WHERE a.materia_id = ?",
-                    (m["id"],))
-            }
-            for eid in estudiantes:
-                f = filas[eid]
-                a = asist_por.get(eid)
-                informes[eid]["materias"].append({
-                    "materia": m["nombre"], "periodo": m["periodo"],
-                    "componentes": [{
-                        "clave": c, "etiqueta": ETIQUETAS[c], "peso": pesos[c],
-                        "puntos": None if f[c] is None else round(f[c] * pesos[c] / 100, 2),
-                    } for c in COMPONENTES],
-                    "nota_final": f["nota_final"], "completa": f["completa"], "aprobado": f["nota_final"] >= minima,
-                    "actividades": [{
-                        "nombre": act["nombre"], "componente": ETIQUETAS[act["componente"]],
-                        "estado": c["estado"], "estado_texto": ESTADOS_ACTIVIDAD[c["estado"]],
-                        "puntos": c["puntos"], "puntos_max": act["puntos_max"], "observacion": c["observacion"] or "",
-                    } for act in actividades if (c := cals.get((act["id"], eid))) and c["estado"] != "revision"],
-                    "asistencia": None if not asist["lecciones_totales"] else {
-                        "lecciones": asist["lecciones_totales"], "ausencias": a["ausencias"], "tardias": a["tardias"],
-                        "justificadas": a["justificadas"], "injustificadas": a["injustificadas"],
-                        "porcentaje": a["porcentaje_ausencias"], "puntos": a["puntos"], "maximo": asist["puntos_maximos"],
-                        "detalle": a["detalle"],
-                    },
-                })
+        agregar_materias(conn, materias, informes, minima)
     return {
         "ok": True, "encabezado": institucion, "nota_minima": minima, "seccion": seccion, "periodo": periodo,
         "informes": list(informes.values()),

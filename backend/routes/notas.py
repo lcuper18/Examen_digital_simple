@@ -107,6 +107,8 @@ def obtener_notas(materia_id: int) -> dict[str, Any]:
         filas = _filas(conn, materia)
         pesos = pesos_de(conn, materia_id)
         minima = nota_minima(conn)
+        publicada = conn.execute(
+            "SELECT publicado FROM publicaciones WHERE materia_id = ?", (materia_id,)).fetchone()
     finales = [f["nota_final"] for f in filas if f["completa"]]
     resumen = {
         "estudiantes": len(filas),
@@ -117,8 +119,32 @@ def obtener_notas(materia_id: int) -> dict[str, Any]:
     }
     return {
         "ok": True, "materia": dict(materia), "notas": filas, "resumen": resumen,
-        "ponderaciones": pesos, "nota_minima": minima,
+        "ponderaciones": pesos, "nota_minima": minima, "publicado": bool(publicada and publicada["publicado"]),
     }
+
+
+class Publicacion(BaseModel):
+    publicado: bool
+
+
+@router.put("/materias/{materia_id}/publicacion")
+def publicar_materia(materia_id: int, request: Publicacion) -> dict[str, Any]:
+    """Muestra u oculta a los estudiantes las notas, la asistencia y las actividades de una materia."""
+    from datetime import datetime, timezone
+
+    with database.get_db_context() as conn:
+        materia = _materia(conn, materia_id)
+        conn.execute(
+            "INSERT INTO publicaciones (materia_id, publicado, fecha) VALUES (?, ?, ?) "
+            "ON CONFLICT (materia_id) DO UPDATE SET publicado = excluded.publicado, fecha = excluded.fecha",
+            (materia_id, int(request.publicado), datetime.now(timezone.utc).isoformat()),
+        )
+        bitacora.registrar(
+            conn, "publicar_notas" if request.publicado else "ocultar_notas",
+            f"{materia['seccion']} · P{materia['periodo']} · {materia['nombre']}",
+        )
+        conn.commit()
+    return {"ok": True, "publicado": request.publicado}
 
 
 class Ponderaciones(BaseModel):

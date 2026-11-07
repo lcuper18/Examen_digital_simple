@@ -39,6 +39,7 @@
     const data = await Panel.json(`/api/docente/notas?materia_id=${id}`);
     ponderaciones = data.ponderaciones;
     notaMinima = data.nota_minima;
+    mostrarPublicacion(data.publicado);
     document.querySelectorAll('[data-peso]').forEach(e => { e.textContent = `/${ponderaciones[e.dataset.peso]}`; });
     $('tabla-notas').querySelector('tbody').innerHTML = data.notas.map(n => `
       <tr data-id="${n.estudiante_id}">
@@ -111,6 +112,28 @@
     await cargarNotas();
   }
 
+  let publicado = false;
+  function mostrarPublicacion(valor) {
+    publicado = valor;
+    $('btn-publicar').textContent = valor ? 'Ocultar a estudiantes' : 'Publicar a estudiantes';
+    $('notas-publicado').textContent = valor ? 'Visible para los estudiantes en «Mis notas»' : 'Oculta para los estudiantes';
+    $('notas-publicado').classList.toggle('doc-pill', true);
+    $('notas-publicado').classList.toggle('ok', valor);
+    $('notas-publicado').classList.toggle('warn', !valor);
+  }
+
+  async function alternarPublicacion() {
+    if (!publicado && sinGuardar) return Panel.toast('Guarda las notas antes de publicarlas', 'error');
+    if (!publicado && !(await Panel.confirmar(
+      'Cada estudiante podrá ver sus notas, su asistencia y las observaciones de sus actividades de esta materia.',
+      { titulo: 'Publicar notas', texto: 'Publicar' }))) return;
+    const data = await Panel.json(`/api/docente/materias/${$('n-materia').value}/publicacion`, {
+      method: 'PUT', body: { publicado: !publicado },
+    });
+    mostrarPublicacion(data.publicado);
+    Panel.toast(data.publicado ? 'Notas publicadas a los estudiantes' : 'Notas ocultas');
+  }
+
   async function importarVinculadas() {
     if (sinGuardar && !(await Panel.confirmar('Tienes cambios sin guardar; se descartarán al importar.', { texto: 'Importar' }))) return;
     const data = await Panel.json('/api/docente/notas/importar-prueba', {
@@ -152,6 +175,8 @@
           <button class="btn btn-secondary" id="btn-importar-p02">Importar Prueba 02</button>
           <button class="btn btn-secondary" id="btn-importar-hoja">Importar hoja…</button>
           <button class="btn btn-secondary" id="btn-exportar-notas">Exportar CSV</button>
+          <button class="btn btn-secondary" id="btn-publicar">Publicar a estudiantes</button>
+          <span id="notas-publicado"></span>
           <button class="btn btn-primary" id="btn-guardar-notas">Guardar notas</button>
         </div>
         <p class="doc-muted"><span id="notas-resumen" aria-live="polite"></span> <strong id="notas-estado" class="doc-sesion-alerta"></strong></p>
@@ -178,6 +203,7 @@
         marcarCambios(true);
       });
       $('btn-guardar-notas').addEventListener('click', run(guardar));
+      $('btn-publicar').addEventListener('click', run(alternarPublicacion));
       $('btn-importar-hoja').addEventListener('click', run(importarHoja));
       $('btn-importar-vinc').addEventListener('click', run(importarVinculadas));
       $('btn-importar-p01').addEventListener('click', run(() => importar('prueba01')));

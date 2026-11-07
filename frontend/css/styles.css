@@ -1767,3 +1767,23 @@
         margin-left: 0;
       }
     }
+
+    /* ========== MIS NOTAS ========== */
+    .grades-overlay { align-items: flex-start; overflow-y: auto; }
+    .grades-container { width: 92%; max-width: 760px; margin: 64px auto 40px; color: var(--text-primary); }
+    .grades-title { font-size: 26px; margin: 0 0 4px; }
+    .grades-sub { color: var(--text-muted); font-size: 13px; margin: 0 0 20px; }
+    .grades-card { background: var(--bg-secondary); border: 1px solid var(--border-medium); border-radius: var(--radius-xl);
+      padding: 20px; margin-bottom: 20px; }
+    .grades-card h2 { font-size: 18px; margin: 0 0 2px; }
+    .grades-periodo { color: var(--accent-primary); font-size: 12px; font-weight: 600; margin: 0 0 12px; }
+    .grades-final { display: flex; align-items: baseline; gap: 12px; margin: 12px 0; }
+    .grades-final strong { font-size: 34px; }
+    .grades-final .ok { color: var(--accent-primary); } .grades-final .low { color: var(--accent-red); }
+    .grades-table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 8px 0 14px; }
+    .grades-table th, .grades-table td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .grades-table .num { text-align: right; white-space: nowrap; }
+    .grades-card h3 { font-size: 14px; margin: 16px 0 4px; color: var(--text-secondary); }
+    .grades-muted { color: var(--text-muted); font-size: 12px; }
+    .grades-alert { color: var(--accent-red); font-size: 13px; }
+    .grades-empty { text-align: center; color: var(--text-muted); padding: 40px 0; }

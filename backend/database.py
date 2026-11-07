@@ -331,6 +331,15 @@ def init_db() -> int:
                 FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id)
             )
         """)
+        # Materias cuyas notas el docente ya publicó a los estudiantes ("Mis notas")
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS publicaciones (
+                materia_id INTEGER PRIMARY KEY,
+                publicado INTEGER NOT NULL DEFAULT 0,
+                fecha TEXT,
+                FOREIGN KEY (materia_id) REFERENCES materias(id)
+            )
+        """)
         _agregar_columnas(cursor, "examenes_config", {
             "materia_id": "INTEGER",  # materia y componente (prueba01/prueba02) donde se importa la nota
             "componente": "TEXT",
