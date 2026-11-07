@@ -71,6 +71,7 @@ Se entra con la contraseña del docente.
 - **Asistencia:** se pasa lista por fecha y materia (presente, ausente, tardía de menos o más de 10 min, ausencia y tardía justificadas, con observación). El porcentaje de ausencias injustificadas sobre las lecciones impartidas da los puntos de asistencia según el artículo 37 del Reglamento de Evaluación (0-<10 % = 5, <20 % = 4, <30 % = 3, <40 % = 2, <50 % = 1, desde 50 % = 0; tardía injustificada de menos de 10 min = media ausencia, de más de 10 min = una ausencia). Cada vez que se guarda o elimina una lista, el componente Asistencia de Notas se recalcula (si ya habías escrito ese componente a mano, se reemplaza desde la primera lista que guardes). Resumen del período, Excel e informe imprimible.
 - **Actividades:** tareas, proyectos y otras actividades por materia, con rúbrica opcional (criterios con sus puntos). Se califica por criterio, con estado (entregado, tardío, sin entrega, en revisión, exonerado), observación para el estudiante y nota interna que nunca se muestra. El componente de Notas se calcula solo: puntos obtenidos entre los posibles de las actividades ya calificadas (sin entrega cuenta 0; en revisión y exonerado no cuentan). **Importar hoja (Excel)** carga hojas como `Calificacion_*.xlsx` (columnas de criterios con sus puntos entre paréntesis, Estado, Observaciones y Notas internas), emparejando por nombre.
 - **Publicar a estudiantes (Notas):** por materia, el botón **Publicar a estudiantes** muestra a cada estudiante, en **Ver mis notas** (pantalla del código del examen), sus componentes en puntos, su nota, su asistencia y sus actividades con la observación para el estudiante. Cada estudiante solo ve lo suyo y solo de las materias publicadas de su sección; la nota interna nunca se muestra. **Ocultar a estudiantes** lo retira.
+- **Seguimiento:** cada estudiante tiene una **Ficha** (botón en Estudiantes y en el Resumen) con teléfono, datos del encargado, adecuación, historial por materia, exámenes presentados y un registro de observaciones (anecdótico, logro, conducta, familia, apoyo) que solo ve el docente. **Importar encargados (Excel)** carga esos datos desde `Lista_Alumnos.xlsx` por cédula («NO posee» en ADECUACIÓN no cuenta como adecuación). El **Resumen** lista a los estudiantes en riesgo del período actual: nota proyectada bajo la mínima, ausencias injustificadas sobre el umbral, actividades sin entrega y exámenes vinculados sin presentar.
 - **Ajustes:** datos institucionales (institución, dirección regional, circuito, docente, curso lectivo), nota mínima de aprobación, ponderación por materia y las direcciones (IP y nombre `.local`) para que los estudiantes entren.
 - **Bitácora:** registro de las acciones del docente (nunca guarda contraseñas).
 
@@ -97,6 +98,10 @@ data/           codigos.json, examenes/*.json, estudiantes.example.csv
 scripts/        iniciar.sh, iniciar.bat
 tests/          pytest
 ```
+
+## Cierre del curso lectivo
+
+En **Ajustes → Cierre del curso lectivo**: guarda en `respaldos/` una copia completa de la base (`cierre_<curso>_<fecha>.sqlite`) y un Excel con las notas finales, borra notas, asistencia, actividades, exámenes presentados, publicaciones y observaciones, pone el nuevo curso lectivo y el período 1, y desactiva (si lo indicas) a los estudiantes de las secciones que egresan. Se conservan estudiantes, materias, ponderaciones y exámenes. Requiere escribir CERRAR.
 
 ## Respaldos
 

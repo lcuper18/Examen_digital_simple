@@ -15,7 +15,7 @@ from backend import database
 from backend.routes import (
     auth_router, bitacora_router, estudiantes_router, examenes_docente_router,
     examenes_router, intentos_router, notas_router, reportes_router,
-    actividades_router, ajustes_router, informes_router, portal_router, asistencia_router, config_router,
+    actividades_router, ajustes_router, informes_router, portal_router, seguimiento_router, asistencia_router, config_router,
 )
 
 # Ruta base del proyecto
@@ -78,6 +78,7 @@ app.include_router(asistencia_router)
 app.include_router(actividades_router)
 app.include_router(informes_router)
 app.include_router(portal_router)
+app.include_router(seguimiento_router)
 app.include_router(config_router)
 
 

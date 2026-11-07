@@ -33,6 +33,22 @@ def a_numero(valor: Any) -> float | None:
         return None
 
 
+def _filas_de(hoja) -> list[list[Any]]:
+    """Filas de una hoja; corta tras muchas filas vacías seguidas (algunos Excel declaran un millón de filas)."""
+    filas, vacias = [], 0
+    for fila in hoja.iter_rows(values_only=True):
+        if all(c is None for c in fila):
+            vacias += 1
+            if vacias >= 100:
+                break
+        else:
+            vacias = 0
+        filas.append(list(fila))
+    while filas and all(c is None for c in filas[-1]):
+        filas.pop()
+    return filas
+
+
 def leer_filas(datos: bytes) -> list[list[Any]]:
     """Filas de la primera hoja de un xlsx, o de un CSV (utf-8 con o sin BOM, separado por ';' o ',')."""
     if not datos:
@@ -40,7 +56,7 @@ def leer_filas(datos: bytes) -> list[list[Any]]:
     if datos[:2] == b"PK":
         try:
             hoja = load_workbook(io.BytesIO(datos), data_only=True, read_only=True).worksheets[0]
-            return [list(f) for f in hoja.iter_rows(values_only=True)]
+            return _filas_de(hoja)
         except Exception:
             raise HTTPException(status_code=400, detail="No se pudo leer el archivo de Excel")
     try:
@@ -50,6 +66,17 @@ def leer_filas(datos: bytes) -> list[list[Any]]:
     primera = texto.splitlines()[0] if texto.strip() else ""
     delimitador = ";" if primera.count(";") >= primera.count(",") else ","
     return [list(f) for f in csv.reader(io.StringIO(texto), delimiter=delimitador)]
+
+
+def leer_hojas(datos: bytes) -> list[tuple[str, list[list[Any]]]]:
+    """Todas las hojas de un xlsx como (nombre, filas)."""
+    if datos[:2] != b"PK":
+        raise HTTPException(status_code=400, detail="Se esperaba un archivo de Excel (.xlsx)")
+    try:
+        libro = load_workbook(io.BytesIO(datos), data_only=True, read_only=True)
+        return [(h.title, _filas_de(h)) for h in libro.worksheets]
+    except Exception:
+        raise HTTPException(status_code=400, detail="No se pudo leer el archivo de Excel")
 
 
 def emparejar(estudiantes: list[Any]):

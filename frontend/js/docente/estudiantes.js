@@ -41,6 +41,7 @@
         <td>${Panel.formatoFecha(e.ultimo_acceso)}</td>
         <td>${e.enviados}</td>
         <td class="doc-actions">
+          <button class="btn btn-secondary" data-ficha="${e.id}" aria-haspopup="dialog">Ficha</button>
           <button class="btn btn-secondary" data-reiniciar="${e.id}">Reiniciar clave</button>
           <button class="btn btn-secondary" data-mas="${e.id}" aria-haspopup="dialog">Más…</button>
         </td>
@@ -160,6 +161,26 @@
     if (r.creados.length) await hojaCredenciales('Credenciales de estudiantes importados', r.creados);
   }
 
+  async function importarEncargados() {
+    const archivo = await Panel.dialogo({
+      titulo: 'Importar datos de encargados',
+      cuerpo: `<p class="doc-muted">Excel como <code>Lista_Alumnos.xlsx</code>: una hoja por sección con las columnas Cédula, Teléfono estudiante,
+        Apellidos / Nombre del encargado, Cédula del encargado, Teléfono 1 y 2 de contacto, Dirección y ADECUACIÓN. Se empareja por cédula y se
+        reemplazan esos datos en la ficha.</p>
+        <label class="doc-campo">Archivo <input type="file" id="enc-archivo" accept=".xlsx"></label>`,
+      botones: [{ texto: 'Cancelar', valor: null },
+        { texto: 'Importar', primario: true, valor: f => f.querySelector('#enc-archivo').files[0] || null }],
+    });
+    if (!archivo) return;
+    const r = await Panel.subir('/api/docente/estudiantes/importar-encargados', archivo);
+    if (r.sin_pareja.length) {
+      await Panel.dialogo({ titulo: `Se actualizaron ${r.actualizados} estudiantes`,
+        cuerpo: `<p>Cédulas sin pareja en el sistema:</p><ul>${r.sin_pareja.map(c => `<li>${Panel.esc(c)}</li>`).join('')}</ul>` });
+    } else {
+      Panel.toast(`Se actualizaron ${r.actualizados} estudiantes`);
+    }
+  }
+
   async function credencialesSeccion() {
     const seccion = $('e-seccion').value;
     if (!seccion) return Panel.toast('Elige primero una sección en el filtro', 'error');
@@ -181,6 +202,7 @@
           <button class="btn btn-primary" id="e-nuevo">Nuevo estudiante</button>
           <button class="btn btn-secondary" id="e-importar">Importar CSV</button>
           <button class="btn btn-secondary" id="e-credenciales">Credenciales de sección</button>
+          <button class="btn btn-secondary" id="e-encargados">Importar encargados (Excel)…</button>
         </div>
         <p id="e-resumen" class="doc-muted" aria-live="polite"></p>
         <div class="doc-table-wrap">
@@ -204,7 +226,9 @@
       $('e-nuevo').addEventListener('click', run(nuevo));
       $('e-importar').addEventListener('click', run(importar));
       $('e-credenciales').addEventListener('click', run(credencialesSeccion));
+      $('e-encargados').addEventListener('click', run(importarEncargados));
       $('tabla-estudiantes').addEventListener('click', e => {
+        if (e.target.dataset.ficha) run(() => Panel.abrirFicha(Number(e.target.dataset.ficha)))();
         if (e.target.dataset.reiniciar) run(reiniciarClave)(Number(e.target.dataset.reiniciar));
         if (e.target.dataset.mas) run(mas)(Number(e.target.dataset.mas));
       });

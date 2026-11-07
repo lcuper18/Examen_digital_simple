@@ -120,6 +120,8 @@ AJUSTES_DEFAULT = {
     "docente": "Fallas Rivas Luis Cupertino",
     "curso_lectivo": "2026",
     "nota_minima": "70",
+    "periodo_actual": "2",        # período que se vigila en las alertas del Resumen
+    "umbral_ausencias": "20",     # % de ausencias injustificadas que dispara una alerta
 }
 
 RESPALDOS_DIR = PROJECT_ROOT / "respaldos"
@@ -130,6 +132,19 @@ def leer_ajustes(conn: sqlite3.Connection) -> dict[str, str]:
     ajustes = dict(AJUSTES_DEFAULT)
     ajustes.update({r["clave"]: r["valor"] for r in conn.execute("SELECT clave, valor FROM ajustes")})
     return ajustes
+
+
+def copiar_base(archivo: Path) -> None:
+    """Copia consistente de la base completa en `archivo` (API de respaldo de SQLite)."""
+    origen = get_db()
+    try:
+        copia = sqlite3.connect(archivo)
+        try:
+            origen.backup(copia)
+        finally:
+            copia.close()
+    finally:
+        origen.close()
 
 
 def respaldar(destino: Path | None = None, mantener: int = 30) -> Path | None:
@@ -144,15 +159,7 @@ def respaldar(destino: Path | None = None, mantener: int = 30) -> Path | None:
     archivo = destino / f"examen_db_{date.today().isoformat()}.sqlite"
     if archivo.exists():
         return None
-    origen = get_db()
-    try:
-        copia = sqlite3.connect(archivo)
-        try:
-            origen.backup(copia)
-        finally:
-            copia.close()
-    finally:
-        origen.close()
+    copiar_base(archivo)
     for viejo in sorted(destino.glob("examen_db_*.sqlite"))[:-mantener]:
         viejo.unlink()
     return archivo
@@ -251,6 +258,15 @@ def init_db() -> int:
             "activo": "INTEGER NOT NULL DEFAULT 1",
             "debe_cambiar_password": "INTEGER NOT NULL DEFAULT 0",
             "ultimo_acceso": "TEXT",
+            # ficha de seguimiento
+            "telefono": "TEXT",
+            "encargado_nombre": "TEXT",
+            "encargado_cedula": "TEXT",
+            "encargado_telefono": "TEXT",
+            "encargado_telefono2": "TEXT",
+            "direccion": "TEXT",
+            "adecuacion": "INTEGER NOT NULL DEFAULT 0",
+            "adecuacion_detalle": "TEXT",
         })
 
         # Configuración por examen (habilitado y ventana de disponibilidad)
@@ -331,6 +347,19 @@ def init_db() -> int:
                 FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id)
             )
         """)
+        # Registro de observaciones (anecdótico) del docente sobre cada estudiante
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS observaciones (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                estudiante_id INTEGER NOT NULL,
+                fecha TEXT NOT NULL,
+                tipo TEXT NOT NULL,
+                texto TEXT NOT NULL,
+                materia_id INTEGER,
+                FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id)
+            )
+        """)
+
         # Materias cuyas notas el docente ya publicó a los estudiantes ("Mis notas")
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS publicaciones (

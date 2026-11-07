@@ -48,6 +48,13 @@ def guardar_ajustes(request: GuardarAjustes) -> dict[str, Any]:
                 raise ValueError
         except ValueError:
             raise HTTPException(status_code=400, detail="La nota mínima debe estar entre 0 y 100")
+    for clave, minimo, maximo in (("periodo_actual", 1, 4), ("umbral_ausencias", 1, 100)):
+        if clave in valores:
+            try:
+                if not minimo <= float(valores[clave]) <= maximo:
+                    raise ValueError
+            except ValueError:
+                raise HTTPException(status_code=400, detail=f"«{clave}» debe estar entre {minimo} y {maximo}")
     with database.get_db_context() as conn:
         conn.executemany(
             "INSERT INTO ajustes (clave, valor) VALUES (?, ?) "
