@@ -303,6 +303,34 @@ def init_db() -> int:
                 FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id)
             )
         """)
+        # Actividades evaluativas (tareas, proyectos, trabajo cotidiano...) con rúbrica opcional
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS actividades (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                materia_id INTEGER NOT NULL,
+                componente TEXT NOT NULL,
+                nombre TEXT NOT NULL,
+                fecha_entrega TEXT,
+                puntos_max REAL NOT NULL,
+                criterios_json TEXT NOT NULL DEFAULT '[]',
+                UNIQUE (materia_id, componente, nombre),
+                FOREIGN KEY (materia_id) REFERENCES materias(id)
+            )
+        """)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS calificaciones (
+                actividad_id INTEGER NOT NULL,
+                estudiante_id INTEGER NOT NULL,
+                estado TEXT NOT NULL DEFAULT 'entregado',
+                puntos REAL,
+                criterios_json TEXT NOT NULL DEFAULT '[]',
+                observacion TEXT,
+                nota_interna TEXT,
+                PRIMARY KEY (actividad_id, estudiante_id),
+                FOREIGN KEY (actividad_id) REFERENCES actividades(id) ON DELETE CASCADE,
+                FOREIGN KEY (estudiante_id) REFERENCES estudiantes(id)
+            )
+        """)
         _agregar_columnas(cursor, "examenes_config", {
             "materia_id": "INTEGER",  # materia y componente (prueba01/prueba02) donde se importa la nota
             "componente": "TEXT",

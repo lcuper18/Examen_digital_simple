@@ -4,7 +4,7 @@ const Panel = {
   modulos: [],
   moduloActivo: null,
   temporizadorSesion: null,
-  ORDEN: ['resumen', 'resultados', 'estudiantes', 'examenes', 'asistencia', 'notas', 'reportes', 'bitacora', 'ajustes'],
+  ORDEN: ['resumen', 'resultados', 'estudiantes', 'examenes', 'asistencia', 'actividades', 'notas', 'reportes', 'bitacora', 'ajustes'],
 };
 
 const $ = (id) => document.getElementById(id);
@@ -54,6 +54,16 @@ Panel.json = async function (url, options = {}) {
     const detalle = Array.isArray(data.detail) ? 'Datos no válidos' : data.detail;
     throw new Error(detalle || 'Error del servidor');
   }
+  return data;
+};
+
+// Sube un archivo tal cual (cuerpo binario) y devuelve el JSON; lanza Error con el detalle del servidor
+Panel.subir = async function (url, archivo) {
+  const response = await Panel.api(url, {
+    method: 'POST', body: await archivo.arrayBuffer(), headers: { 'Content-Type': 'application/octet-stream' },
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error((Array.isArray(data.detail) ? 'Datos no válidos' : data.detail) || 'Error del servidor');
   return data;
 };
 

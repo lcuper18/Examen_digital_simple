@@ -120,6 +120,28 @@
     await cargarNotas();
   }
 
+  async function importarHoja() {
+    const archivo = await Panel.dialogo({
+      titulo: 'Importar hoja de notas',
+      cuerpo: `<p class="doc-muted">CSV (separado por «;») o Excel con las columnas Id o Nombre, Trabajo cotidiano, Tareas, Prueba1, Prueba2, Proyecto y Asistencia,
+        <strong>en puntos</strong> como en tus hojas. Las celdas vacías no cambian nada.</p>
+        <label class="doc-campo">Archivo <input type="file" id="hoja-archivo" accept=".csv,.xlsx"></label>`,
+      botones: [{ texto: 'Cancelar', valor: null },
+        { texto: 'Importar', primario: true, valor: f => f.querySelector('#hoja-archivo').files[0] || null }],
+    });
+    if (!archivo) return;
+    if (sinGuardar && !(await Panel.confirmar('Tienes cambios sin guardar; se descartarán al importar.', { texto: 'Importar' }))) return;
+    const r = await Panel.subir(`/api/docente/notas/importar-hoja?materia_id=${$('n-materia').value}`, archivo);
+    const detalle = [...r.sin_pareja.map(n => `Sin pareja: ${n}`), ...r.avisos];
+    if (detalle.length) {
+      await Panel.dialogo({ titulo: `Se importaron ${r.importados} estudiantes`,
+        cuerpo: `<p>Revisa estas filas:</p><ul>${detalle.map(d => `<li>${Panel.esc(d)}</li>`).join('')}</ul>` });
+    } else {
+      Panel.toast(`Se importaron ${r.importados} estudiantes`);
+    }
+    await cargarNotas();
+  }
+
   Panel.registrar('notas', 'Notas', {
     init(el) {
       el.innerHTML = `
@@ -128,6 +150,7 @@
           <button class="btn btn-secondary" id="btn-importar-vinc" title="Importa los exámenes vinculados a esta materia (pestaña Exámenes)">Importar exámenes vinculados</button>
           <button class="btn btn-secondary" id="btn-importar-p01">Importar Prueba 01</button>
           <button class="btn btn-secondary" id="btn-importar-p02">Importar Prueba 02</button>
+          <button class="btn btn-secondary" id="btn-importar-hoja">Importar hoja…</button>
           <button class="btn btn-secondary" id="btn-exportar-notas">Exportar CSV</button>
           <button class="btn btn-primary" id="btn-guardar-notas">Guardar notas</button>
         </div>
@@ -155,6 +178,7 @@
         marcarCambios(true);
       });
       $('btn-guardar-notas').addEventListener('click', run(guardar));
+      $('btn-importar-hoja').addEventListener('click', run(importarHoja));
       $('btn-importar-vinc').addEventListener('click', run(importarVinculadas));
       $('btn-importar-p01').addEventListener('click', run(() => importar('prueba01')));
       $('btn-importar-p02').addEventListener('click', run(() => importar('prueba02')));

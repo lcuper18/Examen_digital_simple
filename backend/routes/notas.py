@@ -5,10 +5,13 @@ import csv
 import io
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Response
+import re
+
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, Field
 
 from backend import bitacora, database, security
+from backend.hojas import a_numero, emparejar, leer_filas, sin_tildes
 
 router = APIRouter(
     prefix="/api/docente", tags=["notas"], dependencies=[Depends(security.require_docente)]
@@ -254,6 +257,74 @@ def importar_prueba(request: ImportarPrueba) -> dict[str, Any]:
         importadas = sum(_importar(conn, materia, comp, codigo) for comp, codigo in pares)
         conn.commit()
     return {"ok": True, "importadas": importadas, "examenes": [c for _, c in pares]}
+
+
+ALIAS_COMPONENTES = {
+    "tc": "trabajo_cotidiano", "trabajocotidiano": "trabajo_cotidiano",
+    "tarea": "tareas", "tareas": "tareas",
+    "prueba1": "prueba01", "prueba01": "prueba01", "p1": "prueba01",
+    "prueba2": "prueba02", "prueba02": "prueba02", "p2": "prueba02",
+    "proyecto": "proyecto", "asistencia": "asistencia",
+}
+
+
+@router.post("/notas/importar-hoja")
+async def importar_hoja(request: Request, materia_id: int) -> dict[str, Any]:
+    """
+    Carga las notas de una hoja del docente (CSV con ';' o xlsx) en puntos, p. ej. las de
+    `Notas/Periodo02/<sección>/*.csv`: columnas Id (cédula sin guiones) o Nombre, y los componentes
+    (Trabajo cotidiano, Tareas, Prueba1, Prueba2, Proyecto, Asistencia). Las celdas vacías no cambian nada.
+    """
+    filas = leer_filas(await request.body())
+    cab = next((i for i, f in enumerate(filas) if any(
+        re.sub(r"\W", "", sin_tildes(str(c or "")).lower()) in ALIAS_COMPONENTES for c in f)), None)
+    if cab is None:
+        raise HTTPException(status_code=400, detail="No encontré columnas de componentes (TC, Tareas, Prueba1...)")
+    enc = [re.sub(r"\W", "", sin_tildes(str(c or "")).lower()) for c in filas[cab]]
+    c_id = next((i for i, t in enumerate(enc) if t in ("id", "cedula", "identificacion")), None)
+    c_nombre = next((i for i, t in enumerate(enc) if t in ("nombre", "estudiante")), None)
+    columnas = {i: ALIAS_COMPONENTES[t] for i, t in enumerate(enc) if t in ALIAS_COMPONENTES}
+    if c_id is None and c_nombre is None:
+        raise HTTPException(status_code=400, detail="Falta la columna Id o Nombre")
+
+    with database.get_db_context() as conn:
+        materia = _materia(conn, materia_id)
+        pesos = pesos_de(conn, materia_id)
+        buscar = emparejar(conn.execute(
+            "SELECT id, cedula, nombre, apellido1, apellido2 FROM estudiantes WHERE seccion = ?",
+            (materia["seccion"],)).fetchall())
+        importados, sin_pareja, avisos = 0, [], []
+        for f in filas[cab + 1:]:
+            celda = lambda i: (f[i] if i is not None and i < len(f) else None)
+            ident, nombre = celda(c_id), celda(c_nombre)
+            if not str(ident or "").strip() and not str(nombre or "").strip():
+                continue
+            eid = buscar(cedula=a_numero(ident) if a_numero(ident) is not None else ident, nombre=nombre)
+            if eid is None:
+                sin_pareja.append(str(nombre or ident).strip())
+                continue
+            valores = {}
+            for i, comp in columnas.items():
+                puntos = a_numero(celda(i))
+                if puntos is None:
+                    continue
+                if puntos < 0 or puntos > pesos[comp] + 1e-9:
+                    avisos.append(f"{nombre or ident}: {ETIQUETAS[comp]} {puntos:g} supera {pesos[comp]:g}")
+                    continue
+                valores[comp] = round(puntos / pesos[comp] * 100, 4) if pesos[comp] else 0.0
+            if not valores:
+                continue
+            conn.execute(
+                f"INSERT INTO notas (estudiante_id, materia_id, {', '.join(valores)}) "
+                f"VALUES (?, ?, {', '.join('?' for _ in valores)}) ON CONFLICT (estudiante_id, materia_id) "
+                f"DO UPDATE SET {', '.join(f'{c} = excluded.{c}' for c in valores)}",
+                (eid, materia_id, *valores.values()))
+            importados += 1
+        bitacora.registrar(
+            conn, "importar_hoja",
+            f"{materia['seccion']} · P{materia['periodo']} · {materia['nombre']} ({importados} estudiantes)")
+        conn.commit()
+    return {"ok": True, "importados": importados, "sin_pareja": sin_pareja, "avisos": avisos}
 
 
 def _csv_response(nombre: str, encabezado: list[str], filas: list[list[Any]]) -> Response:
