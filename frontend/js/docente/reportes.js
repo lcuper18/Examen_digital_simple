@@ -5,22 +5,25 @@
     examen: 'Resultado de un examen',
     criticas: 'Preguntas críticas de un examen',
     seccion: 'Notas por sección y periodo',
+    acta: 'Acta de calificaciones',
+    encargados: 'Informe para encargados',
+    registro: 'Registro de notas (en puntos)',
   };
   const NOTAS_ETIQUETA = {
     trabajo_cotidiano: 'TC', tareas: 'Tareas', prueba01: 'P01', prueba02: 'P02', proyecto: 'Proyecto', asistencia: 'Asist.',
   };
   let catalogos = null;
-  let actual = null; // { titulo, html, excel }
+  let actual = null; // { titulo, html, excel, csv }
 
   const num = (n, dec = 1) => (n === null || n === undefined ? '—' : Number(n).toFixed(dec).replace(/\.0$/, ''));
   const clase = (nota, minima) => (nota >= minima ? 'rep-aprobado' : 'rep-reprobado');
   const hoy = () => new Date().toLocaleDateString('es-CR', { dateStyle: 'long' });
 
   async function cargarCatalogos() {
-    const [est, exa] = await Promise.all([
-      Panel.json('/api/docente/estudiantes'), Panel.json('/api/docente/examenes'),
+    const [est, exa, mat] = await Promise.all([
+      Panel.json('/api/docente/estudiantes'), Panel.json('/api/docente/examenes'), Panel.json('/api/docente/materias'),
     ]);
-    catalogos = { estudiantes: est.estudiantes, examenes: exa.examenes };
+    catalogos = { estudiantes: est.estudiantes, examenes: exa.examenes, materias: mat.materias };
     catalogos.secciones = [...new Set(est.estudiantes.map(e => e.seccion))].sort();
   }
 
@@ -32,7 +35,14 @@
     const tipo = $('r-tipo').value;
     const seccion = `<label>Sección <select id="r-seccion"><option value="">Todas</option>${opciones(catalogos.secciones, s => s, s => s)}</select></label>`;
     const examen = `<label>Examen <select id="r-examen">${opciones(catalogos.examenes, e => e.codigo, e => `${e.codigo} · ${e.nombre}`)}</select></label>`;
+    const materia = `<label>Materia <select id="r-materia">${opciones(
+      catalogos.materias, m => m.id, m => `${m.seccion} · Periodo ${m.periodo} · ${m.nombre}`)}</select></label>`;
     $('r-parametros').innerHTML = {
+      acta: materia,
+      registro: materia,
+      encargados: `<label>Sección <select id="r-seccion">${opciones(catalogos.secciones, s => s, s => s)}</select></label>
+        <label>Periodo <select id="r-periodo"><option value="1">1</option><option value="2">2</option></select></label>
+        <label>Estudiante <select id="r-estudiante"></select></label>`,
       boleta: `<label>Estudiante <select id="r-estudiante">${opciones(
         catalogos.estudiantes, e => e.id, e => `${Panel.nombre(e)} (${e.seccion})`)}</select></label>`,
       examen: examen + seccion,
@@ -40,7 +50,17 @@
       seccion: `<label>Sección <select id="r-seccion">${opciones(catalogos.secciones, s => s, s => s)}</select></label>
         <label>Periodo <select id="r-periodo"><option value="1">1</option><option value="2">2</option></select></label>`,
     }[tipo];
+    if (tipo === 'encargados') {
+      llenarEstudiantes();
+      $('r-seccion').addEventListener('change', llenarEstudiantes);
+    }
     limpiarSalida();
+  }
+
+  function llenarEstudiantes() {
+    const seccion = $('r-seccion').value;
+    $('r-estudiante').innerHTML = '<option value="">Toda la sección</option>' + opciones(
+      catalogos.estudiantes.filter(e => e.seccion === seccion), e => e.id, e => Panel.nombre(e));
   }
 
   function limpiarSalida() {
@@ -48,6 +68,7 @@
     $('r-salida').innerHTML = '<p class="doc-muted">Elige los parámetros y pulsa «Generar».</p>';
     $('r-imprimir').disabled = true;
     $('r-excel').disabled = true;
+    $('r-csv').disabled = true;
   }
 
   // ---------- Constructores de reporte ----------
@@ -130,23 +151,100 @@
     const minima = d.nota_minima;
     return encabezado(`Notas · sección ${d.seccion} · periodo ${d.periodo}`, '', `Nota mínima ${minima}`) +
       `<table class="rep-tabla"><thead><tr><th>Estudiante</th>${d.materias.map(m => `<th class="num">${Panel.esc(m.nombre)}</th>`).join('')}
-        <th class="num">Promedio</th></tr></thead><tbody>
+        <th class="num">Promedio</th><th>Estado</th></tr></thead><tbody>
         ${d.estudiantes.map(e => `<tr><td>${Panel.esc(e.nombre)}</td>
           ${d.materias.map(m => {
             const n = e.notas[String(m.id)];
             return n && n.completa ? `<td class="num ${clase(n.nota_final, minima)}">${num(n.nota_final)}</td>` : '<td class="num">—</td>';
           }).join('')}
-          <td class="num ${e.promedio_general === null ? '' : clase(e.promedio_general, minima)}">${num(e.promedio_general)}</td></tr>`).join('')}
+          <td class="num ${e.promedio_general === null ? '' : clase(e.promedio_general, minima)}">${num(e.promedio_general)}</td>
+          <td class="${e.estado === 'Aprobado' ? 'rep-aprobado' : e.estado === 'Incompleto' ? '' : 'rep-reprobado'}">${Panel.esc(e.estado)}</td></tr>`).join('')}
         </tbody><tfoot><tr><th>Promedio de la materia</th>
-          ${d.promedios.map(p => `<th class="num">${num(p.promedio)}<br><small>${p.aprobados}/${p.completas} aprob.</small></th>`).join('')}<th></th></tr></tfoot></table>
+          ${d.promedios.map(p => `<th class="num">${num(p.promedio)}<br><small>${p.aprobados}/${p.completas} aprob.</small></th>`).join('')}<th></th><th></th></tr></tfoot></table>
       <p class="rep-meta">Solo se muestran notas completas (los seis componentes calificados).</p>`;
+  }
+
+  const entero = (n) => (n === null || n === undefined ? '—' : String(n));
+
+  function htmlActa(d) {
+    const e = d.encabezado, minima = d.nota_minima;
+    const parcial = d.estudiantes.some(x => !x.completa);
+    return `<p class="rep-acta">Dirección Regional de Educación: <strong>DIRECCIÓN REGIONAL ${Panel.esc(e.direccion_regional.toUpperCase())}</strong><br>
+        Circuito escolar: <strong>CIRCUITO ${Panel.esc(e.circuito)}</strong><br>
+        Centro educativo: <strong>${Panel.esc(e.institucion.toUpperCase())}</strong><br>
+        Curso lectivo: <strong>${Panel.esc(e.curso_lectivo)}</strong></p>
+      <h1 style="text-align:center">${Panel.esc(e.institucion.toUpperCase())}</h1>
+      <p style="text-align:center"><strong>Reportes</strong></p>
+      <p class="rep-acta">Docente: <strong>${Panel.esc(e.docente.toUpperCase())}</strong><br>
+        Asignatura: <strong>${Panel.esc(e.asignatura.toUpperCase())}.</strong><br>
+        Nivel: <strong>${Panel.esc(e.nivel)}</strong><br>
+        Sección: <strong>${Panel.esc(e.seccion)}</strong><br>
+        Período: <strong>${e.periodo}° período</strong></p>
+      <table class="rep-tabla"><thead><tr><th>Id</th><th>Nombre</th><th class="num">Nota</th></tr></thead><tbody>
+        ${d.estudiantes.map(x => `<tr><td>${Panel.esc(x.cedula)}</td><td>${Panel.esc(x.nombre)}</td>
+          <td class="num ${clase(x.nota, minima)}">${x.nota}${x.completa ? '' : '*'}</td></tr>`).join('')}</tbody></table>
+      ${parcial ? '<p class="rep-meta">* Nota parcial: faltan componentes por calificar (cuentan como 0).</p>' : ''}
+      <div class="rep-firma" style="justify-content:center;margin-top:60px"><div>Firma</div></div>`;
+  }
+
+  function htmlMateriaEncargado(m, minima) {
+    const pendientes = m.actividades.filter(a => a.estado === 'sin_entrega');
+    const asis = m.asistencia;
+    return `<h2>${Panel.esc(m.materia)}</h2>
+      <table class="rep-tabla"><thead><tr><th>Componente</th><th class="num">Valor</th><th class="num">Puntos obtenidos</th></tr></thead><tbody>
+        ${m.componentes.map(c => `<tr><td>${Panel.esc(c.etiqueta)}</td><td class="num">${num(c.peso, 2)}</td><td class="num">${num(c.puntos, 2)}</td></tr>`).join('')}
+      </tbody><tfoot><tr><th colspan="2">Nota ${m.completa ? '' : '(parcial)'}</th>
+        <th class="num ${clase(m.nota_final, minima)}">${num(m.nota_final)} · ${m.aprobado ? 'Aprobado' : 'Por debajo de ' + minima}</th></tr></tfoot></table>
+      ${asis ? `<p class="rep-meta"><strong>Asistencia:</strong> ${asis.lecciones} lecciones impartidas · ${asis.ausencias} ausencias ·
+        ${asis.tardias} tardías · ${asis.justificadas} justificadas · ${num(asis.porcentaje, 1)} % de ausencias injustificadas · ${asis.puntos} de ${asis.maximo} puntos.</p>`
+        : '<p class="rep-meta"><strong>Asistencia:</strong> sin lista registrada en el período.</p>'}
+      ${m.actividades.length ? `<table class="rep-tabla"><thead><tr><th>Actividad</th><th>Componente</th><th>Estado</th><th class="num">Puntos</th><th>Observación</th></tr></thead><tbody>
+        ${m.actividades.map(a => `<tr><td>${Panel.esc(a.nombre)}</td><td>${Panel.esc(a.componente)}</td><td>${Panel.esc(a.estado_texto)}</td>
+          <td class="num">${a.estado === 'sin_entrega' ? '0' : num(a.puntos, 2)} / ${num(a.puntos_max, 2)}</td><td>${Panel.esc(a.observacion)}</td></tr>`).join('')}</tbody></table>` : ''}
+      ${pendientes.length ? `<p class="rep-reprobado">Pendiente: ${pendientes.map(a => Panel.esc(a.nombre)).join('; ')}.</p>` : ''}`;
+  }
+
+  function htmlEncargados(d) {
+    const e = d.encabezado;
+    return d.informes.map(i => `<div class="rep-pagina">
+      <h1>Informe de calificaciones y asistencia</h1>
+      <p class="rep-meta">${Panel.esc(e.institucion)} · Curso lectivo ${Panel.esc(e.curso_lectivo)} · ${Panel.esc(e.nivel)} · Sección ${Panel.esc(d.seccion)} · Período ${d.periodo}</p>
+      <p><strong>${Panel.esc(i.estudiante.nombre)}</strong> · Cédula ${Panel.esc(i.estudiante.cedula)}</p>
+      ${i.materias.map(m => htmlMateriaEncargado(m, d.nota_minima)).join('')}
+      <div class="rep-firma"><div>${Panel.esc(e.docente)}<br><small>Docente</small></div><div>Recibido por el encargado</div></div>
+    </div>`).join('') + `<p class="rep-meta">Informe generado el ${hoy()}.</p>`;
+  }
+
+  function htmlRegistro(d, materia) {
+    const filas = d.notas;
+    return encabezado(`Registro de notas · ${materia.nombre}`, '', `Sección ${Panel.esc(materia.seccion)} · Periodo ${materia.periodo} · puntos por componente`) +
+      `<table class="rep-tabla"><thead><tr><th>Estudiante</th>${Object.keys(d.ponderaciones).map(c =>
+        `<th class="num">${NOTAS_ETIQUETA[c]} <small>/${num(d.ponderaciones[c], 2)}</small></th>`).join('')}<th class="num">Nota</th></tr></thead><tbody>
+      ${filas.map(f => `<tr><td>${Panel.esc(Panel.nombre(f))}</td>${Object.keys(d.ponderaciones).map(c =>
+        `<td class="num">${f[c] === null ? '—' : num(f[c] * d.ponderaciones[c] / 100, 2)}</td>`).join('')}
+        <td class="num ${clase(f.nota_final, d.nota_minima)}">${num(f.nota_final)}</td></tr>`).join('')}</tbody></table>`;
   }
 
   async function generar() {
     const tipo = $('r-tipo').value;
     const q = (id) => ($(id) ? $(id).value : '');
     const param = (nombre, valor) => (valor ? `?${nombre}=${encodeURIComponent(valor)}` : '');
-    if (tipo === 'boleta') {
+    if (tipo === 'acta') {
+      const id = q('r-materia');
+      const d = await Panel.json(`/api/docente/informes/acta?materia_id=${id}`);
+      actual = { titulo: `Acta ${d.encabezado.asignatura} ${d.encabezado.seccion}`, html: htmlActa(d),
+        excel: [`/api/docente/informes/acta/excel?materia_id=${id}`, `acta_${id}.xlsx`] };
+    } else if (tipo === 'registro') {
+      const id = q('r-materia');
+      const d = await Panel.json(`/api/docente/notas?materia_id=${id}`);
+      actual = { titulo: `Registro ${d.materia.nombre}`, html: htmlRegistro(d, d.materia),
+        excel: [`/api/docente/informes/registro/excel?materia_id=${id}`, `registro_${id}.xlsx`],
+        csv: [`/api/docente/informes/registro?materia_id=${id}`, `registro_${id}.csv`] };
+    } else if (tipo === 'encargados') {
+      const s = q('r-seccion'), p = q('r-periodo'), e = q('r-estudiante');
+      const d = await Panel.json(`/api/docente/informes/encargados?seccion=${encodeURIComponent(s)}&periodo=${p}${e ? `&estudiante_id=${e}` : ''}`);
+      actual = { titulo: `Informe encargados ${s} P${p}`, html: htmlEncargados(d), excel: null };
+    } else if (tipo === 'boleta') {
       const id = q('r-estudiante');
       if (!id) return Panel.toast('No hay estudiantes', 'error');
       const d = await Panel.json(`/api/docente/reportes/boleta/${id}`);
@@ -166,7 +264,8 @@
     }
     $('r-salida').innerHTML = `<div class="rep">${actual.html}</div>`;
     $('r-imprimir').disabled = false;
-    $('r-excel').disabled = false;
+    $('r-excel').disabled = !actual.excel;
+    $('r-csv').disabled = !actual.csv;
   }
 
   Panel.registrar('reportes', 'Reportes', {
@@ -178,13 +277,15 @@
           <button class="btn btn-primary" id="r-generar">Generar</button>
           <button class="btn btn-secondary" id="r-imprimir" disabled>Imprimir / PDF</button>
           <button class="btn btn-secondary" id="r-excel" disabled>Excel</button>
+          <button class="btn btn-secondary" id="r-csv" disabled>CSV</button>
         </div>
         <div id="r-salida" class="rep-pantalla" aria-live="polite"></div>`;
       const run = (fn) => (...a) => fn(...a).catch(e => Panel.toast(e.message, 'error'));
       $('r-tipo').addEventListener('change', () => catalogos && dibujarParametros());
       $('r-generar').addEventListener('click', run(generar));
       $('r-imprimir').addEventListener('click', () => actual && Panel.imprimirHtml(actual.titulo, actual.html));
-      $('r-excel').addEventListener('click', () => actual && Panel.descargar(actual.excel[0], actual.excel[1]));
+      $('r-excel').addEventListener('click', () => actual && actual.excel && Panel.descargar(actual.excel[0], actual.excel[1]));
+      $('r-csv').addEventListener('click', () => actual && actual.csv && Panel.descargar(actual.csv[0], actual.csv[1]));
     },
     async mostrar() {
       await cargarCatalogos();

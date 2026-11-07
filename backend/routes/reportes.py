@@ -241,6 +241,11 @@ def _datos_seccion(seccion: str, periodo: int) -> dict[str, Any]:
     for e in estudiantes.values():
         completas = [v["nota_final"] for v in e["notas"].values() if v["completa"]]
         e["promedio_general"] = round(sum(completas) / len(completas), 1) if completas else None
+        e["reprobadas"] = sum(n < minima for n in completas)
+        e["estado"] = (
+            "Incompleto" if len(completas) < len(materias)
+            else f"Reprobó {e['reprobadas']}" if e["reprobadas"] else "Aprobado"
+        )
     return {
         "ok": True, "seccion": seccion, "periodo": periodo, "nota_minima": minima,
         "materias": [{"id": m["id"], "nombre": m["nombre"]} for m in materias],

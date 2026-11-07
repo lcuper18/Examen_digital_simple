@@ -12,8 +12,9 @@ from .bitacora import router as bitacora_router
 from .ajustes import router as ajustes_router
 from .asistencia import router as asistencia_router
 from .actividades import router as actividades_router
+from .informes import router as informes_router
 from .ajustes import publico as config_router
 
 __all__ = ["auth_router", "examenes_router", "intentos_router", "notas_router",
            "estudiantes_router", "bitacora_router", "examenes_docente_router",
-           "reportes_router", "ajustes_router", "config_router", "asistencia_router", "actividades_router"]
+           "reportes_router", "ajustes_router", "config_router", "asistencia_router", "actividades_router", "informes_router"]

@@ -202,7 +202,8 @@ const ESTILO_IMPRESION = `
   .rep-kpis { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 12px; } .rep-kpi { border: 1px solid #bbb; padding: 6px 12px; min-width: 90px; }
   .rep-kpi strong { display: block; font-size: 16px; } .rep-firma { margin-top: 48px; display: flex; gap: 48px; }
   .rep-firma div { border-top: 1px solid #333; padding-top: 4px; width: 200px; text-align: center; }
-  svg text { fill: #333; } @page { margin: 14mm; }`;
+  svg text { fill: #333; } @page { margin: 14mm; }
+  .rep-pagina { page-break-after: always; } .rep-pagina:last-of-type { page-break-after: auto; } .rep-acta { line-height: 1.6; }`;
 
 Panel.imprimirHtml = function (titulo, html) {
   const marco = document.createElement('iframe');

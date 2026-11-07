@@ -117,7 +117,7 @@ AJUSTES_DEFAULT = {
     "institucion": "CTP Las Palmitas",
     "direccion_regional": "Guápiles",
     "circuito": "06",
-    "docente": "Luis Cupertino Fallas Rivas",
+    "docente": "Fallas Rivas Luis Cupertino",
     "curso_lectivo": "2026",
     "nota_minima": "70",
 }

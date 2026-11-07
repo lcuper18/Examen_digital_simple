@@ -110,3 +110,7 @@
 .doc-th { background: none; border: 0; color: inherit; font: inherit; font-weight: 600; cursor: pointer; padding: 0; }
 .doc-th:hover { color: var(--text-primary); }
 .rep-kpi small { display: block; color: var(--text-muted); font-size: 0.7rem; margin-top: 2px; }
+
+/* Informes: una hoja por estudiante en pantalla */
+.rep-pagina { border-bottom: 2px dashed var(--border-medium); padding-bottom: 24px; margin-bottom: 24px; }
+.rep-acta { line-height: 1.6; }
