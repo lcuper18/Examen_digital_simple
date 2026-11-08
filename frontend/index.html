@@ -20,9 +20,12 @@
       <h1 class="login-title">Crea tu contraseña</h1>
       <p class="login-subtitle">Tu docente reinició tu contraseña. Escribe la temporal y crea una nueva (mínimo 8 caracteres).</p>
       <form class="login-form" id="change-form" onsubmit="return false;">
-        <input type="password" id="change-actual" placeholder="Contraseña temporal" autocomplete="current-password" required>
-        <input type="password" id="change-nueva" placeholder="Nueva contraseña" autocomplete="new-password" minlength="8" required>
-        <input type="password" id="change-confirmar" placeholder="Repite la nueva contraseña" autocomplete="new-password" minlength="8" required>
+        <label class="campo-est" for="change-actual">Contraseña temporal</label>
+        <input type="password" id="change-actual" autocomplete="current-password" required>
+        <label class="campo-est" for="change-nueva">Nueva contraseña (mínimo 8 caracteres)</label>
+        <input type="password" id="change-nueva" autocomplete="new-password" minlength="8" required>
+        <label class="campo-est" for="change-confirmar">Repite la nueva contraseña</label>
+        <input type="password" id="change-confirmar" autocomplete="new-password" minlength="8" required>
         <button class="btn btn-primary" id="change-btn" onclick="performChangePassword()">Guardar contraseña</button>
         <p id="change-error" class="error-message" style="display: none;"></p>
       </form>
@@ -40,8 +43,13 @@
       <h1 class="login-title">Examen Digital</h1>
       <p class="login-subtitle">Ingresa tus credenciales para continuar</p>
       <form class="login-form" id="login-form" onsubmit="return false;">
-        <input type="text" id="login-username" placeholder="Usuario" autocomplete="username" required>
-        <input type="password" id="login-password" placeholder="Contraseña" autocomplete="current-password" required>
+        <label class="campo-est" for="login-username">Usuario</label>
+        <input type="text" id="login-username" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+        <label class="campo-est" for="login-password">Contraseña</label>
+        <div class="campo-clave">
+          <input type="password" id="login-password" autocomplete="current-password" required>
+          <button type="button" class="btn-ver-clave" id="ver-clave" aria-pressed="false" aria-label="Mostrar la contraseña">Mostrar</button>
+        </div>
         <button class="btn btn-primary" id="login-btn" onclick="performLogin()">
           <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M11 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
@@ -49,7 +57,7 @@
           Iniciar Sesión
         </button>
       </form>
-      <p class="login-error" id="login-error">Usuario o contraseña incorrectos</p>
+      <p class="login-error" id="login-error" role="alert">Revisa tu usuario y tu contraseña e inténtalo de nuevo.</p>
     </div>
   </div>
 
@@ -62,16 +70,17 @@
       Cerrar Sesión
     </button>
     <div class="code-container">
-      <p class="code-welcome">Bienvenido</p>
+      <p class="code-welcome">Te damos la bienvenida</p>
       <p class="code-student-name" id="code-student-name">Estudiante</p>
       <div class="code-icon">
         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/>
         </svg>
       </div>
-      <p class="login-subtitle">Ingresa el código del examen</p>
+      <p class="login-subtitle">¿Vas a presentar un examen? Escribe el código que te dio tu docente.</p>
       <form class="code-form" id="code-form" onsubmit="return false;">
-        <input type="text" id="exam-code" placeholder="Código del examen" maxlength="20" autocomplete="off">
+        <label class="campo-est" for="exam-code">Código del examen</label>
+        <input type="text" id="exam-code" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false">
         <button class="btn btn-primary" id="start-exam-btn" onclick="startExam()">
           <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
@@ -81,15 +90,15 @@
         </button>
       </form>
       <p class="code-error" id="code-error">El código ingresado no es válido</p>
-      <p class="code-help">Solicita el código a tu profesor</p>
-      <button type="button" class="btn btn-secondary" id="my-grades-btn" onclick="abrirMisNotas()">Ver mis notas</button>
+      <p class="code-help">Si no tienes el código, pídeselo a tu docente.</p>
+      <button type="button" class="btn btn-secondary" id="my-grades-btn" onclick="abrirMisNotas()">Ver mis notas, asistencia y actividades</button>
     </div>
   </div>
 
   <div class="code-overlay grades-overlay" id="grades-overlay" role="dialog" aria-modal="true" aria-labelledby="grades-title">
     <button class="code-logout" onclick="cerrarMisNotas()">← Volver</button>
     <div class="grades-container">
-      <h1 id="grades-title" class="grades-title">Mis notas</h1>
+      <h1 id="grades-title" class="grades-title" tabindex="-1">Mis notas</h1>
       <div id="grades-content" aria-live="polite"></div>
     </div>
   </div>
@@ -131,7 +140,7 @@
         <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
       </div>
       <div class="timer-display" id="timer-display">
-        <span class="timer-icon">⏱</span>
+        <span class="timer-icon"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
         <span id="timer-text">60:00</span>
       </div>
     </div>
@@ -150,11 +159,14 @@
     </div>
   </div>
 
+  <div id="student-aviso" class="student-aviso" role="alert" hidden></div>
+  <div id="timer-alerta" class="sr-only" aria-live="assertive"></div>
+
   <!-- Results Overlay -->
   <div class="results-overlay" id="results-overlay">
     <div class="results-modal">
       <div class="results-header">
-        <div class="results-icon" id="results-icon">🎉</div>
+        <div class="results-icon" id="results-icon" aria-hidden="true"></div>
         <h2 class="results-title" id="results-title">¡Excelente!</h2>
         <p class="results-subtitle" id="results-subtitle">Has completado el examen</p>
       </div>
@@ -178,7 +190,6 @@
       </div>
       <div class="results-actions">
         <button class="btn btn-secondary" onclick="closeResults()">Cerrar</button>
-        <button class="btn btn-primary" onclick="showPasswordModal()" id="teacher-access-btn" style="display: none;">Acceso docente</button>
         <button class="btn btn-primary" onclick="generatePDF()" id="download-pdf-btn" style="display: none;">
           <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -186,24 +197,6 @@
           Descargar PDF
         </button>
       </div>
-    </div>
-  </div>
-
-  <!-- Password Modal -->
-  <div class="password-overlay" id="password-overlay">
-    <div class="password-modal">
-      <div class="password-header">
-        <h3>Acceso Docente</h3>
-        <p>Ingrese la contraseña para ver resultados detallados</p>
-      </div>
-      <div class="password-input">
-        <input type="password" id="teacher-password" placeholder="Contraseña" autocomplete="off">
-        <button class="btn btn-primary" id="verify-btn">Verificar</button>
-      </div>
-      <div class="password-actions">
-        <button class="btn btn-secondary" onclick="closePasswordModal()">Cancelar</button>
-      </div>
-      <p id="password-error" class="error-message" style="display: none;"></p>
     </div>
   </div>
 

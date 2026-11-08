@@ -109,4 +109,6 @@ Al arrancar y cada hora, el servidor guarda una copia de la base de datos por d�
 
 ## Apariencia
 
+Panel docente: menú lateral agrupado (en tablet y celular es un cajón con el botón «Menú»), selector único de grupo, período y materia en la cabecera, pasar lista de un toque, hojas de notas con teclado (Enter y flechas) e inicio con accesos rápidos y primeros pasos. App del estudiante: formularios con etiquetas visibles, opciones del examen que se pueden usar con teclado y «Mis notas» pensado para el celular.
+
 La plataforma sigue el tema claro u oscuro del dispositivo y tiene un botón (sol o luna) para cambiarlo; la preferencia se recuerda en el navegador. Los colores, espacios y tipografía viven en `frontend/css/base.css`.

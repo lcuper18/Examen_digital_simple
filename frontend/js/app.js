@@ -12,13 +12,24 @@ let estudianteNombre = '';
 let estudianteSeccion = '';
 let authToken = null;
 let intentoId = null;
-let incidenciasDocente = null; // se llena al abrir el detalle como docente
+let incidenciasDocente = null; // solo si algún día se muestra el detalle completo
 let incidencias = 0; // veces que el estudiante salió de la pestaña durante el examen
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, c => (
     { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
   ));
+}
+
+// Aviso en pantalla (reemplaza a alert): se lee con lectores de pantalla y se cierra solo o con la X
+function mostrarAviso(mensaje) {
+  const el = document.getElementById('student-aviso');
+  el.innerHTML = `<span></span><button type="button" aria-label="Cerrar aviso">×</button>`;
+  el.firstElementChild.textContent = mensaje;
+  el.lastElementChild.addEventListener('click', () => { el.hidden = true; });
+  el.hidden = false;
+  clearTimeout(mostrarAviso.espera);
+  mostrarAviso.espera = setTimeout(() => { el.hidden = true; }, 9000);
 }
 
 function authFetch(url, options = {}, token = authToken) {
@@ -146,13 +157,13 @@ async function performLogin() {
   const loginBtn = document.getElementById('login-btn');
 
   if (!username || !password) {
-    errorEl.textContent = 'Por favor ingresa usuario y contraseña';
+    errorEl.textContent = 'Escribe tu usuario y tu contraseña.';
     errorEl.classList.add('active');
     return;
   }
 
   loginBtn.disabled = true;
-  loginBtn.innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px;margin-right:8px;"></span> Ingresando...';
+  loginBtn.innerHTML = '<span class="spinner spinner-mini"></span> Ingresando...';
 
   try {
     const response = await fetch('/api/login', {
@@ -172,12 +183,12 @@ async function performLogin() {
       document.getElementById('login-password').value = '';
       showCodeScreen();
     } else {
-      errorEl.textContent = 'Usuario o contraseña incorrectos';
+      errorEl.textContent = 'Revisa tu usuario y tu contraseña e inténtalo de nuevo.';
       errorEl.classList.add('active');
     }
   } catch (error) {
     console.error('Error en login:', error);
-    errorEl.textContent = 'Error de conexión. Verifica el servidor.';
+    errorEl.textContent = 'No hay conexión con el servidor. Revisa el wifi e inténtalo de nuevo.';
     errorEl.classList.add('active');
   } finally {
     loginBtn.disabled = false;
@@ -200,7 +211,7 @@ async function startExam() {
   }
 
   startBtn.disabled = true;
-  startBtn.innerHTML = '<span class="spinner" style="width:18px;height:18px;border-width:2px;margin-right:8px;"></span> Cargando...';
+  startBtn.innerHTML = '<span class="spinner spinner-mini"></span> Cargando...';
   errorEl.classList.remove('active');
 
   try {
@@ -238,7 +249,7 @@ async function startExam() {
     }
   } catch (error) {
     console.error('Error cargando examen:', error);
-    errorEl.textContent = 'Error de conexión. Verifica el servidor.';
+    errorEl.textContent = 'No hay conexión con el servidor. Revisa el wifi e inténtalo de nuevo.';
     errorEl.classList.add('active');
   } finally {
     startBtn.disabled = false;
@@ -412,73 +423,22 @@ async function sendExam() {
     });
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
-      alert(data.detail || 'No se pudo enviar el examen. Avisa al docente.');
+      mostrarAviso(data.detail || 'No se pudo enviar el examen. Avisa a tu docente.');
       return;
     }
     intentoId = data.intento_id;
     clearLocalStorage();
     showDetailedResults();
   } catch (error) {
-    alert('Error de conexión al enviar el examen. Intenta de nuevo.');
+    mostrarAviso('No hay conexión con el servidor. Tus respuestas siguen aquí; revisa el wifi e inténtalo de nuevo.');
   }
 }
 
-function showPasswordModal() {
-  document.getElementById('password-overlay').classList.add('active');
-  document.getElementById('teacher-password').value = '';
-  document.getElementById('password-error').style.display = 'none';
-  document.getElementById('teacher-password').focus();
-}
-
-function closePasswordModal() {
-  document.getElementById('password-overlay').classList.remove('active');
-}
-
-async function validatePassword() {
-  const passwordInput = document.getElementById('teacher-password').value;
-  const errorEl = document.getElementById('password-error');
-
-  if (!passwordInput) {
-    errorEl.textContent = 'Ingrese una contraseña';
-    errorEl.style.display = 'block';
-    return;
-  }
-
-  try {
-    const response = await fetch('/api/verificar-docente', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: passwordInput })
-    });
-    const data = await response.json();
-
-    if (data.ok) {
-      closePasswordModal();
-      await loadTeacherDetail(data.token);
-      showDetailedResults();
-    } else {
-      errorEl.textContent = data.error || 'Contraseña incorrecta';
-      errorEl.style.display = 'block';
-      document.getElementById('teacher-password').value = '';
-      document.getElementById('teacher-password').focus();
-    }
-  } catch (error) {
-    errorEl.textContent = 'Error de conexión';
-    errorEl.style.display = 'block';
-  }
-}
-
-async function loadTeacherDetail(teacherToken) {
-  const response = await authFetch(`/api/docente/intentos/${intentoId}`, {}, teacherToken);
-  if (!response.ok) return;
-  const { intento } = await response.json();
-  incidenciasDocente = intento.incidencias;
-  questions.forEach((q, idx) => {
-    const key = String(q.numeroOriginal);
-    q.ans = intento.respuestas_correctas[key].charCodeAt(0) - 97;
-    answers[idx] = intento.respuestas[key] ? intento.respuestas[key].charCodeAt(0) - 97 : null;
-  });
-}
+const ICONO_RESULTADO = {
+  enviado: '<svg width="56" height="56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>',
+  bien: '<svg width="56" height="56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg>',
+  repasar: '<svg width="56" height="56" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M4 5a2 2 0 012-2h12v18H6a2 2 0 01-2-2zM4 19a2 2 0 012-2h12"/></svg>',
+};
 
 function showDetailedResults() {
   // === TAREA 4.1: Obtener datos del estudiante ===
@@ -520,28 +480,27 @@ function showDetailedResults() {
 
   if (!hasCorrectAnswers) {
     // FASE 2: Sin respuestas correctas aún
-    icon.textContent = '📝';
-    title.textContent = '¡Examen Enviado!';
-    subtitle.textContent = `${answered}/${total} preguntas contestadas`;
+    icon.innerHTML = ICONO_RESULTADO.enviado;
+    title.textContent = '¡Examen enviado!';
+    subtitle.textContent = `Contestaste ${answered} de ${total} preguntas. Tu docente te compartirá el resultado.`;
   } else if (percentage >= 80) {
-    icon.textContent = '🏆';
+    icon.innerHTML = ICONO_RESULTADO.bien;
     title.textContent = '¡Excelente!';
     subtitle.textContent = `Puntuación: ${correct}/${total} (${percentage}%) | Nota: ${nota}`;
   } else if (percentage >= 60) {
-    icon.textContent = '👍';
+    icon.innerHTML = ICONO_RESULTADO.bien;
     title.textContent = '¡Buen trabajo!';
     subtitle.textContent = `Puntuación: ${correct}/${total} (${percentage}%) | Nota: ${nota}`;
   } else if (percentage >= 40) {
-    icon.textContent = '📚';
+    icon.innerHTML = ICONO_RESULTADO.repasar;
     title.textContent = 'Casi lo logras';
     subtitle.textContent = `Puntuación: ${correct}/${total} (${percentage}%) | Nota: ${nota}`;
   } else {
-    icon.textContent = '💪';
+    icon.innerHTML = ICONO_RESULTADO.repasar;
     title.textContent = '¡Sigue intentando!';
     subtitle.textContent = `Puntuación: ${correct}/${total} (${percentage}%) | Nota: ${nota}`;
   }
 
-  document.getElementById('teacher-access-btn').style.display = hasCorrectAnswers ? 'none' : 'flex';
   if (!hasCorrectAnswers) {
     document.getElementById('detailed-results').style.display = 'none';
     document.getElementById('download-pdf-btn').style.display = 'none';
@@ -695,7 +654,7 @@ function generatePDF() {
     const script = document.createElement('script');
     script.src = '/static/js/jspdf.min.js';
     script.onload = () => createPDF();
-    script.onerror = () => alert('Error al cargar la biblioteca PDF.');
+    script.onerror = () => mostrarAviso('No se pudo preparar el PDF.');
     document.head.appendChild(script);
   } else {
     createPDF();
@@ -880,8 +839,10 @@ function renderExam() {
   nav.innerHTML = '';
 
   questions.forEach((q, i) => {
-    const navItem = document.createElement('div');
+    const navItem = document.createElement('button');
+    navItem.type = 'button';
     navItem.className = 'q-nav-item';
+    navItem.setAttribute('aria-label', `Ir a la pregunta ${q.numeroOriginal}`);
     navItem.id = 'nav-' + i;
     navItem.textContent = q.numeroOriginal;
     navItem.onclick = () => scrollToQuestion(i);
@@ -915,18 +876,19 @@ function renderExam() {
 
       const keys = ['a', 'b', 'c', 'd'];
       let optsHtml = q.opts.map((o, j) => `
-        <div class="option-item" id="opt-${q.idx}-${j}" onclick="answer(${q.idx}, ${j})">
-          <span class="option-key">${keys[j]}</span>
+        <button type="button" class="option-item" id="opt-${q.idx}-${j}" data-q="${q.idx}" data-opt="${j}" aria-pressed="false">
+          <span class="option-key" aria-hidden="true">${keys[j]}</span>
           <span class="option-text">${escapeHtml(o)}</span>
-        </div>
+        </button>
       `).join('');
       card.innerHTML = `
         <div class="question-header">
           <div class="question-number">${q.numeroOriginal}</div>
           <div class="question-text">${escapeHtml(q.q)}</div>
         </div>
-        <div class="options-list">${optsHtml}</div>
+        <div class="options-list" role="group" aria-label="Opciones de la pregunta ${q.numeroOriginal}">${optsHtml}</div>
       `;
+      card.querySelectorAll('.option-item').forEach(b => b.addEventListener('click', () => answer(Number(b.dataset.q), Number(b.dataset.opt))));
       sec.appendChild(card);
     });
     content.appendChild(sec);
@@ -947,6 +909,7 @@ function answer(qIdx, optIdx) {
 
   opts.forEach((el, j) => {
     el.classList.remove('selected', 'disabled');
+    el.setAttribute('aria-pressed', j === optIdx ? 'true' : 'false');
     if (j === optIdx) {
       el.classList.add('selected');
       // Ripple effect
@@ -1044,7 +1007,7 @@ async function guardarProgreso() {
         updateTimerDisplay();
       }
     } else if (response.status === 409 || response.status === 403) {
-      alert(data.detail || 'Tu examen ya no está disponible.');
+      mostrarAviso(data.detail || 'Tu examen ya no está disponible.');
       logout();
     }
   } catch (e) {
@@ -1075,6 +1038,8 @@ function startTimer() {
     // Advertencia a los últimos 5 minutos
     if (tiempoRestanteSegundos === 5 * 60) {
       document.getElementById('timer-display').classList.add('warning');
+      document.getElementById('timer-alerta').textContent = 'Quedan 5 minutos para terminar el examen.';
+      mostrarAviso('Quedan 5 minutos para terminar el examen.');
     }
   }, 1000);
 
@@ -1120,10 +1085,14 @@ document.addEventListener('DOMContentLoaded', () => {
     showLoginScreen();
   }
 
-  // Event listeners para modales existentes
-  document.getElementById('verify-btn').addEventListener('click', validatePassword);
-  document.getElementById('teacher-password').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') validatePassword();
+  // Mostrar u ocultar la contraseña
+  document.getElementById('ver-clave').addEventListener('click', (e) => {
+    const campo = document.getElementById('login-password');
+    const ver = campo.type === 'password';
+    campo.type = ver ? 'text' : 'password';
+    e.currentTarget.textContent = ver ? 'Ocultar' : 'Mostrar';
+    e.currentTarget.setAttribute('aria-pressed', ver ? 'true' : 'false');
+    e.currentTarget.setAttribute('aria-label', ver ? 'Ocultar la contraseña' : 'Mostrar la contraseña');
   });
 
   // Event listeners para login
