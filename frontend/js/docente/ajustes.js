@@ -32,8 +32,9 @@
   }
 
   function dibujarPesos() {
-    const m = materias.find(x => String(x.id) === $('aj-materia').value);
+    const m = materias.find(x => x.id === Panel.contexto.id());
     if (!m) return;
+    $('aj-materia-txt').textContent = `${m.seccion} · ${m.periodo}.º período · ${m.nombre}`;
     $('aj-pesos').innerHTML = componentes.map(c => `
       <label class="doc-campo">${etiquetas[c]} (puntos)
         <input type="number" min="0" max="100" step="0.5" data-c="${c}" value="${m.ponderaciones[c]}"></label>`).join('');
@@ -53,15 +54,11 @@
     materias = data.materias;
     componentes = data.componentes;
     etiquetas = data.etiquetas;
-    const actual = $('aj-materia').value;
-    $('aj-materia').innerHTML = materias.map(m =>
-      `<option value="${m.id}">${Panel.esc(m.seccion)} · Periodo ${m.periodo} · ${Panel.esc(m.nombre)}</option>`).join('');
-    if (actual) $('aj-materia').value = actual;
     dibujarPesos();
   }
 
   async function guardarPesos() {
-    const id = $('aj-materia').value;
+    const id = Panel.contexto.id();
     const ponderaciones = Object.fromEntries([...document.querySelectorAll('#aj-pesos input')].map(i => [i.dataset.c, Number(i.value) || 0]));
     await Panel.json(`/api/docente/materias/${id}/ponderaciones`, { method: 'PUT', body: { ponderaciones } });
     Panel.toast('Ponderaciones guardadas');
@@ -109,7 +106,7 @@
         <section aria-labelledby="aj-t2">
           <h2 id="aj-t2">Ponderación por materia</h2>
           <p class="doc-muted">Puntos que vale cada componente en la nota final. Deben sumar 100.</p>
-          <div class="doc-toolbar"><label>Materia <select id="aj-materia"></select></label></div>
+          <p class="doc-muted">Materia elegida arriba: <strong id="aj-materia-txt"></strong>. Cámbiala con el selector de la parte superior.</p>
           <div id="aj-pesos"></div>
           <p><span id="aj-suma" class="doc-pill"></span></p>
           <button class="btn btn-primary" id="btn-guardar-pesos">Guardar ponderación</button>
@@ -130,11 +127,11 @@
         </section>`;
       const run = (fn) => (...a) => fn(...a).catch(e => Panel.toast(e.message, 'error'));
       $('btn-guardar-ajustes').addEventListener('click', run(guardarAjustes));
-      $('aj-materia').addEventListener('change', dibujarPesos);
       $('aj-pesos').addEventListener('input', sumarPesos);
       $('btn-guardar-pesos').addEventListener('click', run(guardarPesos));
       $('btn-cerrar-curso').addEventListener('click', run(cerrarCurso));
     },
+    usaContexto: true,
     async mostrar() {
       await Promise.all([cargarAjustes(), cargarMaterias(), cargarRed(), cargarCierre()]);
     },

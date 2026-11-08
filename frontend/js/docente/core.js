@@ -4,7 +4,26 @@ const Panel = {
   modulos: [],
   moduloActivo: null,
   temporizadorSesion: null,
-  ORDEN: ['resumen', 'resultados', 'estudiantes', 'examenes', 'asistencia', 'actividades', 'notas', 'reportes', 'bitacora', 'ajustes'],
+  GRUPOS: [
+    { titulo: 'Inicio', ids: ['resumen'] },
+    { titulo: 'Mis clases', ids: ['asistencia', 'actividades', 'notas'] },
+    { titulo: 'Exámenes', ids: ['examenes', 'resultados'] },
+    { titulo: 'Estudiantes', ids: ['estudiantes'] },
+    { titulo: 'Informes', ids: ['reportes'] },
+    { titulo: 'Sistema', ids: ['ajustes', 'bitacora'] },
+  ],
+  ICONOS: {
+    resumen: '<path d="M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10"/>',
+    asistencia: '<path d="M9 11l3 3 8-8M20 12v7a2 2 0 01-2 2H6a2 2 0 01-2-2V7a2 2 0 012-2h9"/>',
+    actividades: '<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2M9 12h6M9 16h6"/>',
+    notas: '<path d="M4 4h16v16H4zM4 10h16M4 15h16M10 4v16"/>',
+    examenes: '<path d="M12 20h9M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/>',
+    resultados: '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+    estudiantes: '<path d="M17 21v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2M10 11a4 4 0 100-8 4 4 0 000 8M21 21v-2a4 4 0 00-3-3.9M16 3.1a4 4 0 010 7.8"/>',
+    reportes: '<path d="M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8zM14 3v5h5M9 13h6M9 17h6"/>',
+    ajustes: '<path d="M12 15a3 3 0 100-6 3 3 0 000 6M19.4 15a1.7 1.7 0 00.3 1.8l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.8-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1a1.7 1.7 0 00-1.1-1.5 1.7 1.7 0 00-1.8.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.8 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1a1.7 1.7 0 001.5-1.1 1.7 1.7 0 00-.3-1.8l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.8.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.8-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.8V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/>',
+    bitacora: '<path d="M12 8v4l3 2M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+  },
 };
 
 const $ = (id) => document.getElementById(id);
@@ -290,28 +309,48 @@ Panel.salir = function (mensaje) {
 
 // ========== NAVEGACIÓN ==========
 Panel.construirNavegacion = function () {
-  const ordenados = Panel.ORDEN.map(id => Panel.modulos.find(m => m.id === id)).filter(Boolean);
-  const nav = $('doc-tabs');
-  nav.innerHTML = ordenados.map(m =>
-    `<button class="doc-tab" role="tab" id="tabbtn-${m.id}" aria-controls="tab-${m.id}" data-tab="${m.id}">${Panel.esc(m.titulo)}</button>`
-  ).join('');
+  const ids = Panel.GRUPOS.flatMap(g => g.ids);
+  const ordenados = ids.map(id => Panel.modulos.find(m => m.id === id)).filter(Boolean);
+  const icono = (id) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${Panel.ICONOS[id] || ''}</svg>`;
+  $('doc-nav').innerHTML = Panel.GRUPOS.map(g => {
+    const items = g.ids.map(id => Panel.modulos.find(m => m.id === id)).filter(Boolean);
+    return items.length ? `<div class="doc-nav-grupo"><p class="doc-nav-titulo">${Panel.esc(g.titulo)}</p>${items.map(m =>
+      `<button type="button" class="doc-nav-item" id="tabbtn-${m.id}" data-tab="${m.id}" title="${Panel.esc(m.titulo)}">${icono(m.id)}<span>${Panel.esc(m.titulo)}</span></button>`).join('')}</div>` : '';
+  }).join('') + '<button type="button" class="doc-nav-contraer" id="doc-nav-contraer" aria-pressed="false" title="Contraer el menú"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><span>Contraer menú</span></button>';
   $('doc-contenido').innerHTML = ordenados.map(m =>
-    `<section id="tab-${m.id}" class="doc-section" role="tabpanel" aria-labelledby="tabbtn-${m.id}" hidden></section>`
+    `<section id="tab-${m.id}" class="doc-section" aria-labelledby="tabbtn-${m.id}" hidden></section>`
   ).join('');
   ordenados.forEach(m => { if (m.init) m.init($(`tab-${m.id}`)); });
   Panel.ordenados = ordenados;
+  let compacto = false;
+  try { compacto = localStorage.getItem('menuCompacto') === '1'; } catch (e) { /* sin almacenamiento */ }
+  Panel.menuCompacto(compacto);
+};
+
+Panel.menuCompacto = function (valor) {
+  document.querySelector('.doc-cuerpo').classList.toggle('doc-nav-compacto', valor);
+  $('doc-nav-contraer').setAttribute('aria-pressed', valor ? 'true' : 'false');
+  $('doc-nav-contraer').title = valor ? 'Expandir el menú' : 'Contraer el menú';
+  try { localStorage.setItem('menuCompacto', valor ? '1' : '0'); } catch (e) { /* sin almacenamiento */ }
+};
+
+Panel.abrirMenu = function (abrir) {
+  $('doc-nav').classList.toggle('abierto', abrir);
+  $('doc-nav-fondo').hidden = !abrir;
+  $('doc-menu-btn').setAttribute('aria-expanded', abrir ? 'true' : 'false');
 };
 
 Panel.irA = async function (id) {
   const modulo = Panel.ordenados.find(m => m.id === id);
   if (!modulo) return;
   Panel.moduloActivo = id;
-  document.querySelectorAll('.doc-tab').forEach(b => {
+  Panel.abrirMenu(false);
+  document.querySelectorAll('.doc-nav-item').forEach(b => {
     const activa = b.dataset.tab === id;
     b.classList.toggle('active', activa);
-    b.setAttribute('aria-selected', activa ? 'true' : 'false');
-    b.tabIndex = activa ? 0 : -1;
+    if (activa) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
   });
+  $('doc-contexto').hidden = !modulo.usaContexto;
   Panel.ordenados.forEach(m => { $(`tab-${m.id}`).hidden = m.id !== id; });
   sessionStorage.setItem('docenteTab', id);
   if (modulo.mostrar) {
@@ -319,27 +358,94 @@ Panel.irA = async function (id) {
   }
 };
 
+// ========== CONTEXTO: grupo, período y materia compartidos por las pestañas ==========
+// Las pestañas con `usaContexto: true` leen Panel.contexto.materia() en lugar de tener su propio selector.
+Panel.contexto = {
+  materias: [],
+  actual: null,
+
+  async cargar() {
+    const [data, ajustes] = await Promise.all([Panel.json('/api/docente/materias'), Panel.json('/api/docente/ajustes')]);
+    this.materias = data.materias;
+    let guardada = null;
+    try { guardada = Number(localStorage.getItem('contextoMateria')) || null; } catch (e) { /* sin almacenamiento */ }
+    const periodo = Number(ajustes.ajustes.periodo_actual);
+    this.actual = this.materias.find(m => m.id === guardada)
+      || this.materias.find(m => m.periodo === periodo) || this.materias[0] || null;
+    this.dibujar();
+  },
+
+  materia() { return this.actual; },
+  id() { return this.actual ? this.actual.id : null; },
+
+  dibujar() {
+    const m = this.actual;
+    const unicos = (lista) => [...new Set(lista)];
+    $('ctx-seccion').innerHTML = unicos(this.materias.map(x => x.seccion)).map(s => `<option value="${Panel.esc(s)}">${Panel.esc(s)}</option>`).join('');
+    if (!m) return;
+    $('ctx-seccion').value = m.seccion;
+    $('ctx-periodo').innerHTML = unicos(this.materias.filter(x => x.seccion === m.seccion).map(x => x.periodo))
+      .map(p => `<option value="${p}">${p}.º período</option>`).join('');
+    $('ctx-periodo').value = String(m.periodo);
+    $('ctx-materia').innerHTML = this.materias.filter(x => x.seccion === m.seccion && x.periodo === m.periodo)
+      .map(x => `<option value="${x.id}">${Panel.esc(x.nombre)}</option>`).join('');
+    $('ctx-materia').value = String(m.id);
+  },
+
+  // Cambia a la materia que corresponde a (sección, período, materia) pidiendo permiso a la pestaña activa
+  async elegir(seccion, periodo, materiaId) {
+    const modulo = Panel.ordenados.find(x => x.id === Panel.moduloActivo);
+    const previa = this.actual;
+    let destino = this.materias.find(x => x.id === materiaId);
+    if (!destino) {
+      if (periodo === null) {
+        const delGrupo = this.materias.filter(x => x.seccion === seccion);
+        periodo = previa && delGrupo.some(x => x.periodo === previa.periodo) ? previa.periodo : (delGrupo[0] || {}).periodo;
+      }
+      const mismas = this.materias.filter(x => x.seccion === seccion && x.periodo === periodo);
+      destino = (previa && mismas.find(x => x.nombre === previa.nombre)) || mismas[0]
+        || this.materias.find(x => x.seccion === seccion) || previa;
+    }
+    if (destino === previa) return this.dibujar();
+    if (modulo && modulo.hayCambios && modulo.hayCambios() &&
+        !(await Panel.confirmar('Tienes cambios sin guardar; se descartarán al cambiar de materia.', { texto: 'Cambiar de materia' }))) {
+      return this.dibujar();
+    }
+    this.actual = destino;
+    try { localStorage.setItem('contextoMateria', String(destino.id)); } catch (e) { /* sin almacenamiento */ }
+    this.dibujar();
+    if (modulo && modulo.usaContexto && modulo.mostrar) {
+      try { await modulo.mostrar(); } catch (e) { Panel.toast(e.message, 'error'); }
+    }
+  },
+};
+
 Panel.mostrarPanel = function () {
   $('doc-login').style.display = 'none';
   $('doc-panel').style.display = 'block';
   Panel.iniciarTemporizadorSesion();
   if (!Panel.ordenados) Panel.construirNavegacion();
+  fetch('/api/config').then(r => r.json()).then(c => { if (c.institucion) $('doc-marca').textContent = c.institucion; }).catch(() => {});
   const guardada = sessionStorage.getItem('docenteTab');
-  Panel.irA(Panel.ordenados.some(m => m.id === guardada) ? guardada : Panel.ordenados[0].id);
+  Panel.contexto.cargar().catch(e => Panel.toast(e.message, 'error')).finally(() =>
+    Panel.irA(Panel.ordenados.some(m => m.id === guardada) ? guardada : Panel.ordenados[0].id));
 };
 
 document.addEventListener('DOMContentLoaded', () => {
   $('doc-login-btn').addEventListener('click', Panel.entrar);
   $('doc-password').addEventListener('keypress', e => { if (e.key === 'Enter') Panel.entrar(); });
   $('doc-logout').addEventListener('click', () => Panel.salir());
-  $('doc-tabs').addEventListener('click', e => { if (e.target.dataset.tab) Panel.irA(e.target.dataset.tab); });
-  $('doc-tabs').addEventListener('keydown', e => {
-    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-    const ids = Panel.ordenados.map(m => m.id);
-    const i = ids.indexOf(Panel.moduloActivo);
-    const sig = ids[(i + (e.key === 'ArrowRight' ? 1 : -1) + ids.length) % ids.length];
-    Panel.irA(sig).then(() => $(`tabbtn-${sig}`).focus());
+  $('doc-nav').addEventListener('click', e => {
+    const b = e.target.closest('[data-tab]');
+    if (b) Panel.irA(b.dataset.tab);
+    if (e.target.closest('#doc-nav-contraer')) Panel.menuCompacto(!document.querySelector('.doc-cuerpo').classList.contains('doc-nav-compacto'));
   });
+  $('doc-menu-btn').addEventListener('click', () => Panel.abrirMenu(!$('doc-nav').classList.contains('abierto')));
+  $('doc-nav-fondo').addEventListener('click', () => Panel.abrirMenu(false));
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('doc-nav').classList.contains('abierto')) Panel.abrirMenu(false); });
+  $('ctx-seccion').addEventListener('change', () => Panel.contexto.elegir($('ctx-seccion').value, null, null));
+  $('ctx-periodo').addEventListener('change', () => Panel.contexto.elegir($('ctx-seccion').value, Number($('ctx-periodo').value), null));
+  $('ctx-materia').addEventListener('change', () => Panel.contexto.elegir(null, null, Number($('ctx-materia').value)));
   if (Panel.token && expiracionToken(Panel.token) > Date.now()) Panel.mostrarPanel();
   else Panel.salir();
 });

@@ -24,13 +24,22 @@
 
   <div id="doc-panel" class="doc-panel" style="display:none;">
     <header class="doc-header">
-      <h1>Panel docente</h1>
-      <nav id="doc-tabs" class="doc-tabs" role="tablist" aria-label="Secciones del panel"></nav>
+      <button type="button" class="btn btn-secondary doc-menu-btn" id="doc-menu-btn" aria-expanded="false" aria-controls="doc-nav">☰ Menú</button>
+      <div class="doc-marca"><strong id="doc-marca">Panel docente</strong><span class="doc-muted">Panel docente</span></div>
+      <div id="doc-contexto" class="doc-contexto" role="group" aria-label="Grupo y materia" hidden>
+        <label>Grupo <select id="ctx-seccion"></select></label>
+        <label>Período <select id="ctx-periodo"></select></label>
+        <label class="doc-ctx-materia">Materia <select id="ctx-materia"></select></label>
+      </div>
       <span id="doc-sesion" class="doc-muted"></span>
       <button type="button" class="tema-btn" aria-label="Cambiar tema"></button>
       <button class="btn btn-secondary" id="doc-logout">Salir</button>
     </header>
-    <main id="doc-contenido"></main>
+    <div class="doc-cuerpo">
+      <nav id="doc-nav" class="doc-nav" aria-label="Secciones del panel"></nav>
+      <div id="doc-nav-fondo" class="doc-nav-fondo" hidden></div>
+      <main id="doc-contenido"></main>
+    </div>
   </div>
 
   <div id="doc-toasts" class="doc-toasts" aria-live="polite"></div>

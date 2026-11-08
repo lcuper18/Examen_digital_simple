@@ -35,13 +35,13 @@
   }
 
   async function cargarLista() {
-    const id = $('as-materia').value;
+    const id = Panel.contexto.id();
     if (!id || !$('as-fecha').value) return;
     dibujarLista(await Panel.json(`/api/docente/asistencia/sesion?materia_id=${id}&fecha=${$('as-fecha').value}`));
   }
 
   async function cargarResumen() {
-    const id = $('as-materia').value;
+    const id = Panel.contexto.id();
     if (!id) return;
     resumen = await Panel.json(`/api/docente/asistencia/resumen?materia_id=${id}`);
     estados = resumen.estados;
@@ -62,13 +62,7 @@
       : '<li class="doc-pending">Sin fechas guardadas</li>';
   }
 
-  async function cargarMaterias() {
-    const data = await Panel.json('/api/docente/materias');
-    const select = $('as-materia');
-    const actual = select.value;
-    select.innerHTML = data.materias.map(m =>
-      `<option value="${m.id}">${Panel.esc(m.seccion)} · Periodo ${m.periodo} · ${Panel.esc(m.nombre)}</option>`).join('');
-    if (actual) select.value = actual;
+  async function cargarTodo() {
     if (!$('as-fecha').value) $('as-fecha').value = hoyIso();
     await cargarResumen();
     await cargarLista();
@@ -83,7 +77,7 @@
     await Panel.json('/api/docente/asistencia/sesion', {
       method: 'PUT',
       body: {
-        materia_id: Number($('as-materia').value), fecha: $('as-fecha').value,
+        materia_id: Number(Panel.contexto.id()), fecha: $('as-fecha').value,
         lecciones: Number($('as-lecciones').value), tema: $('as-tema').value, registros,
       },
     });
@@ -118,7 +112,6 @@
     init(el) {
       el.innerHTML = `
         <div class="doc-toolbar">
-          <label>Materia <select id="as-materia"></select></label>
           <label>Fecha <input type="date" id="as-fecha"></label>
           <label>Lecciones <input type="number" id="as-lecciones" min="1" max="12" value="2" class="doc-corto"></label>
           <label>Tema <input type="text" id="as-tema" maxlength="200" placeholder="opcional"></label>
@@ -150,11 +143,6 @@
         <h2>Fechas guardadas</h2>
         <ul id="as-sesiones" class="doc-lista"></ul>`;
       const run = (fn) => (...a) => fn(...a).catch(e => Panel.toast(e.message, 'error'));
-      $('as-materia').addEventListener('change', run(async () => {
-        if (!(await confirmarCambios())) return;
-        await cargarResumen();
-        await cargarLista();
-      }));
       $('as-fecha').addEventListener('change', run(async () => { if (await confirmarCambios()) await cargarLista(); }));
       $('tabla-asistencia').addEventListener('input', () => marcar(true));
       $('as-lecciones').addEventListener('input', () => marcar(true));
@@ -165,7 +153,7 @@
       });
       $('btn-guardar-lista').addEventListener('click', run(guardar));
       $('btn-as-excel').addEventListener('click', () => {
-        const id = $('as-materia').value;
+        const id = Panel.contexto.id();
         if (id) Panel.descargar(`/api/docente/asistencia/excel?materia_id=${id}`, `asistencia_${id}.xlsx`);
       });
       $('btn-as-imprimir').addEventListener('click', () => resumen && imprimir());
@@ -184,6 +172,8 @@
         }
       }));
     },
-    mostrar: cargarMaterias,
+    usaContexto: true,
+    hayCambios: () => sinGuardar,
+    mostrar: cargarTodo,
   });
 })();

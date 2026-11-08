@@ -167,3 +167,53 @@
 .rep-firma-centro { justify-content: center; margin-top: 60px; }
 .doc-final.low, .low { color: var(--accent-red); }
 .num { text-align: right; }
+
+/* ===== Etapa 2: menú lateral y contexto ===== */
+.doc-panel { max-width: 1480px; }
+.doc-header { gap: 12px 16px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.doc-header .btn:last-child { margin-left: 0; }
+.doc-marca { display: flex; flex-direction: column; line-height: 1.2; margin-right: auto; }
+.doc-marca strong { font-family: var(--font-display); font-size: var(--text-lg); }
+.doc-marca .doc-muted { font-size: var(--text-xs); }
+.doc-menu-btn { display: none; }
+.doc-contexto { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: flex-end; background: var(--bg-secondary);
+  border: 1px solid var(--border-medium); border-radius: var(--radius-md); padding: 8px 12px; }
+.doc-contexto[hidden] { display: none; }
+.doc-contexto label { display: flex; flex-direction: column; gap: 2px; color: var(--text-secondary); font-size: var(--text-xs); }
+.doc-contexto select { min-height: 36px; padding: 4px 10px; }
+.doc-ctx-materia select { min-width: 240px; max-width: 360px; }
+
+.doc-cuerpo { display: grid; grid-template-columns: 224px minmax(0, 1fr); gap: 24px; align-items: start; }
+.doc-cuerpo.doc-nav-compacto { grid-template-columns: 64px minmax(0, 1fr); }
+.doc-nav { position: sticky; top: 16px; display: flex; flex-direction: column; gap: 16px; padding: 12px 8px;
+  background: var(--bg-secondary); border: 1px solid var(--border-medium); border-radius: var(--radius-md); }
+.doc-nav-titulo { margin: 0 0 4px; padding: 0 12px; font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--text-muted); }
+.doc-nav-item, .doc-nav-contraer { display: flex; align-items: center; gap: 12px; width: 100%; min-height: 42px; padding: 8px 12px;
+  border: 0; border-radius: var(--radius-sm); background: transparent; color: var(--text-secondary); font: inherit;
+  font-size: var(--text-sm); text-align: left; cursor: pointer; }
+.doc-nav-item svg, .doc-nav-contraer svg { width: 20px; height: 20px; flex: none; }
+.doc-nav-item:hover, .doc-nav-contraer:hover { background: var(--bg-hover); color: var(--text-primary); }
+.doc-nav-item.active { background: rgb(var(--accent-rgb) / 0.14); color: var(--accent-primary); font-weight: 700; }
+.doc-nav-item:focus-visible, .doc-nav-contraer:focus-visible, .doc-menu-btn:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+.doc-nav-contraer { margin-top: 4px; border-top: 1px solid var(--border); border-radius: 0 0 var(--radius-sm) var(--radius-sm); }
+.doc-nav-compacto .doc-nav-item span, .doc-nav-compacto .doc-nav-contraer span, .doc-nav-compacto .doc-nav-titulo { display: none; }
+.doc-nav-compacto .doc-nav-item, .doc-nav-compacto .doc-nav-contraer { justify-content: center; padding: 8px; }
+.doc-nav-compacto .doc-nav-contraer svg { transform: rotate(180deg); }
+.doc-nav-fondo { display: none; }
+
+@media (max-width: 900px) {
+  .doc-cuerpo, .doc-cuerpo.doc-nav-compacto { grid-template-columns: minmax(0, 1fr); }
+  .doc-menu-btn { display: inline-flex; }
+  .doc-contexto { order: 5; width: 100%; }
+  .doc-ctx-materia { flex: 1 1 200px; }
+  .doc-ctx-materia select { min-width: 0; max-width: none; width: 100%; }
+  .doc-nav { position: fixed; z-index: 1200; top: 0; bottom: 0; left: 0; width: 280px; max-width: 84vw; overflow-y: auto;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0; transform: translateX(-102%); transition: transform 0.2s ease; box-shadow: var(--shadow-2); }
+  .doc-nav.abierto { transform: translateX(0); }
+  .doc-nav-fondo:not([hidden]) { display: block; position: fixed; inset: 0; z-index: 1150; background: var(--overlay); }
+  .doc-nav-contraer { display: none; }
+  .doc-nav-compacto .doc-nav-item span, .doc-nav-compacto .doc-nav-titulo { display: inline; }
+  .doc-nav-compacto .doc-nav-item { justify-content: flex-start; padding: 8px 12px; }
+}
+@media (prefers-reduced-motion: reduce) { .doc-nav { transition: none; } }

@@ -35,30 +35,27 @@
     const tipo = $('r-tipo').value;
     const seccion = `<label>Sección <select id="r-seccion"><option value="">Todas</option>${opciones(catalogos.secciones, s => s, s => s)}</select></label>`;
     const examen = `<label>Examen <select id="r-examen">${opciones(catalogos.examenes, e => e.codigo, e => `${e.codigo} · ${e.nombre}`)}</select></label>`;
-    const materia = `<label>Materia <select id="r-materia">${opciones(
-      catalogos.materias, m => m.id, m => `${m.seccion} · Periodo ${m.periodo} · ${m.nombre}`)}</select></label>`;
+    const ctx = Panel.contexto.materia();
+    const materia = ctx ? `<p class="doc-muted doc-ctx-aviso">Materia elegida arriba: <strong>${Panel.esc(ctx.seccion)} · ${ctx.periodo}.º período · ${Panel.esc(ctx.nombre)}</strong></p>` : '';
+    const grupo = ctx ? `<p class="doc-muted doc-ctx-aviso">Grupo elegido arriba: <strong>${Panel.esc(ctx.seccion)} · ${ctx.periodo}.º período</strong></p>` : '';
     $('r-parametros').innerHTML = {
       acta: materia,
       registro: materia,
-      encargados: `<label>Sección <select id="r-seccion">${opciones(catalogos.secciones, s => s, s => s)}</select></label>
-        <label>Periodo <select id="r-periodo"><option value="1">1</option><option value="2">2</option></select></label>
-        <label>Estudiante <select id="r-estudiante"></select></label>`,
+      encargados: grupo + `<label>Estudiante <select id="r-estudiante"></select></label>`,
       boleta: `<label>Estudiante <select id="r-estudiante">${opciones(
         catalogos.estudiantes, e => e.id, e => `${Panel.nombre(e)} (${e.seccion})`)}</select></label>`,
       examen: examen + seccion,
       criticas: examen + seccion,
-      seccion: `<label>Sección <select id="r-seccion">${opciones(catalogos.secciones, s => s, s => s)}</select></label>
-        <label>Periodo <select id="r-periodo"><option value="1">1</option><option value="2">2</option></select></label>`,
+      seccion: grupo,
     }[tipo];
     if (tipo === 'encargados') {
       llenarEstudiantes();
-      $('r-seccion').addEventListener('change', llenarEstudiantes);
     }
     limpiarSalida();
   }
 
   function llenarEstudiantes() {
-    const seccion = $('r-seccion').value;
+    const seccion = Panel.contexto.materia() ? Panel.contexto.materia().seccion : '';
     $('r-estudiante').innerHTML = '<option value="">Toda la sección</option>' + opciones(
       catalogos.estudiantes.filter(e => e.seccion === seccion), e => e.id, e => Panel.nombre(e));
   }
@@ -230,18 +227,18 @@
     const q = (id) => ($(id) ? $(id).value : '');
     const param = (nombre, valor) => (valor ? `?${nombre}=${encodeURIComponent(valor)}` : '');
     if (tipo === 'acta') {
-      const id = q('r-materia');
+      const id = Panel.contexto.id();
       const d = await Panel.json(`/api/docente/informes/acta?materia_id=${id}`);
       actual = { titulo: `Acta ${d.encabezado.asignatura} ${d.encabezado.seccion}`, html: htmlActa(d),
         excel: [`/api/docente/informes/acta/excel?materia_id=${id}`, `acta_${id}.xlsx`] };
     } else if (tipo === 'registro') {
-      const id = q('r-materia');
+      const id = Panel.contexto.id();
       const d = await Panel.json(`/api/docente/notas?materia_id=${id}`);
       actual = { titulo: `Registro ${d.materia.nombre}`, html: htmlRegistro(d, d.materia),
         excel: [`/api/docente/informes/registro/excel?materia_id=${id}`, `registro_${id}.xlsx`],
         csv: [`/api/docente/informes/registro?materia_id=${id}`, `registro_${id}.csv`] };
     } else if (tipo === 'encargados') {
-      const s = q('r-seccion'), p = q('r-periodo'), e = q('r-estudiante');
+      const s = Panel.contexto.materia().seccion, p = Panel.contexto.materia().periodo, e = q('r-estudiante');
       const d = await Panel.json(`/api/docente/informes/encargados?seccion=${encodeURIComponent(s)}&periodo=${p}${e ? `&estudiante_id=${e}` : ''}`);
       actual = { titulo: `Informe encargados ${s} P${p}`, html: htmlEncargados(d), excel: null };
     } else if (tipo === 'boleta') {
@@ -258,7 +255,7 @@
       const d = await Panel.json(`/api/docente/reportes/preguntas-criticas/${c}${param('seccion', s)}`);
       actual = { titulo: `Preguntas críticas ${c}`, html: htmlCriticas(d), excel: [`/api/docente/reportes/examen/${c}/excel${param('seccion', s)}`, `reporte_${c}.xlsx`] };
     } else {
-      const s = q('r-seccion'), p = q('r-periodo');
+      const s = Panel.contexto.materia().seccion, p = Panel.contexto.materia().periodo;
       const d = await Panel.json(`/api/docente/reportes/seccion?seccion=${encodeURIComponent(s)}&periodo=${p}`);
       actual = { titulo: `Notas ${s} periodo ${p}`, html: htmlSeccion(d), excel: [`/api/docente/reportes/seccion/excel?seccion=${encodeURIComponent(s)}&periodo=${p}`, `notas_${s}_P${p}.xlsx`] };
     }
@@ -287,6 +284,7 @@
       $('r-excel').addEventListener('click', () => actual && actual.excel && Panel.descargar(actual.excel[0], actual.excel[1]));
       $('r-csv').addEventListener('click', () => actual && actual.csv && Panel.descargar(actual.csv[0], actual.csv[1]));
     },
+    usaContexto: true,
     async mostrar() {
       await cargarCatalogos();
       dibujarParametros();

@@ -12,18 +12,8 @@
   const fecha = (iso) => (iso ? iso.split('-').reverse().join('/') : '—');
 
   // ---------- lista ----------
-  async function cargarMaterias() {
-    const data = await Panel.json('/api/docente/materias');
-    const select = $('ac-materia');
-    const actual = select.value;
-    select.innerHTML = data.materias.map(m =>
-      `<option value="${m.id}">${Panel.esc(m.seccion)} · Periodo ${m.periodo} · ${Panel.esc(m.nombre)}</option>`).join('');
-    if (actual) select.value = actual;
-    await cargarLista();
-  }
-
   async function cargarLista() {
-    const id = $('ac-materia').value;
+    const id = Panel.contexto.id();
     if (!id) return;
     const data = await Panel.json(`/api/docente/actividades?materia_id=${id}`);
     actividades = data.actividades;
@@ -68,7 +58,7 @@
       botones: [{ texto: 'Cancelar', valor: null }, { texto: 'Guardar', primario: true, valor: f => {
         const criterios = deTextoCriterios(f.querySelector('#a-criterios').value);
         return {
-          materia_id: Number($('ac-materia').value), nombre: f.querySelector('#a-nombre').value.trim(),
+          materia_id: Number(Panel.contexto.id()), nombre: f.querySelector('#a-nombre').value.trim(),
           componente: f.querySelector('#a-comp').value, fecha_entrega: f.querySelector('#a-fecha').value || null,
           criterios, puntos_max: criterios.length ? null : Number(f.querySelector('#a-puntos').value) || null,
         };
@@ -97,7 +87,7 @@
     });
     if (!datos) return;
     if (!datos.nombre || !datos.archivo) return Panel.toast('Falta el nombre o el archivo', 'error');
-    const q = new URLSearchParams({ materia_id: $('ac-materia').value, componente: datos.componente, nombre: datos.nombre });
+    const q = new URLSearchParams({ materia_id: Panel.contexto.id(), componente: datos.componente, nombre: datos.nombre });
     if (datos.fecha) q.set('fecha_entrega', datos.fecha);
     const r = await Panel.subir(`/api/docente/actividades/importar?${q}`, datos.archivo);
     if (r.sin_pareja.length) {
@@ -182,9 +172,6 @@
   Panel.registrar('actividades', 'Actividades', {
     init(el) {
       el.innerHTML = `
-        <div class="doc-toolbar">
-          <label>Materia <select id="ac-materia"></select></label>
-        </div>
         <section id="ac-vista-lista">
           <div class="doc-toolbar">
             <button class="btn btn-primary" id="btn-nueva-act">Nueva actividad</button>
@@ -212,7 +199,6 @@
           </div>
         </section>`;
       const run = (fn) => (...a) => fn(...a).catch(e => Panel.toast(e.message, 'error'));
-      $('ac-materia').addEventListener('change', run(cargarLista));
       $('btn-nueva-act').addEventListener('click', run(() => editar(null)));
       $('btn-importar-act').addEventListener('click', run(importar));
       $('tabla-actividades').addEventListener('click', run(async (ev) => {
@@ -238,6 +224,8 @@
         await cargarLista();
       }));
     },
-    mostrar: cargarMaterias,
+    usaContexto: true,
+    hayCambios: () => !!calificando && sinGuardar,
+    mostrar: cargarLista,
   });
 })();

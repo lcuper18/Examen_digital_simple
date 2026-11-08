@@ -22,19 +22,8 @@
     $('notas-estado').textContent = valor ? 'Cambios sin guardar' : '';
   }
 
-  async function cargarMaterias() {
-    const data = await Panel.json('/api/docente/materias');
-    notaMinima = data.nota_minima;
-    const select = $('n-materia');
-    const actual = select.value;
-    select.innerHTML = data.materias.map(m =>
-      `<option value="${m.id}">${Panel.esc(m.seccion)} · Periodo ${m.periodo} · ${Panel.esc(m.nombre)}</option>`).join('');
-    if (actual) select.value = actual;
-    await cargarNotas();
-  }
-
   async function cargarNotas() {
-    const id = $('n-materia').value;
+    const id = Panel.contexto.id();
     if (!id) return;
     const data = await Panel.json(`/api/docente/notas?materia_id=${id}`);
     ponderaciones = data.ponderaciones;
@@ -93,7 +82,7 @@
         const v = valoresDeFila(tr);
         return { estudiante_id: Number(tr.dataset.id), ...Object.fromEntries(COMPONENTES.map(c => [c, aPorcentaje(v[c], c)])) };
       });
-    await Panel.json('/api/docente/notas', { method: 'PUT', body: { materia_id: Number($('n-materia').value), notas } });
+    await Panel.json('/api/docente/notas', { method: 'PUT', body: { materia_id: Number(Panel.contexto.id()), notas } });
     marcarCambios(false);
     Panel.toast('Notas guardadas');
   }
@@ -106,7 +95,7 @@
     if (sinGuardar && !(await Panel.confirmar('Tienes cambios sin guardar; se descartarán al importar.', { texto: 'Importar' }))) return;
     const data = await Panel.json('/api/docente/notas/importar-prueba', {
       method: 'POST',
-      body: { materia_id: Number($('n-materia').value), componente, codigo_examen: codigo },
+      body: { materia_id: Number(Panel.contexto.id()), componente, codigo_examen: codigo },
     });
     Panel.toast(`Se importaron ${data.importadas} notas`);
     await cargarNotas();
@@ -127,7 +116,7 @@
     if (!publicado && !(await Panel.confirmar(
       'Cada estudiante podrá ver sus notas, su asistencia y las observaciones de sus actividades de esta materia.',
       { titulo: 'Publicar notas', texto: 'Publicar' }))) return;
-    const data = await Panel.json(`/api/docente/materias/${$('n-materia').value}/publicacion`, {
+    const data = await Panel.json(`/api/docente/materias/${Panel.contexto.id()}/publicacion`, {
       method: 'PUT', body: { publicado: !publicado },
     });
     mostrarPublicacion(data.publicado);
@@ -137,7 +126,7 @@
   async function importarVinculadas() {
     if (sinGuardar && !(await Panel.confirmar('Tienes cambios sin guardar; se descartarán al importar.', { texto: 'Importar' }))) return;
     const data = await Panel.json('/api/docente/notas/importar-prueba', {
-      method: 'POST', body: { materia_id: Number($('n-materia').value) },
+      method: 'POST', body: { materia_id: Number(Panel.contexto.id()) },
     });
     Panel.toast(`Se importaron ${data.importadas} notas de ${data.examenes.join(', ')}`);
     await cargarNotas();
@@ -154,7 +143,7 @@
     });
     if (!archivo) return;
     if (sinGuardar && !(await Panel.confirmar('Tienes cambios sin guardar; se descartarán al importar.', { texto: 'Importar' }))) return;
-    const r = await Panel.subir(`/api/docente/notas/importar-hoja?materia_id=${$('n-materia').value}`, archivo);
+    const r = await Panel.subir(`/api/docente/notas/importar-hoja?materia_id=${Panel.contexto.id()}`, archivo);
     const detalle = [...r.sin_pareja.map(n => `Sin pareja: ${n}`), ...r.avisos];
     if (detalle.length) {
       await Panel.dialogo({ titulo: `Se importaron ${r.importados} estudiantes`,
@@ -169,7 +158,6 @@
     init(el) {
       el.innerHTML = `
         <div class="doc-toolbar">
-          <label>Materia <select id="n-materia"></select></label>
           <button class="btn btn-secondary" id="btn-importar-vinc" title="Importa los exámenes vinculados a esta materia (pestaña Exámenes)">Importar exámenes vinculados</button>
           <button class="btn btn-secondary" id="btn-importar-p01">Importar Prueba 01</button>
           <button class="btn btn-secondary" id="btn-importar-p02">Importar Prueba 02</button>
@@ -192,10 +180,6 @@
           </table>
         </div>`;
       const run = (fn) => (...a) => fn(...a).catch(e => Panel.toast(e.message, 'error'));
-      $('n-materia').addEventListener('change', run(async () => {
-        if (sinGuardar && !(await Panel.confirmar('Tienes cambios sin guardar; se descartarán.', { texto: 'Cambiar de materia' }))) return;
-        await cargarNotas();
-      }));
       $('tabla-notas').addEventListener('input', e => {
         if (!e.target.matches('input')) return;
         actualizarFila(e.target.closest('tr'));
@@ -209,10 +193,12 @@
       $('btn-importar-p01').addEventListener('click', run(() => importar('prueba01')));
       $('btn-importar-p02').addEventListener('click', run(() => importar('prueba02')));
       $('btn-exportar-notas').addEventListener('click', () => {
-        const id = $('n-materia').value;
+        const id = Panel.contexto.id();
         if (id) Panel.descargar(`/api/docente/notas/exportar?materia_id=${id}`, `notas_${id}.csv`);
       });
     },
-    mostrar: cargarMaterias,
+    usaContexto: true,
+    hayCambios: () => sinGuardar,
+    mostrar: cargarNotas,
   });
 })();
