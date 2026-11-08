@@ -11,7 +11,7 @@
 .doc-tabs { display: flex; gap: 6px; margin-right: auto; }
 .doc-tab { background: transparent; color: var(--text-secondary); border: 1px solid var(--border-medium);
   border-radius: var(--radius-full); padding: 8px 18px; cursor: pointer; font: inherit; }
-.doc-tab.active { color: var(--bg-primary); background: var(--accent-primary); border-color: var(--accent-primary); }
+.doc-tab.active { color: var(--on-accent); background: var(--accent-primary); border-color: var(--accent-primary); }
 .doc-toolbar { display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end; margin-bottom: 12px; }
 .doc-toolbar label { display: flex; flex-direction: column; gap: 4px; color: var(--text-secondary); font-size: 0.85rem; }
 .doc-table-wrap { overflow-x: auto; border: 1px solid var(--border-medium); border-radius: var(--radius-md); }
@@ -114,3 +114,56 @@
 /* Informes: una hoja por estudiante en pantalla */
 .rep-pagina { border-bottom: 2px dashed var(--border-medium); padding-bottom: 24px; margin-bottom: 24px; }
 .rep-acta { line-height: 1.6; }
+
+/* ===== Etapa 1: sistema de diseño del panel ===== */
+.docente-body { font-size: var(--text-md); }
+.docente-body :is(h1, h2) { font-family: var(--font-display); font-weight: 700; }
+.docente-body h3 { font-size: var(--text-md); margin: 16px 0 4px; color: var(--text-secondary); }
+.doc-muted, .doc-pending, .doc-campo, .doc-toolbar label, .doc-table th { font-size: var(--text-sm); }
+.doc-table th small, .rep-kpi small, .doc-pill { font-size: var(--text-xs); }
+
+/* Controles de formulario: mismo aspecto en toolbars, diálogos y tablas (el tema los adapta con color-scheme) */
+.docente-body :where(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), select, textarea) {
+  background: var(--bg-option); color: var(--text-primary); border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm); padding: 10px 12px; font: inherit; min-height: 40px; }
+.docente-body :where(textarea) { min-height: 0; resize: vertical; }
+.docente-body :where(input[type="checkbox"], input[type="radio"]) { accent-color: var(--accent-primary); width: 18px; height: 18px; vertical-align: middle; }
+.docente-body :where(input[type="file"]) { color: var(--text-secondary); font: inherit; }
+.docente-body :where(input, select, textarea):focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+.doc-table input, .doc-table select { min-height: 36px; padding: 6px 8px; }
+.doc-table input { width: 72px; }
+.doc-table select { width: auto; max-width: 220px; }
+.doc-campo select, .doc-campo input:not([type="checkbox"]):not([type="radio"]), .doc-campo textarea { width: 100%; }
+
+/* Botones: tamaño estable, sin saltos; la acción principal destaca por color, no por brillo */
+.docente-body .btn { flex: none; min-height: 40px; padding: 8px 18px; font-size: var(--text-sm); border-radius: var(--radius-sm); }
+.docente-body .btn::before { display: none; }
+.docente-body .btn-primary { box-shadow: var(--shadow-1); }
+.docente-body .btn-primary:hover { transform: none; filter: brightness(1.06); box-shadow: var(--shadow-1); }
+.docente-body .btn-primary:active { transform: none; filter: brightness(0.96); }
+.docente-body .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+.docente-body .btn-danger { background: var(--accent-red); border: 1px solid var(--accent-red); color: #fff; }
+.docente-body .btn-danger:hover { filter: brightness(1.08); }
+.doc-actions button { min-height: 36px; padding: 6px 12px; font-size: var(--text-xs); }
+@media (pointer: coarse) { .docente-body .btn, .doc-actions button { min-height: 44px; } .docente-body :where(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), select) { min-height: 44px; } }
+
+/* Diálogos y avisos */
+.doc-dialogo { box-shadow: var(--shadow-2); }
+.doc-dialogo.doc-dialogo-ancho { max-width: 860px; }
+.doc-dialogo-fondo { background: var(--overlay); }
+.doc-toast { display: flex; align-items: flex-start; gap: 10px; background: var(--bg-card); box-shadow: var(--shadow-2); max-width: 380px; }
+.doc-toast-cerrar { background: none; border: 0; color: var(--text-secondary); cursor: pointer; font-size: 1.1rem; line-height: 1; padding: 0 2px; }
+.doc-toast-cerrar:hover { color: var(--text-primary); }
+
+/* Etiquetas de estado */
+.doc-pill { display: inline-block; font-weight: 600; }
+.doc-pill.info { background: rgb(var(--accent-rgb) / 0.08); color: var(--accent-blue); }
+.doc-pill.wait { background: rgb(var(--amber-rgb) / 0.15); }
+
+/* Utilidades que antes eran estilos en línea */
+.doc-sin-margen { margin: 0; }
+.doc-corto { width: 5rem; }
+.rep-centro { text-align: center; }
+.rep-firma-centro { justify-content: center; margin-top: 60px; }
+.doc-final.low, .low { color: var(--accent-red); }
+.num { text-align: right; }

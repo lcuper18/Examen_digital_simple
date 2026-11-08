@@ -12,7 +12,7 @@ function misNotasHtmlMateria(m, minima) {
     <p class="grades-periodo">Período ${m.periodo}</p>
     <div class="grades-final"><strong class="${m.aprobado ? 'ok' : 'low'}">${misNotasNum(m.nota_final, 1)}</strong>
       <span>${m.aprobado ? 'Vas aprobando' : 'Por debajo de ' + minima}${m.completa ? '' : ' · nota parcial: faltan componentes por calificar'}</span></div>
-    <table class="grades-table"><caption class="grades-muted" style="text-align:left">Componentes de la nota</caption>
+    <table class="grades-table"><caption class="grades-muted grades-caption">Componentes de la nota</caption>
       <thead><tr><th scope="col">Componente</th><th scope="col" class="num">Valor</th><th scope="col" class="num">Obtenido</th></tr></thead>
       <tbody>${m.componentes.map(c => `<tr><td>${e(c.etiqueta)}</td><td class="num">${misNotasNum(c.peso)}</td><td class="num">${misNotasNum(c.puntos)}</td></tr>`).join('')}</tbody></table>
     <h3>Asistencia</h3>

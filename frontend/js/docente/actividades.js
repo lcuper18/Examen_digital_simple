@@ -203,7 +203,7 @@
         <section id="ac-vista-calificar" hidden>
           <div class="doc-toolbar">
             <button class="btn btn-secondary" id="btn-volver-act">← Volver</button>
-            <h2 id="ac-titulo" style="margin:0"></h2>
+            <h2 id="ac-titulo" class="doc-sin-margen"></h2>
             <button class="btn btn-primary" id="btn-guardar-cal">Guardar calificaciones</button>
           </div>
           <p class="doc-muted"><strong id="ac-estado" class="doc-sesion-alerta" aria-live="polite"></strong></p>

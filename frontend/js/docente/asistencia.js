@@ -120,7 +120,7 @@
         <div class="doc-toolbar">
           <label>Materia <select id="as-materia"></select></label>
           <label>Fecha <input type="date" id="as-fecha"></label>
-          <label>Lecciones <input type="number" id="as-lecciones" min="1" max="12" value="2" style="width:5rem"></label>
+          <label>Lecciones <input type="number" id="as-lecciones" min="1" max="12" value="2" class="doc-corto"></label>
           <label>Tema <input type="text" id="as-tema" maxlength="200" placeholder="opcional"></label>
           <button class="btn btn-secondary" id="btn-todos-presentes">Todos presentes</button>
           <button class="btn btn-primary" id="btn-guardar-lista">Guardar lista</button>

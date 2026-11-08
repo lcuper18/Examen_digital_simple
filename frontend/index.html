@@ -8,9 +8,12 @@
   <!-- Self-hosted fonts (no external dependencies) -->
   <link rel="stylesheet" href="/fonts/fonts.css">
   <!-- External styles -->
+  <script src="/js/tema.js"></script>
+  <link rel="stylesheet" href="/css/base.css">
   <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
+  <button type="button" class="tema-btn tema-flotante" aria-label="Cambiar tema"></button>
   <!-- Cambio de contraseña obligatorio -->
   <div class="login-overlay" id="change-overlay">
     <div class="login-container">
@@ -79,7 +82,7 @@
       </form>
       <p class="code-error" id="code-error">El código ingresado no es válido</p>
       <p class="code-help">Solicita el código a tu profesor</p>
-      <button type="button" class="btn btn-secondary" id="my-grades-btn" onclick="abrirMisNotas()" style="margin-top:16px">Ver mis notas</button>
+      <button type="button" class="btn btn-secondary" id="my-grades-btn" onclick="abrirMisNotas()">Ver mis notas</button>
     </div>
   </div>
 
@@ -127,7 +130,7 @@
       <div class="progress-track">
         <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
       </div>
-      <div class="timer-display" id="timer-display" style="margin-top: 16px; justify-content: center;">
+      <div class="timer-display" id="timer-display">
         <span class="timer-icon">⏱</span>
         <span id="timer-text">60:00</span>
       </div>
@@ -224,7 +227,7 @@
   <!-- Loading -->
   <div id="loading-indicator">
     <div class="spinner"></div>
-    <div style="font-size: 16px; color: var(--text-secondary);">Cargando preguntas...</div>
+    <div class="loading-text">Cargando preguntas...</div>
   </div>
 
   <!-- Error -->

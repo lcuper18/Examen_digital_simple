@@ -173,8 +173,8 @@
         Circuito escolar: <strong>CIRCUITO ${Panel.esc(e.circuito)}</strong><br>
         Centro educativo: <strong>${Panel.esc(e.institucion.toUpperCase())}</strong><br>
         Curso lectivo: <strong>${Panel.esc(e.curso_lectivo)}</strong></p>
-      <h1 style="text-align:center">${Panel.esc(e.institucion.toUpperCase())}</h1>
-      <p style="text-align:center"><strong>Reportes</strong></p>
+      <h1 class="rep-centro">${Panel.esc(e.institucion.toUpperCase())}</h1>
+      <p class="rep-centro"><strong>Reportes</strong></p>
       <p class="rep-acta">Docente: <strong>${Panel.esc(e.docente.toUpperCase())}</strong><br>
         Asignatura: <strong>${Panel.esc(e.asignatura.toUpperCase())}.</strong><br>
         Nivel: <strong>${Panel.esc(e.nivel)}</strong><br>
@@ -184,7 +184,7 @@
         ${d.estudiantes.map(x => `<tr><td>${Panel.esc(x.cedula)}</td><td>${Panel.esc(x.nombre)}</td>
           <td class="num ${clase(x.nota, minima)}">${x.nota}${x.completa ? '' : '*'}</td></tr>`).join('')}</tbody></table>
       ${parcial ? '<p class="rep-meta">* Nota parcial: faltan componentes por calificar (cuentan como 0).</p>' : ''}
-      <div class="rep-firma" style="justify-content:center;margin-top:60px"><div>Firma</div></div>`;
+      <div class="rep-firma rep-firma-centro"><div>Firma</div></div>`;
   }
 
   function htmlMateriaEncargado(m, minima) {

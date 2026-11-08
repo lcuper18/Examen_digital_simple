@@ -122,9 +122,17 @@ Panel.toast = function (mensaje, tipo = 'ok') {
   const t = document.createElement('div');
   t.className = `doc-toast ${tipo}`;
   t.setAttribute('role', tipo === 'error' ? 'alert' : 'status');
-  t.textContent = mensaje;
+  const texto = document.createElement('span');
+  texto.textContent = mensaje;
+  const cerrar = document.createElement('button');
+  cerrar.type = 'button';
+  cerrar.className = 'doc-toast-cerrar';
+  cerrar.setAttribute('aria-label', 'Cerrar aviso');
+  cerrar.textContent = '×';
+  cerrar.addEventListener('click', () => t.remove());
+  t.append(texto, cerrar);
   $('doc-toasts').appendChild(t);
-  setTimeout(() => t.remove(), tipo === 'error' ? 6000 : 3500);
+  setTimeout(() => t.remove(), tipo === 'error' ? 8000 : 4000);
 };
 
 // Diálogo modal accesible. Devuelve una promesa con el valor del botón (o null si se cierra).
@@ -138,7 +146,7 @@ Panel.dialogo = function ({ titulo, cuerpo = '', botones = [{ texto: 'Cerrar', v
         <h2 id="dlg-titulo">${Panel.esc(titulo)}</h2>
         <div class="doc-dialogo-cuerpo">${cuerpo}</div>
         <div class="doc-dialogo-botones">
-          ${botones.map((b, i) => `<button type="button" class="btn ${b.primario ? 'btn-primary' : 'btn-secondary'}" data-i="${i}">${Panel.esc(b.texto)}</button>`).join('')}
+          ${botones.map((b, i) => `<button type="button" class="btn ${b.peligro ? 'btn-danger' : b.primario ? 'btn-primary' : 'btn-secondary'}" data-i="${i}">${Panel.esc(b.texto)}</button>`).join('')}
         </div>
       </div>`;
     const cerrar = (valor) => {
@@ -174,7 +182,7 @@ Panel.confirmar = async function (mensaje, { titulo = 'Confirmar', texto = 'Acep
   const r = await Panel.dialogo({
     titulo,
     cuerpo: `<p>${Panel.esc(mensaje)}</p>`,
-    botones: [{ texto: 'Cancelar', valor: false }, { texto, valor: true, primario: !peligro }],
+    botones: [{ texto: 'Cancelar', valor: false }, { texto, valor: true, primario: !peligro, peligro }],
   });
   return r === true;
 };
@@ -203,6 +211,7 @@ const ESTILO_IMPRESION = `
   .rep-kpi strong { display: block; font-size: 16px; } .rep-firma { margin-top: 48px; display: flex; gap: 48px; }
   .rep-firma div { border-top: 1px solid #333; padding-top: 4px; width: 200px; text-align: center; }
   svg text { fill: #333; } @page { margin: 14mm; }
+  .rep-centro { text-align: center; } .rep-firma-centro { justify-content: center; margin-top: 60px; }
   .rep-pagina { page-break-after: always; } .rep-pagina:last-of-type { page-break-after: auto; } .rep-acta { line-height: 1.6; }`;
 
 Panel.imprimirHtml = function (titulo, html) {

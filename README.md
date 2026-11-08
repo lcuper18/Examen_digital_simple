@@ -106,3 +106,7 @@ En **Ajustes → Cierre del curso lectivo**: guarda en `respaldos/` una copia co
 ## Respaldos
 
 Al arrancar y cada hora, el servidor guarda una copia de la base de datos por día en `respaldos/` (se conservan las últimas 30). La base usa el modo WAL, por lo que pueden aparecer archivos `examen_db.sqlite-wal` y `-shm` junto a ella.
+
+## Apariencia
+
+La plataforma sigue el tema claro u oscuro del dispositivo y tiene un botón (sol o luna) para cambiarlo; la preferencia se recuerda en el navegador. Los colores, espacios y tipografía viven en `frontend/css/base.css`.
