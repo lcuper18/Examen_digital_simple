@@ -1,7 +1,7 @@
 // Pestaña Actividades: tareas, proyectos y trabajo cotidiano con rúbrica; califica por criterio
 (function () {
   const ETIQUETA = {
-    trabajo_cotidiano: 'Trabajo cotidiano', tareas: 'Tareas', prueba01: 'Prueba 01', prueba02: 'Prueba 02', proyecto: 'Proyecto',
+    trabajo_cotidiano: 'Trabajo cotidiano', tareas: 'Tareas', prueba01: 'Prueba 1', prueba02: 'Prueba 2', proyecto: 'Proyecto',
   };
   let actividades = [];
   let estados = {};
@@ -225,7 +225,7 @@
         marcar(true);
       });
       Panel.navegarCeldas($('tabla-calificar'));
-      $('btn-guardar-cal').addEventListener('click', run(guardarCalificaciones));
+      $('btn-guardar-cal').addEventListener('click', run(() => Panel.conCarga($('btn-guardar-cal'), guardarCalificaciones)));
       $('btn-volver-act').addEventListener('click', run(async () => {
         if (sinGuardar && !(await Panel.confirmar('Tienes cambios sin guardar; se descartarán.', { texto: 'Volver' }))) return;
         await cargarLista();

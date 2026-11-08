@@ -3,8 +3,8 @@
   // Se notan en puntos (como en las hojas del docente); el servidor guarda 0-100 por componente.
   let COMPONENTES = ['trabajo_cotidiano', 'tareas', 'prueba01', 'prueba02', 'proyecto', 'asistencia'];
   let ETIQUETAS = {
-    trabajo_cotidiano: 'TC', tareas: 'Tareas', prueba01: 'Prueba 01',
-    prueba02: 'Prueba 02', proyecto: 'Proyecto', asistencia: 'Asistencia',
+    trabajo_cotidiano: 'Trabajo cotidiano', tareas: 'Tareas', prueba01: 'Prueba 1',
+    prueba02: 'Prueba 2', proyecto: 'Proyecto', asistencia: 'Asistencia',
   };
   let ponderaciones = {};
   const redondear = (n, d = 2) => Math.round(n * 10 ** d) / 10 ** d;
@@ -187,15 +187,15 @@
         actualizarResumen();
         marcarCambios(true);
       });
-      $('btn-guardar-notas').addEventListener('click', run(guardar));
+      $('btn-guardar-notas').addEventListener('click', run(() => Panel.conCarga($('btn-guardar-notas'), guardar)));
       $('n-publicado-sw').addEventListener('change', run(cambiarPublicacion));
       Panel.navegarCeldas($('tabla-notas'));
       Panel.menuDesplegable($('btn-mas-notas'), [
         { texto: 'Importar exámenes vinculados', accion: run(importarVinculadas) },
-        { texto: 'Cargar hoja de notas (Excel o CSV)…', accion: run(importarHoja) },
+        { texto: 'Cargar una hoja de notas (Excel)…', accion: run(importarHoja) },
         { texto: 'Importar un examen como Prueba 1…', accion: run(() => importar('prueba01')) },
         { texto: 'Importar un examen como Prueba 2…', accion: run(() => importar('prueba02')) },
-        { texto: 'Descargar notas (CSV)', accion: () => {
+        { texto: 'Descargar notas (para Excel)', accion: () => {
           const id = Panel.contexto.id();
           if (id) Panel.descargar(`/api/docente/notas/exportar?materia_id=${id}`, `notas_${id}.csv`);
         } },

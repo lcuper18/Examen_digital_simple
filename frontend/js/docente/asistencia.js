@@ -202,7 +202,7 @@
         contar();
         marcar(true);
       });
-      $('btn-guardar-lista').addEventListener('click', run(guardar));
+      $('btn-guardar-lista').addEventListener('click', run(() => Panel.conCarga($('btn-guardar-lista'), guardar)));
       $('btn-as-excel').addEventListener('click', () => {
         const id = Panel.contexto.id();
         if (id) Panel.descargar(`/api/docente/asistencia/excel?materia_id=${id}`, `asistencia_${id}.xlsx`);

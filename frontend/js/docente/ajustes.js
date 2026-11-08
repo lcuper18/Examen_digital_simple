@@ -3,8 +3,13 @@
   const CAMPOS = [
     ['institucion', 'Institución'], ['direccion_regional', 'Dirección Regional'], ['circuito', 'Circuito'],
     ['docente', 'Docente (como aparece en las actas)'], ['curso_lectivo', 'Curso lectivo'], ['nota_minima', 'Nota mínima de aprobación (0-100)'],
-    ['periodo_actual', 'Período actual (para las alertas del Resumen)'], ['umbral_ausencias', 'Alerta de asistencia desde (% de ausencias injustificadas)'],
+    ['periodo_actual', 'Período actual'], ['umbral_ausencias', 'Avisar desde este % de ausencias injustificadas'],
   ];
+  const AYUDAS = {
+    nota_minima: 'Nota desde la cual el estudiante aprueba.',
+    periodo_actual: 'Es el período que se vigila en «Estudiantes que necesitan atención» en el inicio.',
+    umbral_ausencias: 'Con este porcentaje de ausencias sin justificar se muestra un aviso en el inicio.',
+  };
   const NUMERICOS = ['nota_minima', 'periodo_actual', 'umbral_ausencias'];
   let materias = [];
   let componentes = [];
@@ -13,7 +18,7 @@
   async function cargarAjustes() {
     const { ajustes } = await Panel.json('/api/docente/ajustes');
     $('aj-campos').innerHTML = CAMPOS.map(([k, etiqueta]) => `
-      <label class="doc-campo">${etiqueta}
+      <label class="doc-campo">${etiqueta}${AYUDAS[k] ? Panel.ayuda(AYUDAS[k]) : ''}
         <input type="${NUMERICOS.includes(k) ? 'number' : 'text'}" data-clave="${k}" value="${Panel.esc(ajustes[k])}"
           ${NUMERICOS.includes(k) ? 'min="1" max="100" step="1"' : ''}></label>`).join('');
   }
@@ -27,8 +32,8 @@
   async function cargarRed() {
     const red = await Panel.json('/api/docente/red');
     $('aj-red').innerHTML = `
-      <li>Por IP: <strong>${red.url_ip ? Panel.esc(red.url_ip) : 'sin red'}</strong> <small class="doc-muted">(puede cambiar si la Mac se reconecta)</small></li>
-      ${red.url_nombre ? `<li>Por nombre: <strong>${Panel.esc(red.url_nombre)}</strong> <small class="doc-muted">(no cambia aunque cambie la IP; funciona en la mayoría de los celulares y computadoras)</small></li>` : ''}`;
+      <li>Con la dirección numérica: <strong>${red.url_ip ? Panel.esc(red.url_ip) : 'sin red'}</strong> <small class="doc-muted">(puede cambiar si el computador se reconecta al wifi)</small></li>
+      ${red.url_nombre ? `<li>Con el nombre del computador: <strong>${Panel.esc(red.url_nombre)}</strong> <small class="doc-muted">(no cambia aunque cambie la IP; funciona en la mayoría de los celulares y computadoras)</small></li>` : ''}`;
   }
 
   function dibujarPesos() {

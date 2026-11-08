@@ -61,8 +61,8 @@
             `<option value="${m.id}" ${m.id === e.materia_id ? 'selected' : ''}>${Panel.esc(m.seccion)} · Periodo ${m.periodo} · ${Panel.esc(m.nombre)}</option>`).join('')}</select></label>
         <label class="doc-campo">Componente
           <select id="c-componente">
-            <option value="prueba01" ${e.componente === 'prueba01' ? 'selected' : ''}>Prueba 01</option>
-            <option value="prueba02" ${e.componente === 'prueba02' ? 'selected' : ''}>Prueba 02</option>
+            <option value="prueba01" ${e.componente === 'prueba01' ? 'selected' : ''}>Prueba 1</option>
+            <option value="prueba02" ${e.componente === 'prueba02' ? 'selected' : ''}>Prueba 2</option>
           </select></label>`,
       botones: [
         { texto: 'Cancelar', valor: null },

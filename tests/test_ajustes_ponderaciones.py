@@ -80,3 +80,20 @@ def test_respaldo_diario_una_vez_y_conserva_los_ultimos(client, tmp_path):
     copia = database.sqlite3.connect(archivo)
     assert copia.execute("SELECT COUNT(*) FROM estudiantes").fetchone()[0] == 2
     copia.close()
+
+
+def test_primeros_pasos_se_marcan_solos(client):
+    hd = _docente(client)
+    assert client.get("/api/docente/primeros-pasos").status_code == 401
+    hechos = lambda: {p["id"]: p["hecho"] for p in client.get("/api/docente/primeros-pasos", headers=hd).json()["pasos"]}
+    assert not any(hechos().values())
+
+    mid = _materia(client, hd)
+    client.put("/api/docente/ajustes", headers=hd, json={"ajustes": {"institucion": "CTP Prueba"}})
+    client.put(f"/api/docente/examenes/{CODIGO}", headers=hd, json={"materia_id": mid, "componente": "prueba01"})
+    client.put("/api/docente/asistencia/sesion", headers=hd, json={
+        "materia_id": mid, "fecha": "2026-03-02", "lecciones": 1, "registros": [{"estudiante_id": 1, "estado": "P"}]})
+    client.put(f"/api/docente/materias/{mid}/publicacion", headers=hd, json={"publicado": True})
+    h = hechos()
+    assert h["institucion"] and h["vinculos"] and h["lista"] and h["publicar"]
+    assert not h["encargados"] and not h["actividad"]

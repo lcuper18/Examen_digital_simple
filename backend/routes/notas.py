@@ -19,8 +19,8 @@ router = APIRouter(
 
 COMPONENTES = ["trabajo_cotidiano", "tareas", "prueba01", "prueba02", "proyecto", "asistencia"]
 ETIQUETAS = {
-    "trabajo_cotidiano": "Trabajo cotidiano", "tareas": "Tareas", "prueba01": "Prueba 01",
-    "prueba02": "Prueba 02", "proyecto": "Proyecto", "asistencia": "Asistencia",
+    "trabajo_cotidiano": "Trabajo cotidiano", "tareas": "Tareas", "prueba01": "Prueba 1",
+    "prueba02": "Prueba 2", "proyecto": "Proyecto", "asistencia": "Asistencia",
 }
 
 # Componente -> puntos de la nota final por defecto (suman 100). Cada materia puede tener los suyos.

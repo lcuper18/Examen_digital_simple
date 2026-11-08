@@ -5,7 +5,7 @@ const Panel = {
   moduloActivo: null,
   temporizadorSesion: null,
   GRUPOS: [
-    { titulo: 'Inicio', ids: ['resumen'] },
+    { titulo: 'Hoy', ids: ['resumen'] },
     { titulo: 'Mis clases', ids: ['asistencia', 'actividades', 'notas'] },
     { titulo: 'Exámenes', ids: ['examenes', 'resultados'] },
     { titulo: 'Estudiantes', ids: ['estudiantes'] },
@@ -99,6 +99,40 @@ Panel.descargar = async function (url, nombre) {
   } catch (e) {
     Panel.toast(e.message, 'error');
   }
+};
+
+// ========== LENGUAJE CLARO ==========
+Panel.ETIQUETA_ALERTA = {
+  riesgo: 'En riesgo', asistencia: 'Ausencias', pendientes: 'Sin entrega', examen: 'Examen pendiente',
+  vencido: 'Tiempo agotado', salidas: 'Salió de la pestaña', bloqueados: 'Acceso bloqueado', temporales: 'Clave temporal',
+  sospechosos: 'Intento sospechoso',
+};
+
+Panel.FRASES = {
+  guardar_notas: 'Guardaste notas', importar_prueba: 'Importaste las notas de un examen', importar_hoja: 'Cargaste una hoja de notas',
+  guardar_ponderaciones: 'Cambiaste la ponderación', publicar_notas: 'Publicaste notas a los estudiantes', ocultar_notas: 'Ocultaste notas a los estudiantes',
+  pasar_lista: 'Pasaste lista', eliminar_lista: 'Eliminaste una lista de asistencia', crear_actividad: 'Creaste una actividad',
+  editar_actividad: 'Editaste una actividad', eliminar_actividad: 'Eliminaste una actividad', calificar_actividad: 'Calificaste una actividad',
+  importar_actividad: 'Importaste una actividad desde Excel', configurar_examen: 'Configuraste un examen', guardar_ajustes: 'Guardaste los ajustes',
+  guardar_ficha: 'Actualizaste la ficha de un estudiante', agregar_observacion: 'Agregaste una observación', eliminar_observacion: 'Eliminaste una observación',
+  importar_encargados: 'Importaste datos de encargados', importar_estudiantes: 'Importaste estudiantes', crear_estudiante: 'Creaste un estudiante',
+  eliminar_estudiante: 'Eliminaste un estudiante', activar_cuenta: 'Activaste una cuenta', desactivar_cuenta: 'Desactivaste una cuenta',
+  cambiar_seccion: 'Cambiaste a un estudiante de grupo', reiniciar_password: 'Reiniciaste una contraseña', reiniciar_seccion: 'Reiniciaste las contraseñas de un grupo',
+  desbloquear_login: 'Desbloqueaste el acceso de un estudiante', reiniciar_intento: 'Permitiste repetir un examen', anular_intento: 'Anulaste un intento de examen',
+  restaurar_intento: 'Restauraste un intento de examen', marcar_sospechoso: 'Marcaste un intento como sospechoso', quitar_sospechoso: 'Quitaste la marca de sospechoso',
+  cerrar_intento: 'Cerraste un examen en curso', tiempo_extra: 'Diste tiempo extra', cierre_curso: 'Cerraste el curso lectivo',
+};
+Panel.frase = (accion) => Panel.FRASES[accion] || accion.replace(/_/g, ' ');
+
+// Botón de ayuda «?» con explicación breve (visible con el ratón, el foco y los lectores de pantalla)
+Panel.ayuda = (texto) => `<button type="button" class="doc-ayuda" aria-label="Ayuda: ${Panel.esc(texto)}" title="${Panel.esc(texto)}">?</button>`;
+
+// Desactiva el botón y muestra «Guardando…» mientras dura la operación
+Panel.conCarga = async function (boton, operacion, texto = 'Guardando…') {
+  const original = boton.textContent;
+  boton.disabled = true;
+  boton.textContent = texto;
+  try { return await operacion(); } finally { boton.disabled = false; boton.textContent = original; }
 };
 
 // ========== MENÚ DESPLEGABLE (acciones secundarias) ==========
@@ -381,7 +415,7 @@ Panel.construirNavegacion = function () {
     return items.length ? `<div class="doc-nav-grupo"><p class="doc-nav-titulo">${Panel.esc(g.titulo)}</p>${items.map(m =>
       `<button type="button" class="doc-nav-item" id="tabbtn-${m.id}" data-tab="${m.id}" title="${Panel.esc(m.titulo)}">${icono(m.id)}<span>${Panel.esc(m.titulo)}</span></button>`).join('')}</div>` : '';
   }).join('') + '<button type="button" class="doc-nav-contraer" id="doc-nav-contraer" aria-pressed="false" title="Contraer el menú"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg><span>Contraer menú</span></button>';
-  $('doc-contenido').innerHTML = ordenados.map(m =>
+  $('doc-contenido').innerHTML = `<div id="doc-vacio-ctx" class="doc-vacio" hidden><h2>Aún no hay materias</h2><p>Esta sección trabaja sobre un grupo y una materia. Cuando haya estudiantes y materias registrados, aparecerán en el selector de arriba.</p></div>` + ordenados.map(m =>
     `<section id="tab-${m.id}" class="doc-section" aria-labelledby="tabbtn-${m.id}" hidden></section>`
   ).join('');
   ordenados.forEach(m => { if (m.init) m.init($(`tab-${m.id}`)); });
@@ -415,10 +449,29 @@ Panel.irA = async function (id) {
     if (activa) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
   });
   $('doc-contexto').hidden = !modulo.usaContexto;
-  Panel.ordenados.forEach(m => { $(`tab-${m.id}`).hidden = m.id !== id; });
+  const sinMaterias = modulo.usaContexto && !Panel.contexto.id();
+  $('doc-vacio-ctx').hidden = !sinMaterias;
+  Panel.ordenados.forEach(m => { $(`tab-${m.id}`).hidden = m.id !== id || sinMaterias; });
   sessionStorage.setItem('docenteTab', id);
-  if (modulo.mostrar) {
-    try { await modulo.mostrar(); } catch (e) { if (e.message !== 'Sesión expirada') Panel.toast(e.message, 'error'); }
+  if (!modulo.mostrar || sinMaterias) return;
+  const seccion = $(`tab-${id}`);
+  seccion.classList.add('doc-cargando');
+  seccion.setAttribute('aria-busy', 'true');
+  seccion.querySelectorAll(':scope > .doc-aviso-error').forEach(e => e.remove());
+  try {
+    await modulo.mostrar();
+  } catch (e) {
+    if (e.message === 'Sesión expirada') return;
+    Panel.toast(e.message, 'error');
+    const aviso = document.createElement('div');
+    aviso.className = 'doc-aviso-error';
+    aviso.setAttribute('role', 'alert');
+    aviso.innerHTML = `<span>No se pudo cargar esta sección: ${Panel.esc(e.message)}</span><button type="button" class="btn btn-secondary">Reintentar</button>`;
+    aviso.querySelector('button').addEventListener('click', () => Panel.irA(id));
+    seccion.prepend(aviso);
+  } finally {
+    seccion.classList.remove('doc-cargando');
+    seccion.removeAttribute('aria-busy');
   }
 };
 

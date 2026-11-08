@@ -275,3 +275,47 @@
 .doc-auto:focus { max-height: 260px; }
 .doc-hoja td:has(.doc-auto) { white-space: normal; vertical-align: top; }
 .doc-candado { width: 14px; height: 14px; vertical-align: -2px; }
+
+/* ===== Etapa 4: carga, errores, vacíos y ayudas ===== */
+.doc-section { position: relative; }
+.doc-cargando { min-height: 120px; }
+.doc-cargando > * { opacity: 0.5; transition: opacity 0.15s; pointer-events: none; }
+.doc-cargando::after { content: ''; position: absolute; top: 48px; left: 50%; width: 32px; height: 32px; margin-left: -16px; border-radius: 50%;
+  border: 3px solid var(--border-medium); border-top-color: var(--accent-primary); animation: doc-giro 0.8s linear infinite; }
+@keyframes doc-giro { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .doc-cargando::after { animation-duration: 3s; } }
+.doc-aviso-error { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; padding: 12px 16px;
+  background: var(--accent-red-glow); border: 1px solid var(--accent-red); border-radius: var(--radius-md); color: var(--text-primary); }
+.doc-vacio { padding: 32px 16px; text-align: center; color: var(--text-secondary); border: 1px dashed var(--border-medium); border-radius: var(--radius-md); }
+.doc-vacio[hidden] { display: none; }
+.doc-ayuda { width: 20px; height: 20px; margin-left: 6px; padding: 0; border: 1px solid var(--border-medium); border-radius: 50%; background: transparent;
+  color: var(--text-secondary); font-size: var(--text-xs); font-weight: 700; cursor: help; vertical-align: middle; }
+.doc-ayuda:hover, .doc-ayuda:focus-visible { color: var(--text-primary); border-color: var(--accent-blue); outline: none; }
+
+/* Inicio */
+.doc-bienvenida { margin-bottom: 16px; }
+.doc-bienvenida h2 { font-size: var(--text-2xl); margin: 0; }
+.doc-atajos { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.doc-atajo { display: flex; align-items: center; gap: 14px; padding: 16px; text-align: left; font: inherit; color: var(--text-primary);
+  background: var(--bg-secondary); border: 1px solid var(--border-medium); border-radius: var(--radius-md); cursor: pointer; }
+.doc-atajo:hover { border-color: var(--accent-primary); background: var(--bg-hover); }
+.doc-atajo:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+.doc-atajo svg { width: 28px; height: 28px; flex: none; color: var(--accent-primary); }
+.doc-atajo strong { display: block; font-size: var(--text-md); }
+.doc-atajo small { display: block; color: var(--text-secondary); font-size: var(--text-xs); }
+.doc-pasos-caja { margin-bottom: 20px; padding: 16px 20px; background: var(--bg-secondary); border: 1px solid var(--border-medium); border-radius: var(--radius-md); }
+.doc-pasos-caja[hidden] { display: none; }
+.doc-pasos-cab { display: flex; justify-content: space-between; align-items: baseline; }
+.doc-pasos-cab h2 { margin: 0 0 8px; font-size: var(--text-lg); }
+.doc-pasos { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+.doc-pasos li { display: flex; align-items: center; gap: 10px; font-size: var(--text-sm); }
+.doc-pasos li.hecho { color: var(--text-secondary); text-decoration: line-through; }
+.doc-paso-marca { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; flex: none; border: 2px solid var(--border-medium);
+  border-radius: 50%; font-size: 13px; color: var(--on-accent); }
+.doc-pasos li.hecho .doc-paso-marca { background: var(--accent-primary); border-color: var(--accent-primary); }
+.rep-kpi-alerta strong { color: var(--accent-red); }
+.doc-tarjeta-alerta { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 16px; background: var(--bg-secondary);
+  border: 1px solid var(--border-medium); border-radius: var(--radius-md); }
+.doc-pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0; }
+
+.doc-hoja thead th { white-space: normal; min-width: 88px; vertical-align: bottom; }

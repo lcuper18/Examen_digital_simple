@@ -66,6 +66,26 @@ def guardar_ajustes(request: GuardarAjustes) -> dict[str, Any]:
         return {"ok": True, "ajustes": database.leer_ajustes(conn)}
 
 
+@router.get("/primeros-pasos")
+def primeros_pasos() -> dict[str, Any]:
+    """Lista de arranque para el docente nuevo; cada paso se marca solo cuando ya hay datos que lo demuestran."""
+    with database.get_db_context() as conn:
+        cuenta = lambda sql: conn.execute(sql).fetchone()[0]
+        guardados = {r["clave"] for r in conn.execute("SELECT clave FROM ajustes")}
+        pasos = [
+            ("institucion", "Revisa los datos de la institución y del docente", "institucion" in guardados, "ajustes"),
+            ("encargados", "Importa los datos de los encargados de tus estudiantes",
+             cuenta("SELECT COUNT(*) FROM estudiantes WHERE COALESCE(encargado_nombre, '') <> ''") > 0, "estudiantes"),
+            ("vinculos", "Vincula cada examen a su materia para importar las notas con un clic",
+             cuenta("SELECT COUNT(*) FROM examenes_config WHERE materia_id IS NOT NULL") > 0, "examenes"),
+            ("lista", "Pasa tu primera lista de asistencia", cuenta("SELECT COUNT(*) FROM sesiones") > 0, "asistencia"),
+            ("actividad", "Crea o importa una actividad con su rúbrica", cuenta("SELECT COUNT(*) FROM actividades") > 0, "actividades"),
+            ("publicar", "Publica las notas de una materia para tus estudiantes",
+             cuenta("SELECT COUNT(*) FROM publicaciones WHERE publicado = 1") > 0, "notas"),
+        ]
+    return {"ok": True, "pasos": [{"id": i, "texto": t, "hecho": h, "ir": ir} for i, t, h, ir in pasos]}
+
+
 def _ip_local() -> str | None:
     """IP de la Mac en la red (no envía tráfico: solo consulta la ruta por defecto)."""
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)

@@ -10,7 +10,7 @@
     registro: 'Registro de notas (en puntos)',
   };
   const NOTAS_ETIQUETA = {
-    trabajo_cotidiano: 'TC', tareas: 'Tareas', prueba01: 'P01', prueba02: 'P02', proyecto: 'Proyecto', asistencia: 'Asist.',
+    trabajo_cotidiano: 'Trabajo cotidiano', tareas: 'Tareas', prueba01: 'Prueba 1', prueba02: 'Prueba 2', proyecto: 'Proyecto', asistencia: 'Asistencia',
   };
   let catalogos = null;
   let actual = null; // { titulo, html, excel, csv }
@@ -274,7 +274,7 @@
           <button class="btn btn-primary" id="r-generar">Generar</button>
           <button class="btn btn-secondary" id="r-imprimir" disabled>Imprimir / PDF</button>
           <button class="btn btn-secondary" id="r-excel" disabled>Excel</button>
-          <button class="btn btn-secondary" id="r-csv" disabled>CSV</button>
+          <button class="btn btn-secondary" id="r-csv" disabled>Para Excel (CSV)</button>
         </div>
         <div id="r-salida" class="rep-pantalla" aria-live="polite"></div>`;
       const run = (fn) => (...a) => fn(...a).catch(e => Panel.toast(e.message, 'error'));
