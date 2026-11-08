@@ -41,12 +41,19 @@
         <td>${Panel.formatoFecha(e.ultimo_acceso)}</td>
         <td>${e.enviados}</td>
         <td class="doc-actions">
-          <button class="btn btn-secondary" data-ficha="${e.id}" aria-haspopup="dialog">Ficha</button>
-          <button class="btn btn-secondary" data-reiniciar="${e.id}">Reiniciar clave</button>
-          <button class="btn btn-secondary" data-mas="${e.id}" aria-haspopup="dialog">Más…</button>
+          <button class="btn btn-primary" data-ficha="${e.id}" aria-haspopup="dialog">Ficha</button>
+          <button class="btn btn-secondary" data-menu-est="${e.id}" aria-label="Más acciones de ${Panel.esc(Panel.nombre(e))}">⋯</button>
         </td>
       </tr>`;
-    }).join('') || '<tr><td colspan="7" class="doc-pending">Sin estudiantes</td></tr>';
+    }).join('') || '<tr><td colspan="7" class="doc-pending">Sin estudiantes con ese filtro.</td></tr>';
+    document.querySelectorAll('[data-menu-est]').forEach(b => {
+      const id = Number(b.dataset.menuEst);
+      const fallo = (fn) => () => fn(id).catch(err => Panel.toast(err.message, 'error'));
+      Panel.menuDesplegable(b, [
+        { texto: 'Reiniciar contraseña…', accion: fallo(reiniciarClave) },
+        { texto: 'Más opciones…', accion: fallo(mas) },
+      ]);
+    });
   }
 
   function mostrarClave(titulo, nombre, username, clave) {
@@ -229,8 +236,6 @@
       $('e-encargados').addEventListener('click', run(importarEncargados));
       $('tabla-estudiantes').addEventListener('click', e => {
         if (e.target.dataset.ficha) run(() => Panel.abrirFicha(Number(e.target.dataset.ficha)))();
-        if (e.target.dataset.reiniciar) run(reiniciarClave)(Number(e.target.dataset.reiniciar));
-        if (e.target.dataset.mas) run(mas)(Number(e.target.dataset.mas));
       });
       // Copiar al portapapeles y cargar CSV desde archivo (elementos dentro de diálogos)
       document.addEventListener('click', e => {

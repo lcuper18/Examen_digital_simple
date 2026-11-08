@@ -19,7 +19,7 @@
 
   function marcarCambios(valor) {
     sinGuardar = valor;
-    $('notas-estado').textContent = valor ? 'Cambios sin guardar' : '';
+    $('notas-estado').textContent = valor ? 'Cambios sin guardar' : 'Todo guardado';
   }
 
   async function cargarNotas() {
@@ -104,23 +104,26 @@
   let publicado = false;
   function mostrarPublicacion(valor) {
     publicado = valor;
-    $('btn-publicar').textContent = valor ? 'Ocultar a estudiantes' : 'Publicar a estudiantes';
-    $('notas-publicado').textContent = valor ? 'Visible para los estudiantes en «Mis notas»' : 'Oculta para los estudiantes';
-    $('notas-publicado').classList.toggle('doc-pill', true);
-    $('notas-publicado').classList.toggle('ok', valor);
-    $('notas-publicado').classList.toggle('warn', !valor);
+    $('n-publicado-sw').checked = valor;
+    $('n-publicado-txt').textContent = valor ? 'Visible para los estudiantes en «Mis notas»' : 'Oculta para los estudiantes';
   }
 
-  async function alternarPublicacion() {
-    if (!publicado && sinGuardar) return Panel.toast('Guarda las notas antes de publicarlas', 'error');
-    if (!publicado && !(await Panel.confirmar(
+  async function cambiarPublicacion() {
+    const quiere = $('n-publicado-sw').checked;
+    if (quiere && sinGuardar) { mostrarPublicacion(false); return Panel.toast('Guarda las notas antes de publicarlas', 'error'); }
+    if (quiere && !(await Panel.confirmar(
       'Cada estudiante podrá ver sus notas, su asistencia y las observaciones de sus actividades de esta materia.',
-      { titulo: 'Publicar notas', texto: 'Publicar' }))) return;
-    const data = await Panel.json(`/api/docente/materias/${Panel.contexto.id()}/publicacion`, {
-      method: 'PUT', body: { publicado: !publicado },
-    });
-    mostrarPublicacion(data.publicado);
-    Panel.toast(data.publicado ? 'Notas publicadas a los estudiantes' : 'Notas ocultas');
+      { titulo: 'Publicar notas', texto: 'Publicar' }))) return mostrarPublicacion(false);
+    try {
+      const data = await Panel.json(`/api/docente/materias/${Panel.contexto.id()}/publicacion`, {
+        method: 'PUT', body: { publicado: quiere },
+      });
+      mostrarPublicacion(data.publicado);
+      Panel.toast(data.publicado ? 'Notas publicadas a los estudiantes' : 'Notas ocultas');
+    } catch (e) {
+      mostrarPublicacion(publicado);
+      throw e;
+    }
   }
 
   async function importarVinculadas() {
@@ -157,18 +160,12 @@
   Panel.registrar('notas', 'Notas', {
     init(el) {
       el.innerHTML = `
-        <div class="doc-toolbar">
-          <button class="btn btn-secondary" id="btn-importar-vinc" title="Importa los exámenes vinculados a esta materia (pestaña Exámenes)">Importar exámenes vinculados</button>
-          <button class="btn btn-secondary" id="btn-importar-p01">Importar Prueba 01</button>
-          <button class="btn btn-secondary" id="btn-importar-p02">Importar Prueba 02</button>
-          <button class="btn btn-secondary" id="btn-importar-hoja">Importar hoja…</button>
-          <button class="btn btn-secondary" id="btn-exportar-notas">Exportar CSV</button>
-          <button class="btn btn-secondary" id="btn-publicar">Publicar a estudiantes</button>
-          <span id="notas-publicado"></span>
-          <button class="btn btn-primary" id="btn-guardar-notas">Guardar notas</button>
+        <div class="doc-toolbar doc-toolbar-fila">
+          <label class="doc-interruptor"><input type="checkbox" role="switch" id="n-publicado-sw"><span id="n-publicado-txt"></span></label>
+          <button class="btn btn-secondary" id="btn-mas-notas">Más ▾</button>
         </div>
-        <p class="doc-muted"><span id="notas-resumen" aria-live="polite"></span> <strong id="notas-estado" class="doc-sesion-alerta"></strong></p>
-        <div class="doc-table-wrap">
+        <p class="doc-muted" id="notas-resumen" aria-live="polite"></p>
+        <div class="doc-table-wrap doc-hoja">
           <table class="doc-table" id="tabla-notas">
             <caption class="doc-solo-lectores">Notas de la materia seleccionada</caption>
             <thead><tr>
@@ -178,6 +175,10 @@
             </tr></thead>
             <tbody></tbody>
           </table>
+        </div>
+        <div class="doc-barra-fija">
+          <strong id="notas-estado" class="doc-barra-estado" aria-live="polite"></strong>
+          <button class="btn btn-primary" id="btn-guardar-notas">Guardar notas</button>
         </div>`;
       const run = (fn) => (...a) => fn(...a).catch(e => Panel.toast(e.message, 'error'));
       $('tabla-notas').addEventListener('input', e => {
@@ -187,15 +188,18 @@
         marcarCambios(true);
       });
       $('btn-guardar-notas').addEventListener('click', run(guardar));
-      $('btn-publicar').addEventListener('click', run(alternarPublicacion));
-      $('btn-importar-hoja').addEventListener('click', run(importarHoja));
-      $('btn-importar-vinc').addEventListener('click', run(importarVinculadas));
-      $('btn-importar-p01').addEventListener('click', run(() => importar('prueba01')));
-      $('btn-importar-p02').addEventListener('click', run(() => importar('prueba02')));
-      $('btn-exportar-notas').addEventListener('click', () => {
-        const id = Panel.contexto.id();
-        if (id) Panel.descargar(`/api/docente/notas/exportar?materia_id=${id}`, `notas_${id}.csv`);
-      });
+      $('n-publicado-sw').addEventListener('change', run(cambiarPublicacion));
+      Panel.navegarCeldas($('tabla-notas'));
+      Panel.menuDesplegable($('btn-mas-notas'), [
+        { texto: 'Importar exámenes vinculados', accion: run(importarVinculadas) },
+        { texto: 'Cargar hoja de notas (Excel o CSV)…', accion: run(importarHoja) },
+        { texto: 'Importar un examen como Prueba 1…', accion: run(() => importar('prueba01')) },
+        { texto: 'Importar un examen como Prueba 2…', accion: run(() => importar('prueba02')) },
+        { texto: 'Descargar notas (CSV)', accion: () => {
+          const id = Panel.contexto.id();
+          if (id) Panel.descargar(`/api/docente/notas/exportar?materia_id=${id}`, `notas_${id}.csv`);
+        } },
+      ]);
     },
     usaContexto: true,
     hayCambios: () => sinGuardar,

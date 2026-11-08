@@ -27,10 +27,21 @@
         <td>${fecha(a.fecha_entrega)}</td><td class="num">${num(a.puntos_max)}</td><td class="num">${a.calificadas}</td>
         <td class="doc-actions">
           <button class="btn btn-primary" data-calificar="${a.id}">Calificar</button>
-          <button class="btn btn-secondary" data-editar="${a.id}">Editar…</button>
-          <button class="btn btn-secondary" data-borrar="${a.id}" aria-label="Eliminar ${Panel.esc(a.nombre)}">Eliminar</button>
+          <button class="btn btn-secondary" data-menu-act="${a.id}" aria-label="Más acciones de ${Panel.esc(a.nombre)}">⋯</button>
         </td>
-      </tr>`).join('') : '<tr><td colspan="5" class="doc-pending">Aún no hay actividades en esta materia.</td></tr>';
+      </tr>`).join('') : '<tr><td colspan="5" class="doc-pending">Aún no hay actividades en esta materia. Crea la primera con «Nueva actividad» o impórtala desde tu hoja de Excel.</td></tr>';
+    document.querySelectorAll('[data-menu-act]').forEach(b => {
+      const a = actividades.find(x => String(x.id) === b.dataset.menuAct);
+      Panel.menuDesplegable(b, [
+        { texto: 'Editar…', accion: () => editar(a) },
+        { texto: 'Eliminar…', peligro: true, accion: async () => {
+          if (!(await Panel.confirmar(`Se elimina «${a.nombre}» con todas sus calificaciones.`, { texto: 'Eliminar', peligro: true }))) return;
+          await Panel.json(`/api/docente/actividades/${a.id}`, { method: 'DELETE' });
+          Panel.toast('Actividad eliminada');
+          await cargarLista();
+        } },
+      ]);
+    });
   }
 
   // ---------- crear / editar ----------
@@ -111,7 +122,7 @@
     $('ac-titulo').textContent = `${a.nombre} · ${ETIQUETA[a.componente]} · ${num(a.puntos_max)} puntos`;
     $('tabla-calificar').querySelector('thead').innerHTML = `<tr><th scope="col">Estudiante</th>
       ${rubrica ? a.criterios.map(c => `<th scope="col">${Panel.esc(c.nombre)} <small>/${num(c.puntos)}</small></th>`).join('') : `<th scope="col">Puntos <small>/${num(a.puntos_max)}</small></th>`}
-      <th scope="col">Total</th><th scope="col">Estado</th><th scope="col">Observación para el estudiante</th><th scope="col">Nota interna (no se muestra)</th></tr>`;
+      <th scope="col">Total</th><th scope="col">Estado</th><th scope="col">Observación para el estudiante</th><th scope="col"><svg class="doc-candado" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg> Nota interna (privada)</th></tr>`;
     $('tabla-calificar').querySelector('tbody').innerHTML = data.calificaciones.map(c => `
       <tr data-id="${c.estudiante_id}">
         <th scope="row">${Panel.esc(Panel.nombre(c))}</th>
@@ -122,8 +133,8 @@
         <td class="doc-final"></td>
         <td><select data-estado aria-label="Estado de ${Panel.esc(c.nombre)} ${Panel.esc(c.apellido1)}">${Object.entries(estados).map(([k, v]) =>
           `<option value="${k}" ${k === c.estado ? 'selected' : ''}>${v}</option>`).join('')}</select></td>
-        <td><input type="text" data-obs maxlength="2000" value="${Panel.esc(c.observacion)}"></td>
-        <td><input type="text" data-interna maxlength="2000" value="${Panel.esc(c.nota_interna)}"></td>
+        <td><textarea rows="1" class="doc-auto" data-obs maxlength="2000" aria-label="Observación para ${Panel.esc(c.nombre)} ${Panel.esc(c.apellido1)}">${Panel.esc(c.observacion)}</textarea></td>
+        <td><textarea rows="1" class="doc-auto" data-interna maxlength="2000" aria-label="Nota interna de ${Panel.esc(c.nombre)} ${Panel.esc(c.apellido1)}">${Panel.esc(c.nota_interna)}</textarea></td>
       </tr>`).join('');
     document.querySelectorAll('#tabla-calificar tbody tr').forEach(actualizarTotal);
     marcar(false);
@@ -142,7 +153,7 @@
 
   function marcar(v) {
     sinGuardar = v;
-    $('ac-estado').textContent = v ? 'Cambios sin guardar' : '';
+    $('ac-estado').textContent = v ? 'Cambios sin guardar' : 'Todo guardado';
   }
 
   async function guardarCalificaciones() {
@@ -188,14 +199,17 @@
           </div>
         </section>
         <section id="ac-vista-calificar" hidden>
-          <div class="doc-toolbar">
-            <button class="btn btn-secondary" id="btn-volver-act">← Volver</button>
-            <h2 id="ac-titulo" class="doc-sin-margen"></h2>
-            <button class="btn btn-primary" id="btn-guardar-cal">Guardar calificaciones</button>
-          </div>
-          <p class="doc-muted"><strong id="ac-estado" class="doc-sesion-alerta" aria-live="polite"></strong></p>
-          <div class="doc-table-wrap">
+          <nav class="doc-ruta" aria-label="Ruta">
+            <button type="button" class="doc-enlace" id="btn-volver-act">Actividades</button>
+            <span aria-hidden="true">›</span>
+            <h2 id="ac-titulo" class="doc-sin-margen" aria-current="page"></h2>
+          </nav>
+          <div class="doc-table-wrap doc-hoja">
             <table class="doc-table" id="tabla-calificar"><caption class="doc-solo-lectores">Calificación por estudiante</caption><thead></thead><tbody></tbody></table>
+          </div>
+          <div class="doc-barra-fija">
+            <strong id="ac-estado" class="doc-barra-estado" aria-live="polite"></strong>
+            <button class="btn btn-primary" id="btn-guardar-cal">Guardar calificaciones</button>
           </div>
         </section>`;
       const run = (fn) => (...a) => fn(...a).catch(e => Panel.toast(e.message, 'error'));
@@ -204,20 +218,13 @@
       $('tabla-actividades').addEventListener('click', run(async (ev) => {
         const t = ev.target.dataset;
         if (t.calificar) await abrirCalificar(t.calificar);
-        if (t.editar) await editar(actividades.find(a => String(a.id) === t.editar));
-        if (t.borrar) {
-          const a = actividades.find(x => String(x.id) === t.borrar);
-          if (!(await Panel.confirmar(`Se elimina «${a.nombre}» con todas sus calificaciones.`, { texto: 'Eliminar', peligro: true }))) return;
-          await Panel.json(`/api/docente/actividades/${a.id}`, { method: 'DELETE' });
-          Panel.toast('Actividad eliminada');
-          await cargarLista();
-        }
       }));
       $('tabla-calificar').addEventListener('input', ev => {
         const tr = ev.target.closest('tr');
         if (tr && tr.dataset.id) actualizarTotal(tr);
         marcar(true);
       });
+      Panel.navegarCeldas($('tabla-calificar'));
       $('btn-guardar-cal').addEventListener('click', run(guardarCalificaciones));
       $('btn-volver-act').addEventListener('click', run(async () => {
         if (sinGuardar && !(await Panel.confirmar('Tienes cambios sin guardar; se descartarán.', { texto: 'Volver' }))) return;

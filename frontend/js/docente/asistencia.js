@@ -1,6 +1,8 @@
 // Pestaña Asistencia: pasar lista por fecha y resumen del período (art. 37 del Reglamento de Evaluación)
 (function () {
   let estados = {};
+  // [código del servidor, etiqueta corta del botón]
+  const OPCIONES = [['P', 'P'], ['A', 'A'], ['T', 'T'], ['TM', 'T+'], ['AJ', 'AJ'], ['TJ', 'TJ']];
   let sinGuardar = false;
   let sesionActual = null;
   let resumen = null;
@@ -15,22 +17,43 @@
 
   function marcar(valor) {
     sinGuardar = valor;
-    $('as-estado').textContent = valor ? 'Cambios sin guardar' : '';
+    $('as-estado').textContent = valor ? 'Cambios sin guardar' : 'Todo guardado';
+  }
+
+  function contar() {
+    const cuenta = { P: 0, A: 0, T: 0, J: 0 };
+    document.querySelectorAll('#tabla-asistencia tbody tr').forEach(tr => {
+      const e = tr.dataset.estado;
+      if (e === 'P') cuenta.P++; else if (e === 'A') cuenta.A++; else if (e === 'T' || e === 'TM') cuenta.T++; else cuenta.J++;
+    });
+    $('as-contadores').innerHTML = `<span class="as-cont as-c-P">${cuenta.P} presentes</span><span class="as-cont as-c-A">${cuenta.A} ausentes</span>` +
+      `<span class="as-cont as-c-T">${cuenta.T} tardías</span><span class="as-cont as-c-J">${cuenta.J} justificadas</span>`;
+  }
+
+  function pintarEstado(tr, estado) {
+    tr.dataset.estado = estado;
+    tr.querySelectorAll('.as-op').forEach(b => b.setAttribute('aria-checked', b.dataset.estado === estado ? 'true' : 'false'));
   }
 
   function dibujarLista(d) {
     $('as-lecciones').value = d.lecciones;
     $('as-tema').value = d.tema;
-    $('as-existe').textContent = d.existe ? 'Lista ya guardada: puedes corregirla.' : 'Lista nueva: todos aparecen presentes.';
-    $('tabla-asistencia').querySelector('tbody').innerHTML = d.registros.map(r => `
-      <tr data-id="${r.estudiante_id}">
+    $('as-existe').textContent = d.existe ? 'Lista ya guardada: puedes corregirla.' : 'Lista nueva: todos aparecen presentes. Toca solo a quien tenga novedad.';
+    $('tabla-asistencia').querySelector('tbody').innerHTML = d.registros.map(r => {
+      const nombre = `${Panel.esc(r.nombre)} ${Panel.esc(r.apellido1)}`;
+      return `
+      <tr data-id="${r.estudiante_id}" data-estado="${r.estado}">
         <th scope="row">${Panel.esc(Panel.nombre(r))}</th>
-        <td><select data-campo="estado" aria-label="Estado de ${Panel.esc(r.nombre)} ${Panel.esc(r.apellido1)}">
-          ${Object.entries(estados).map(([k, v]) => `<option value="${k}" ${k === r.estado ? 'selected' : ''}>${v}</option>`).join('')}
-        </select></td>
-        <td><input type="text" maxlength="200" data-campo="observacion" value="${Panel.esc(r.observacion)}"
-          aria-label="Observación de ${Panel.esc(r.nombre)} ${Panel.esc(r.apellido1)}"></td>
-      </tr>`).join('');
+        <td><div class="as-estados" role="radiogroup" aria-label="Estado de ${nombre}">
+          ${OPCIONES.map(([k, corto]) => `<button type="button" role="radio" class="as-op as-${k}" data-estado="${k}"
+            aria-checked="${k === r.estado}" title="${Panel.esc(estados[k] || k)}" aria-label="${Panel.esc(estados[k] || k)}">${corto}</button>`).join('')}
+        </div></td>
+        <td class="as-celda-obs"><button type="button" class="as-nota-btn" data-nota aria-label="Observación de ${nombre}" title="Agregar o ver observación">✎</button>
+          <input type="text" class="as-obs" maxlength="200" data-campo="observacion" value="${Panel.esc(r.observacion)}" ${r.observacion ? '' : 'hidden'}
+            placeholder="Observación" aria-label="Observación de ${nombre}"></td>
+      </tr>`;
+    }).join('');
+    contar();
     marcar(false);
   }
 
@@ -71,7 +94,7 @@
   async function guardar() {
     const registros = [...document.querySelectorAll('#tabla-asistencia tbody tr')].map(tr => ({
       estudiante_id: Number(tr.dataset.id),
-      estado: tr.querySelector('[data-campo=estado]').value,
+      estado: tr.dataset.estado,
       observacion: tr.querySelector('[data-campo=observacion]').value,
     }));
     await Panel.json('/api/docente/asistencia/sesion', {
@@ -113,18 +136,26 @@
       el.innerHTML = `
         <div class="doc-toolbar">
           <label>Fecha <input type="date" id="as-fecha"></label>
+          <button class="btn btn-secondary" id="btn-hoy">Hoy</button>
           <label>Lecciones <input type="number" id="as-lecciones" min="1" max="12" value="2" class="doc-corto"></label>
           <label>Tema <input type="text" id="as-tema" maxlength="200" placeholder="opcional"></label>
-          <button class="btn btn-secondary" id="btn-todos-presentes">Todos presentes</button>
-          <button class="btn btn-primary" id="btn-guardar-lista">Guardar lista</button>
         </div>
-        <p class="doc-muted"><span id="as-existe" aria-live="polite"></span> <strong id="as-estado" class="doc-sesion-alerta"></strong></p>
-        <div class="doc-table-wrap">
-          <table class="doc-table" id="tabla-asistencia">
-            <caption class="doc-solo-lectores">Lista de asistencia de la fecha</caption>
-            <thead><tr><th scope="col">Estudiante</th><th scope="col">Estado</th><th scope="col">Observación</th></tr></thead>
-            <tbody></tbody>
-          </table>
+        <p class="doc-muted" id="as-existe" aria-live="polite"></p>
+        <p class="as-leyenda"><b>P</b> Presente · <b>A</b> Ausente · <b>T</b> Tardía (menos de 10 min) · <b>T+</b> Tardía (más de 10 min) · <b>AJ</b> Ausencia justificada · <b>TJ</b> Tardía justificada</p>
+        <div class="as-lista">
+          <div class="doc-table-wrap">
+            <table class="doc-table" id="tabla-asistencia">
+              <caption class="doc-solo-lectores">Lista de asistencia de la fecha</caption>
+              <thead><tr><th scope="col">Estudiante</th><th scope="col">Estado</th><th scope="col">Observación</th></tr></thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="doc-barra-fija">
+            <p id="as-contadores" class="as-contadores" aria-live="polite"></p>
+            <strong id="as-estado" class="doc-barra-estado" aria-live="polite"></strong>
+            <button class="btn btn-secondary" id="btn-todos-presentes">Todos presentes</button>
+            <button class="btn btn-primary" id="btn-guardar-lista">Guardar lista</button>
+          </div>
         </div>
         <h2>Resumen del período</h2>
         <p class="doc-muted" id="as-total"></p>
@@ -144,11 +175,31 @@
         <ul id="as-sesiones" class="doc-lista"></ul>`;
       const run = (fn) => (...a) => fn(...a).catch(e => Panel.toast(e.message, 'error'));
       $('as-fecha').addEventListener('change', run(async () => { if (await confirmarCambios()) await cargarLista(); }));
+      $('btn-hoy').addEventListener('click', run(async () => {
+        if (!(await confirmarCambios())) return;
+        $('as-fecha').value = hoyIso();
+        await cargarLista();
+      }));
+      $('tabla-asistencia').addEventListener('click', (ev) => {
+        const op = ev.target.closest('.as-op');
+        if (op) {
+          pintarEstado(op.closest('tr'), op.dataset.estado);
+          contar();
+          marcar(true);
+        }
+        const nota = ev.target.closest('[data-nota]');
+        if (nota) {
+          const campo = nota.parentElement.querySelector('.as-obs');
+          campo.hidden = !campo.hidden;
+          if (!campo.hidden) campo.focus();
+        }
+      });
       $('tabla-asistencia').addEventListener('input', () => marcar(true));
       $('as-lecciones').addEventListener('input', () => marcar(true));
       $('as-tema').addEventListener('input', () => marcar(true));
       $('btn-todos-presentes').addEventListener('click', () => {
-        document.querySelectorAll('#tabla-asistencia [data-campo=estado]').forEach(s => { s.value = 'P'; });
+        document.querySelectorAll('#tabla-asistencia tbody tr').forEach(tr => pintarEstado(tr, 'P'));
+        contar();
         marcar(true);
       });
       $('btn-guardar-lista').addEventListener('click', run(guardar));

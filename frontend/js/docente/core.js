@@ -101,6 +101,70 @@ Panel.descargar = async function (url, nombre) {
   }
 };
 
+// ========== MENÚ DESPLEGABLE (acciones secundarias) ==========
+// items: [{ texto, accion, peligro? }]. Se cierra al elegir, con Escape o al hacer clic fuera.
+Panel.menuDesplegable = function (boton, items) {
+  boton.setAttribute('aria-haspopup', 'menu');
+  boton.setAttribute('aria-expanded', 'false');
+  let menu = null;
+  const cerrar = () => {
+    if (!menu) return;
+    menu.remove();
+    menu = null;
+    boton.setAttribute('aria-expanded', 'false');
+    document.removeEventListener('mousedown', fuera, true);
+    document.removeEventListener('keydown', teclas, true);
+  };
+  const fuera = (e) => { if (menu && !menu.contains(e.target) && e.target !== boton) cerrar(); };
+  const teclas = (e) => {
+    if (!menu) return;
+    const opciones = [...menu.querySelectorAll('[role=menuitem]')];
+    const i = opciones.indexOf(document.activeElement);
+    if (e.key === 'Escape') { e.stopPropagation(); cerrar(); boton.focus(); }
+    if (e.key === 'ArrowDown') { e.preventDefault(); opciones[(i + 1) % opciones.length].focus(); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); opciones[(i - 1 + opciones.length) % opciones.length].focus(); }
+  };
+  const abrir = () => {
+    menu = document.createElement('div');
+    menu.className = 'doc-menu';
+    menu.setAttribute('role', 'menu');
+    menu.innerHTML = items.map((it, k) =>
+      `<button type="button" role="menuitem" class="doc-menu-item ${it.peligro ? 'peligro' : ''}" data-k="${k}">${Panel.esc(it.texto)}</button>`).join('');
+    menu.addEventListener('click', (e) => {
+      const b = e.target.closest('[data-k]');
+      if (!b) return;
+      cerrar();
+      Promise.resolve(items[Number(b.dataset.k)].accion()).catch(err => Panel.toast(err.message, 'error'));
+    });
+    document.body.appendChild(menu);
+    const r = boton.getBoundingClientRect();
+    menu.style.top = `${Math.min(r.bottom + 4, window.innerHeight - menu.offsetHeight - 8) + window.scrollY}px`;
+    menu.style.left = `${Math.max(8, Math.min(r.left, window.innerWidth - menu.offsetWidth - 8)) + window.scrollX}px`;
+    boton.setAttribute('aria-expanded', 'true');
+    document.addEventListener('mousedown', fuera, true);
+    document.addEventListener('keydown', teclas, true);
+    menu.querySelector('[role=menuitem]').focus();
+  };
+  boton.addEventListener('click', () => (menu ? cerrar() : abrir()));
+};
+
+// ========== NAVEGACIÓN POR CELDAS (hojas de notas) ==========
+// Enter o flecha abajo pasa a la misma columna de la fila siguiente; flecha arriba, a la anterior.
+Panel.navegarCeldas = function (tabla) {
+  tabla.addEventListener('keydown', (e) => {
+    const campo = e.target;
+    if (!campo.matches || !campo.matches('input[type=number]')) return;
+    const baja = e.key === 'Enter' || e.key === 'ArrowDown';
+    if (!baja && e.key !== 'ArrowUp') return;
+    const celda = campo.closest('td');
+    const fila = campo.closest('tr');
+    const vecina = baja ? fila.nextElementSibling : fila.previousElementSibling;
+    if (!vecina) return;
+    const destino = vecina.children[[...fila.children].indexOf(celda)].querySelector('input[type=number]');
+    if (destino) { e.preventDefault(); destino.focus(); destino.select(); }
+  });
+};
+
 // ========== TABLAS ORDENABLES ==========
 // Orden por columnas: los encabezados <th> con <button data-orden="clave"> alternan asc/desc.
 Panel.ordenable = function (tabla, getters, estado, alCambiar) {
