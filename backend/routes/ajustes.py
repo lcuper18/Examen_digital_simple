@@ -9,6 +9,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 
 from backend import bitacora, database, security
+from backend.version import VERSION
 
 router = APIRouter(
     prefix="/api/docente", tags=["ajustes"], dependencies=[Depends(security.require_docente)]
@@ -21,7 +22,7 @@ def config_publica() -> dict[str, Any]:
     """Datos institucionales para mostrar en pantalla y PDF (no son sensibles)."""
     with database.get_db_context() as conn:
         a = database.leer_ajustes(conn)
-    return {"ok": True, "institucion": a["institucion"], "curso_lectivo": a["curso_lectivo"]}
+    return {"ok": True, "institucion": a["institucion"], "curso_lectivo": a["curso_lectivo"], "version": VERSION}
 
 
 @router.get("/ajustes")

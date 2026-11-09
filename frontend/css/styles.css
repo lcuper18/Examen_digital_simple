@@ -1817,3 +1817,5 @@
     .grades-act-cab { display: flex; justify-content: space-between; gap: 12px; }
     .grades-obs { margin-top: 6px; color: var(--text-secondary); }
     .grades-card h3 { font-size: 15px; }
+
+    .login-version { font-size: 12px; color: var(--text-muted); margin: -8px 0 12px; }

@@ -816,7 +816,11 @@ function createPDF() {
 }
 
 let institucionNombre = 'CTP Las Palmitas';
-fetch('/api/config').then(r => r.json()).then(c => { if (c.institucion) institucionNombre = c.institucion; }).catch(() => {});
+fetch('/api/config').then(r => r.json()).then(c => {
+  if (c.institucion) institucionNombre = c.institucion;
+  const v = document.getElementById('login-version');
+  if (v && c.version) v.textContent = `Versión ${c.version}`;
+}).catch(() => {});
 
 function closeResults() {
   document.getElementById('results-overlay').classList.remove('active');

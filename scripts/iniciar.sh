@@ -23,7 +23,8 @@ IP=$(hostname -I 2>/dev/null | awk '{print $1}')
 [ -z "$IP" ] && IP=localhost
 
 echo "=============================================="
-echo "  SERVIDOR EXAMEN DIGITAL v2"
+VERSION=$(python3 -c "from backend.version import VERSION; print(VERSION)" 2>/dev/null || echo "?")
+echo "  EXAMEN DIGITAL  ·  versión $VERSION"
 echo "=============================================="
 echo ""
 echo "  Acceso local:   http://localhost:8001"

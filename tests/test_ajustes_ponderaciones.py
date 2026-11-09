@@ -97,3 +97,10 @@ def test_primeros_pasos_se_marcan_solos(client):
     h = hechos()
     assert h["institucion"] and h["vinculos"] and h["lista"] and h["publicar"]
     assert not h["encargados"] and not h["actividad"]
+
+
+def test_config_publica_informa_la_version(client):
+    from backend.version import VERSION
+
+    d = client.get("/api/config").json()
+    assert d["version"] == VERSION and VERSION.count(".") == 2

@@ -542,7 +542,10 @@ Panel.mostrarPanel = function () {
   $('doc-panel').style.display = 'block';
   Panel.iniciarTemporizadorSesion();
   if (!Panel.ordenados) Panel.construirNavegacion();
-  fetch('/api/config').then(r => r.json()).then(c => { if (c.institucion) $('doc-marca').textContent = c.institucion; }).catch(() => {});
+  fetch('/api/config').then(r => r.json()).then(c => {
+    if (c.institucion) $('doc-marca').textContent = c.institucion;
+    if (c.version) $('doc-version').textContent = `· versión ${c.version}`;
+  }).catch(() => {});
   const guardada = sessionStorage.getItem('docenteTab');
   Panel.contexto.cargar().catch(e => Panel.toast(e.message, 'error')).finally(() =>
     Panel.irA(Panel.ordenados.some(m => m.id === guardada) ? guardada : Panel.ordenados[0].id));

@@ -12,6 +12,7 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
 from backend import database
+from backend.version import VERSION
 from backend.routes import (
     auth_router, bitacora_router, estudiantes_router, examenes_docente_router,
     examenes_router, intentos_router, notas_router, reportes_router,
@@ -46,9 +47,9 @@ async def _respaldo_diario() -> None:
 
 # Crear aplicación FastAPI (el frontend se sirve desde el mismo origen: no se requiere CORS)
 app = FastAPI(
-    title="Examen Digital Simple v2",
+    title="Examen Digital",
     description="API para plataforma de examen digital",
-    version="2.0.0",
+    version=VERSION,
     lifespan=lifespan,
 )
 

@@ -107,6 +107,22 @@ En **Ajustes → Cierre del curso lectivo**: guarda en `respaldos/` una copia co
 
 Al arrancar y cada hora, el servidor guarda una copia de la base de datos por día en `respaldos/` (se conservan las últimas 30). La base usa el modo WAL, por lo que pueden aparecer archivos `examen_db.sqlite-wal` y `-shm` junto a ella.
 
+## Abrir el sistema con un clic (Mac)
+
+Para instalar la aplicación **Examen Digital** (una sola vez, o cada vez que cambie la versión):
+
+```bash
+bash scripts/mac/instalar_app.sh
+```
+
+Compila la app, la instala en Aplicaciones, crea el acceso directo en el Escritorio y la agrega al Dock. Al abrirla:
+- muestra la **versión** del sistema (se define en `backend/version.py`);
+- **levanta el servidor** (si ya había uno corriendo, lo usa y no lo apaga al salir);
+- muestra la **dirección para los estudiantes** (`http://<IP>:8001`) con un código QR, el nombre `.local` y un botón para copiarla. Si la IP cambia al reconectarse al wifi, la ventana lo avisa y se actualiza sola;
+- mantiene la Mac despierta mientras el servidor corre.
+
+Botones: **Abrir panel docente**, **Ver registro** (`logs/servidor.log`) y **Detener servidor y salir**. Si cierras la ventana, el sistema se detiene (pide confirmación). Si macOS pregunta por conexiones entrantes de Python, permítelas.
+
 ## Apariencia
 
 Panel docente: menú lateral agrupado (en tablet y celular es un cajón con el botón «Menú»), selector único de grupo, período y materia en la cabecera, pasar lista de un toque, hojas de notas con teclado (Enter y flechas) e inicio con accesos rápidos y primeros pasos. App del estudiante: formularios con etiquetas visibles, opciones del examen que se pueden usar con teclado y «Mis notas» pensado para el celular.
