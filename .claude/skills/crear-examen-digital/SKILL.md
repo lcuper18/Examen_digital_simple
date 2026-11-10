@@ -40,5 +40,5 @@ Los .docx se leen con python-docx (`pip install python-docx`; no hay pandoc): re
 - El reparto por tema contra la lista oficial de temas (tabla) y qué quedó fuera a propósito.
 - Cómo se alinea con el examen en papel y qué partes (correspondencia, respuesta corta, caso) no están en la plataforma.
 - Letras: 15/15/15/15 y cuántas correctas son la opción más larga.
-- Cómo probarlo: servidor en el puerto **8001** (el 8000 lo usa Docker en esa Mac), `http://<IP>:8001`, IP con `ipconfig getifaddr en0` (puede cambiar). Probar con un estudiante de la sección y **borrar el intento** de prueba en Resultados (un intento por estudiante y examen).
+- Cómo probarlo: servidor en el puerto **8090** (el 8000 lo usa Docker en esa Mac; el 8001 chocaba con Packet Tracer), `http://<IP>:8090`, IP con `ipconfig getifaddr en0` (puede cambiar). Probar con un estudiante de la sección y **borrar el intento** de prueba en Resultados (un intento por estudiante y examen).
 - Lanzar el servidor con `run_in_terminal` (queda en el panel de Terminal); en segundo plano se apaga si la app se cierra.

@@ -35,13 +35,13 @@ bash scripts/iniciar.sh      # Linux/Mac
 scripts\iniciar.bat          # Windows
 ```
 
-Acceso local: http://localhost:8001 · Red: http://IP:8001 (el puerto se cambia con la variable `PORT` si se usa `python -m backend.main`)
+Acceso local: http://localhost:8090 · Red: http://IP:8090 (el puerto se cambia con la variable `PORT` si se usa `python -m backend.main`)
 
 ## Configuración (variables de entorno)
 
 | Variable | Uso |
 |----------|-----|
-| `PORT` | Puerto al ejecutar `python -m backend.main` (por defecto 8001). |
+| `PORT` | Puerto al ejecutar `python -m backend.main` (por defecto 8090). |
 | `DOCENTE_PASSWORD_HASH` | Hash de la contraseña del docente (SHA-256 hexadecimal o bcrypt). Si no se define, se usa un valor por defecto: **cámbialo antes de usarlo en producción**. |
 | `EXAMEN_SECRET_KEY` | Clave para firmar sesiones. Si no existe, se genera en `.secret_key`. |
 | `ESTUDIANTES_CSV` | Ruta alternativa al CSV de estudiantes. |
@@ -118,7 +118,7 @@ bash scripts/mac/instalar_app.sh
 Compila la app, la instala en Aplicaciones, crea el acceso directo en el Escritorio y la agrega al Dock. Al abrirla:
 - muestra la **versión** del sistema (se define en `backend/version.py`);
 - **levanta el servidor** (si ya había uno corriendo, lo usa y no lo apaga al salir);
-- muestra la **dirección para los estudiantes** (`http://<IP>:8001`) con un código QR, el nombre `.local` y un botón para copiarla. Si la IP cambia al reconectarse al wifi, la ventana lo avisa y se actualiza sola;
+- muestra la **dirección para los estudiantes** (`http://<IP>:8090`) con un código QR, el nombre `.local` y un botón para copiarla. Si la IP cambia al reconectarse al wifi, la ventana lo avisa y se actualiza sola;
 - mantiene la Mac despierta mientras el servidor corre.
 
 Botones: **Abrir panel docente**, **Ver registro** (`logs/servidor.log`) y **Detener servidor y salir**. Si cierras la ventana, el sistema se detiene (pide confirmación). Si macOS pregunta por conexiones entrantes de Python, permítelas.

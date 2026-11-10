@@ -4,7 +4,7 @@
 import Cocoa
 import CoreImage
 
-let PUERTO = 8001
+let PUERTO = 8090
 let VERDE = NSColor(srgbRed: 0.04, green: 0.48, blue: 0.28, alpha: 1)
 
 // MARK: - Red

@@ -27,10 +27,10 @@ VERSION=$(python3 -c "from backend.version import VERSION; print(VERSION)" 2>/de
 echo "  EXAMEN DIGITAL  ·  versión $VERSION"
 echo "=============================================="
 echo ""
-echo "  Acceso local:   http://localhost:8001"
-echo "  Acceso red:     http://$IP:8001"
+echo "  Acceso local:   http://localhost:8090"
+echo "  Acceso red:     http://$IP:8090"
 echo ""
 echo "  Presiona Ctrl+C para detener"
 echo "=============================================="
 
-uvicorn backend.main:app --host 0.0.0.0 --port 8001
+uvicorn backend.main:app --host 0.0.0.0 --port 8090
