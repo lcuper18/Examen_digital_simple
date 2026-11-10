@@ -65,6 +65,17 @@ app.mount("/fonts", StaticFiles(directory=str(FONTS_DIR)), name="fonts")
 app.mount("/js", StaticFiles(directory=str(JS_DIR)), name="js")
 app.mount("/css", StaticFiles(directory=str(CSS_DIR)), name="css")
 
+@app.middleware("http")
+async def revalidar_interfaz(request, call_next):
+    """El navegador revalida CSS, JS y páginas en cada carga (usa ETag, no descarga si no cambió).
+    Sin esto un CSS viejo en caché se combina con HTML/JS nuevos y la interfaz sale sin estilos."""
+    respuesta = await call_next(request)
+    ruta = request.url.path
+    if ruta in ("/", "/docente") or ruta.startswith(("/css/", "/js/")):
+        respuesta.headers["Cache-Control"] = "no-cache"
+    return respuesta
+
+
 # Incluir routers
 app.include_router(auth_router)
 app.include_router(examenes_router)
