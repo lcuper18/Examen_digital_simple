@@ -1,6 +1,6 @@
 // Examen Digital para Mac: abre el sistema con un clic.
 // Levanta el servidor, muestra la versión y la dirección con la que se conectan los estudiantes (con QR),
-// vigila que la IP no cambie y detiene el servidor al salir.
+// vigila que la IP no cambie y detiene el servidor (liberando el puerto) al salir.
 import Cocoa
 import CoreImage
 
@@ -164,16 +164,49 @@ final class Servidor {
         iniciar()
     }
 
-    /// Detiene el servidor solo si lo lanzó esta app.
+    /// Detiene el servidor y deja libre el puerto: el proceso que lanzó esta app y, si quedó otro servidor
+    /// de Examen Digital escuchando en el puerto (iniciado desde la terminal o por otra copia), también ese.
     func detener() {
         temporizador?.invalidate()
-        guard let p = proceso, p.isRunning else { proceso = nil; return }
-        let pid = p.processIdentifier
+        if let p = proceso, p.isRunning {
+            let pid = p.processIdentifier
+            p.terminate()
+            let limite = Date().addingTimeInterval(5)
+            while p.isRunning && Date() < limite { Thread.sleep(forTimeInterval: 0.1) }
+            if p.isRunning { kill(pid, SIGKILL) }
+        }
         proceso = nil
-        p.terminate()
+        liberarPuerto()
+    }
+
+    /// Ejecuta un comando y devuelve su salida de texto.
+    private func salida(_ ruta: String, _ args: [String]) -> String {
+        let p = Process()
+        p.executableURL = URL(fileURLWithPath: ruta)
+        p.arguments = args
+        let tubo = Pipe()
+        p.standardOutput = tubo
+        p.standardError = Pipe()
+        do { try p.run() } catch { return "" }
+        let datos = tubo.fileHandleForReading.readDataToEndOfFile()
+        p.waitUntilExit()
+        return String(data: datos, encoding: .utf8) ?? ""
+    }
+
+    /// Termina a quien siga escuchando en el puerto, pero solo si es el servidor de Examen Digital
+    /// (uvicorn con backend.main:app); nunca otro programa que use ese puerto.
+    private func liberarPuerto() {
+        func escuchando() -> [pid_t] {
+            salida("/usr/sbin/lsof", ["-tiTCP:\(PUERTO)", "-sTCP:LISTEN"])
+                .split(whereSeparator: \.isNewline).compactMap { pid_t($0) }
+                .filter { salida("/bin/ps", ["-o", "command=", "-p", "\($0)"]).contains("backend.main:app") }
+        }
+        let restantes = escuchando()
+        guard !restantes.isEmpty else { return }
+        restantes.forEach { kill($0, SIGTERM) }
         let limite = Date().addingTimeInterval(5)
-        while p.isRunning && Date() < limite { Thread.sleep(forTimeInterval: 0.1) }
-        if p.isRunning { kill(pid, SIGKILL) }
+        while !escuchando().isEmpty && Date() < limite { Thread.sleep(forTimeInterval: 0.2) }
+        escuchando().forEach { kill($0, SIGKILL) }
     }
 }
 
@@ -362,7 +395,7 @@ final class Ventana: NSObject, NSApplicationDelegate, NSWindowDelegate {
         switch e {
         case .iniciando: texto = "Iniciando el servidor…"
         case .enLinea: texto = "Servidor en línea"; color = .systemGreen
-        case .yaEjecutando: texto = "El servidor ya estaba en ejecución (esta ventana no lo apagará al salir)"; color = .systemGreen
+        case .yaEjecutando: texto = "El servidor ya estaba en ejecución (también se detendrá al salir)"; color = .systemGreen
         case .detenido(let motivo): texto = motivo; color = .systemRed; caido = true
         }
         estadoTxt.stringValue = texto
@@ -412,7 +445,9 @@ final class Ventana: NSObject, NSApplicationDelegate, NSWindowDelegate {
     func applicationShouldTerminateAfterLastWindowClosed(_ app: NSApplication) -> Bool { false }
 
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        if servidor.loLanzamos, servidor.proceso != nil, !sinConfirmar {
+        var corriendo = servidor.proceso != nil
+        if case .yaEjecutando = servidor.estado { corriendo = true }
+        if corriendo, !sinConfirmar {
             let a = NSAlert()
             a.messageText = "¿Detener el servidor y salir?"
             a.informativeText = "Los estudiantes conectados perderán la conexión. Sus respuestas ya guardadas se conservan."
