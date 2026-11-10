@@ -319,3 +319,36 @@
 .doc-pills { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0; }
 
 .doc-hoja thead th { white-space: normal; min-width: 88px; vertical-align: bottom; }
+
+/* ===== Revisión de diseño: contexto con botones segmentados, encabezado y menú de acciones ===== */
+.doc-header-acciones { display: flex; align-items: center; gap: 12px; }
+.doc-contexto { gap: 8px 16px; }
+.doc-ctx-campo { display: flex; flex-direction: column; gap: 4px; }
+.doc-contexto .doc-ctx-etiqueta { color: var(--text-secondary); font-size: var(--text-sm); font-weight: 600; }
+.doc-seg { display: inline-flex; border: 1px solid var(--border-medium); border-radius: var(--radius-sm); background: var(--bg-option); padding: 2px; gap: 2px; }
+.doc-seg-op { min-height: 36px; min-width: 52px; padding: 4px 14px; border: 0; border-radius: calc(var(--radius-sm) - 2px); background: transparent;
+  color: var(--text-secondary); font: inherit; font-size: var(--text-sm); font-weight: 600; cursor: pointer; }
+.doc-seg-op:hover { background: var(--bg-hover); color: var(--text-primary); }
+.doc-seg-op[aria-checked="true"] { background: var(--accent-primary); color: var(--on-accent); }
+.doc-seg-op:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 1px; }
+.doc-ctx-materia { flex: 1 1 280px; }
+.doc-ctx-materia select { width: 100%; min-width: 0; max-width: 480px; }
+@media (pointer: coarse) { .doc-seg-op { min-height: 44px; min-width: 56px; } .doc-contexto select { min-height: 44px; } }
+
+/* Menú de acciones: títulos de grupo y separadores */
+.doc-menu-grupo { padding: 8px 12px 4px; font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-muted); }
+.doc-menu-sep { height: 1px; margin: 6px 4px; background: var(--border); }
+
+@media (max-width: 900px) {
+  .doc-header { gap: 8px 12px; }
+  .doc-header-acciones { margin-left: auto; gap: 8px; }
+  .doc-sesion-pref { display: none; }
+  #doc-sesion::before { content: '⏱ '; }
+  .doc-ctx-materia { flex: 1 1 100%; }
+  .doc-ctx-materia select { max-width: none; }
+}
+@media (max-width: 640px) {
+  /* El menú de acciones se ancla abajo, a ancho completo, con ítems grandes */
+  .doc-menu { position: fixed; left: 8px !important; right: 8px; top: auto !important; bottom: 8px; min-width: 0; padding: 8px; box-shadow: var(--shadow-2); }
+  .doc-menu-item { min-height: 48px; }
+}

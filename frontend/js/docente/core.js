@@ -136,7 +136,7 @@ Panel.conCarga = async function (boton, operacion, texto = 'Guardando…') {
 };
 
 // ========== MENÚ DESPLEGABLE (acciones secundarias) ==========
-// items: [{ texto, accion, peligro? }]. Se cierra al elegir, con Escape o al hacer clic fuera.
+// items: [{ texto, accion, peligro? }, { grupo: 'Título' }, { separador: true }]. Se cierra al elegir, con Escape, Tab o al hacer clic fuera.
 Panel.menuDesplegable = function (boton, items) {
   boton.setAttribute('aria-haspopup', 'menu');
   boton.setAttribute('aria-expanded', 'false');
@@ -155,6 +155,9 @@ Panel.menuDesplegable = function (boton, items) {
     const opciones = [...menu.querySelectorAll('[role=menuitem]')];
     const i = opciones.indexOf(document.activeElement);
     if (e.key === 'Escape') { e.stopPropagation(); cerrar(); boton.focus(); }
+    if (e.key === 'Tab') cerrar();
+    if (e.key === 'Home') { e.preventDefault(); opciones[0].focus(); }
+    if (e.key === 'End') { e.preventDefault(); opciones[opciones.length - 1].focus(); }
     if (e.key === 'ArrowDown') { e.preventDefault(); opciones[(i + 1) % opciones.length].focus(); }
     if (e.key === 'ArrowUp') { e.preventDefault(); opciones[(i - 1 + opciones.length) % opciones.length].focus(); }
   };
@@ -162,8 +165,12 @@ Panel.menuDesplegable = function (boton, items) {
     menu = document.createElement('div');
     menu.className = 'doc-menu';
     menu.setAttribute('role', 'menu');
-    menu.innerHTML = items.map((it, k) =>
-      `<button type="button" role="menuitem" class="doc-menu-item ${it.peligro ? 'peligro' : ''}" data-k="${k}">${Panel.esc(it.texto)}</button>`).join('');
+    if (boton.id) menu.setAttribute('aria-labelledby', boton.id);
+    menu.innerHTML = items.map((it, k) => {
+      if (it.separador) return '<div class="doc-menu-sep" role="separator"></div>';
+      if (it.grupo) return `<div class="doc-menu-grupo" role="presentation">${Panel.esc(it.grupo)}</div>`;
+      return `<button type="button" role="menuitem" class="doc-menu-item ${it.peligro ? 'peligro' : ''}" data-k="${k}">${Panel.esc(it.texto)}</button>`;
+    }).join('');
     menu.addEventListener('click', (e) => {
       const b = e.target.closest('[data-k]');
       if (!b) return;
@@ -365,7 +372,7 @@ Panel.iniciarTemporizadorSesion = function () {
     const resta = Math.floor((vence - Date.now()) / 1000);
     if (resta <= 0) return Panel.salir('Tu sesión expiró. Ingresa de nuevo.');
     const m = Math.floor(resta / 60);
-    $('doc-sesion').textContent = `Sesión: ${m >= 60 ? Math.floor(m / 60) + ' h ' + (m % 60) + ' min' : m + ' min'}`;
+    $('doc-sesion').innerHTML = `<span class="doc-sesion-pref">Sesión: </span>${m >= 60 ? Math.floor(m / 60) + ' h ' + (m % 60) + ' min' : m + ' min'}`;
     $('doc-sesion').classList.toggle('doc-sesion-alerta', resta < 300);
   };
   tick();
@@ -495,18 +502,24 @@ Panel.contexto = {
   materia() { return this.actual; },
   id() { return this.actual ? this.actual.id : null; },
 
+  // Botones segmentados (un toque) para pocas opciones: Grupo y Período
+  segmentos(id, opciones, actual) {
+    $(id).innerHTML = opciones.map(o => `<button type="button" role="radio" class="doc-seg-op" data-valor="${Panel.esc(String(o.valor))}"
+      aria-checked="${String(o.valor) === String(actual)}" tabindex="${String(o.valor) === String(actual) ? 0 : -1}"
+      ${o.aria ? `aria-label="${Panel.esc(o.aria)}"` : ''}>${Panel.esc(o.texto)}</button>`).join('');
+  },
+
   dibujar() {
     const m = this.actual;
     const unicos = (lista) => [...new Set(lista)];
-    $('ctx-seccion').innerHTML = unicos(this.materias.map(x => x.seccion)).map(s => `<option value="${Panel.esc(s)}">${Panel.esc(s)}</option>`).join('');
+    this.segmentos('ctx-seccion', unicos(this.materias.map(x => x.seccion)).map(s => ({ valor: s, texto: s, aria: `Grupo ${s}` })), m && m.seccion);
     if (!m) return;
-    $('ctx-seccion').value = m.seccion;
-    $('ctx-periodo').innerHTML = unicos(this.materias.filter(x => x.seccion === m.seccion).map(x => x.periodo))
-      .map(p => `<option value="${p}">${p}.º período</option>`).join('');
-    $('ctx-periodo').value = String(m.periodo);
+    this.segmentos('ctx-periodo', unicos(this.materias.filter(x => x.seccion === m.seccion).map(x => x.periodo))
+      .map(p => ({ valor: p, texto: `${p}.º`, aria: `${p}.º período` })), m.periodo);
     $('ctx-materia').innerHTML = this.materias.filter(x => x.seccion === m.seccion && x.periodo === m.periodo)
       .map(x => `<option value="${x.id}">${Panel.esc(x.nombre)}</option>`).join('');
     $('ctx-materia').value = String(m.id);
+    $('ctx-materia').title = m.nombre;
   },
 
   // Cambia a la materia que corresponde a (sección, período, materia) pidiendo permiso a la pestaña activa
@@ -531,6 +544,9 @@ Panel.contexto = {
     this.actual = destino;
     try { localStorage.setItem('contextoMateria', String(destino.id)); } catch (e) { /* sin almacenamiento */ }
     this.dibujar();
+    if (!materiaId && previa && destino.nombre !== previa.nombre) {
+      Panel.toast(`Ahora en ${destino.seccion} · ${destino.periodo}.º período · ${destino.nombre}`);
+    }
     if (modulo && modulo.usaContexto && modulo.mostrar) {
       try { await modulo.mostrar(); } catch (e) { Panel.toast(e.message, 'error'); }
     }
@@ -563,8 +579,27 @@ document.addEventListener('DOMContentLoaded', () => {
   $('doc-menu-btn').addEventListener('click', () => Panel.abrirMenu(!$('doc-nav').classList.contains('abierto')));
   $('doc-nav-fondo').addEventListener('click', () => Panel.abrirMenu(false));
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && $('doc-nav').classList.contains('abierto')) Panel.abrirMenu(false); });
-  $('ctx-seccion').addEventListener('change', () => Panel.contexto.elegir($('ctx-seccion').value, null, null));
-  $('ctx-periodo').addEventListener('change', () => Panel.contexto.elegir($('ctx-seccion').value, Number($('ctx-periodo').value), null));
+  const seg = (id) => $(id).querySelector('[aria-checked="true"]').dataset.valor;
+  $('ctx-seccion').addEventListener('click', e => {
+    const b = e.target.closest('[data-valor]');
+    if (b) Panel.contexto.elegir(b.dataset.valor, null, null);
+  });
+  $('ctx-periodo').addEventListener('click', e => {
+    const b = e.target.closest('[data-valor]');
+    if (b) Panel.contexto.elegir(seg('ctx-seccion'), Number(b.dataset.valor), null);
+  });
+  // Flechas dentro del grupo de botones (como un radiogroup nativo)
+  document.querySelectorAll('.doc-seg').forEach(g => g.addEventListener('keydown', e => {
+    const dir = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key];
+    if (!dir) return;
+    const ops = [...g.querySelectorAll('[role=radio]')];
+    const sig = ops[(ops.indexOf(document.activeElement) + dir + ops.length) % ops.length];
+    e.preventDefault();
+    sig.click();
+    // dibujar() rehace los botones: devolver el foco al que quedó marcado
+    const marcado = g.querySelector('[aria-checked="true"]');
+    if (marcado) marcado.focus();
+  }));
   $('ctx-materia').addEventListener('change', () => Panel.contexto.elegir(null, null, Number($('ctx-materia').value)));
   if (Panel.token && expiracionToken(Panel.token) > Date.now()) Panel.mostrarPanel();
   else Panel.salir();

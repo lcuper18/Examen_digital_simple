@@ -27,13 +27,15 @@
       <button type="button" class="btn btn-secondary doc-menu-btn" id="doc-menu-btn" aria-expanded="false" aria-controls="doc-nav">☰ Menú</button>
       <div class="doc-marca"><strong id="doc-marca">Panel docente</strong><span class="doc-muted">Panel docente <span id="doc-version"></span></span></div>
       <div id="doc-contexto" class="doc-contexto" role="group" aria-label="Grupo y materia" hidden>
-        <label>Grupo <select id="ctx-seccion"></select></label>
-        <label>Período <select id="ctx-periodo"></select></label>
-        <label class="doc-ctx-materia">Materia <select id="ctx-materia"></select></label>
+        <div class="doc-ctx-campo"><span class="doc-ctx-etiqueta" id="ctx-seccion-et">Grupo</span><div class="doc-seg" id="ctx-seccion" role="radiogroup" aria-labelledby="ctx-seccion-et"></div></div>
+        <div class="doc-ctx-campo"><span class="doc-ctx-etiqueta" id="ctx-periodo-et">Período</span><div class="doc-seg" id="ctx-periodo" role="radiogroup" aria-labelledby="ctx-periodo-et"></div></div>
+        <label class="doc-ctx-campo doc-ctx-materia"><span class="doc-ctx-etiqueta">Materia</span><select id="ctx-materia"></select></label>
       </div>
-      <span id="doc-sesion" class="doc-muted"></span>
-      <button type="button" class="tema-btn" aria-label="Cambiar tema"></button>
-      <button class="btn btn-secondary" id="doc-logout">Salir</button>
+      <div class="doc-header-acciones">
+        <span id="doc-sesion" class="doc-muted"></span>
+        <button type="button" class="tema-btn" aria-label="Cambiar tema"></button>
+        <button class="btn btn-secondary" id="doc-logout">Salir</button>
+      </div>
     </header>
     <div class="doc-cuerpo">
       <nav id="doc-nav" class="doc-nav" aria-label="Secciones del panel"></nav>

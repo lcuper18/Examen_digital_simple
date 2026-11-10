@@ -87,15 +87,23 @@
     Panel.toast('Notas guardadas');
   }
 
-  async function importar(componente) {
-    const codigo = await Panel.pedir(
-      `Código del examen a importar como ${ETIQUETAS[componente]} (ej. SGC01)`, '',
-      { titulo: `Importar ${ETIQUETAS[componente]}` });
-    if (!codigo) return;
+  async function importar() {
+    const r = await Panel.dialogo({
+      titulo: 'Importar un examen como prueba',
+      cuerpo: `<label class="doc-campo">Código del examen (ej. SGC01) <input type="text" id="imp-codigo" autocomplete="off"></label>
+        <label class="doc-campo">Guardar como
+          <select id="imp-componente"><option value="prueba01">${ETIQUETAS.prueba01}</option><option value="prueba02">${ETIQUETAS.prueba02}</option></select></label>`,
+      botones: [{ texto: 'Cancelar', valor: null },
+        { texto: 'Importar', primario: true, valor: f => {
+          const codigo = f.querySelector('#imp-codigo').value.trim();
+          return codigo ? { codigo, componente: f.querySelector('#imp-componente').value } : null;
+        } }],
+    });
+    if (!r) return;
     if (sinGuardar && !(await Panel.confirmar('Tienes cambios sin guardar; se descartarán al importar.', { texto: 'Importar' }))) return;
     const data = await Panel.json('/api/docente/notas/importar-prueba', {
       method: 'POST',
-      body: { materia_id: Number(Panel.contexto.id()), componente, codigo_examen: codigo },
+      body: { materia_id: Number(Panel.contexto.id()), componente: r.componente, codigo_examen: r.codigo },
     });
     Panel.toast(`Se importaron ${data.importadas} notas`);
     await cargarNotas();
@@ -127,7 +135,10 @@
   }
 
   async function importarVinculadas() {
-    if (sinGuardar && !(await Panel.confirmar('Tienes cambios sin guardar; se descartarán al importar.', { texto: 'Importar' }))) return;
+    if (!(await Panel.confirmar(
+      sinGuardar ? 'Tienes cambios sin guardar. Se descartarán y las notas de Prueba 1 y Prueba 2 se reemplazarán con las de los exámenes vinculados.'
+        : 'Las notas de Prueba 1 y Prueba 2 se reemplazarán con las de los exámenes vinculados a esta materia.',
+      { titulo: 'Importar exámenes vinculados', texto: 'Importar' }))) return;
     const data = await Panel.json('/api/docente/notas/importar-prueba', {
       method: 'POST', body: { materia_id: Number(Panel.contexto.id()) },
     });
@@ -162,7 +173,7 @@
       el.innerHTML = `
         <div class="doc-toolbar doc-toolbar-fila">
           <label class="doc-interruptor"><input type="checkbox" role="switch" id="n-publicado-sw"><span id="n-publicado-txt"></span></label>
-          <button class="btn btn-secondary" id="btn-mas-notas">Más ▾</button>
+          <button class="btn btn-secondary" id="btn-mas-notas">Importar / exportar <span aria-hidden="true">▾</span></button>
         </div>
         <p class="doc-muted" id="notas-resumen" aria-live="polite"></p>
         <div class="doc-table-wrap doc-hoja">
@@ -191,11 +202,13 @@
       $('n-publicado-sw').addEventListener('change', run(cambiarPublicacion));
       Panel.navegarCeldas($('tabla-notas'));
       Panel.menuDesplegable($('btn-mas-notas'), [
-        { texto: 'Importar exámenes vinculados', accion: run(importarVinculadas) },
-        { texto: 'Cargar una hoja de notas (Excel)…', accion: run(importarHoja) },
-        { texto: 'Importar un examen como Prueba 1…', accion: run(() => importar('prueba01')) },
-        { texto: 'Importar un examen como Prueba 2…', accion: run(() => importar('prueba02')) },
-        { texto: 'Descargar notas (para Excel)', accion: () => {
+        { grupo: 'Importar' },
+        { texto: 'Notas de los exámenes vinculados…', accion: run(importarVinculadas) },
+        { texto: 'Un examen como prueba…', accion: run(importar) },
+        { texto: 'Hoja de notas (Excel o CSV)…', accion: run(importarHoja) },
+        { separador: true },
+        { grupo: 'Exportar' },
+        { texto: 'Descargar notas en CSV (abre en Excel)', accion: () => {
           const id = Panel.contexto.id();
           if (id) Panel.descargar(`/api/docente/notas/exportar?materia_id=${id}`, `notas_${id}.csv`);
         } },
