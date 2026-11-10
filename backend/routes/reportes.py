@@ -13,7 +13,7 @@ from openpyxl.utils import get_column_letter
 
 from backend import barajado, database, security
 from backend.routes.examenes import _get_examen, load_codigos
-from backend.routes.notas import COMPONENTES, ETIQUETAS as ETIQUETAS_NOTA, nota_minima, _filas
+from backend.routes.notas import COMPONENTES, ETIQUETAS as ETIQUETAS_NOTA, nota_minima, _filas, pesos_de
 
 router = APIRouter(
     prefix="/api/docente/reportes", tags=["reportes"], dependencies=[Depends(security.require_docente)]
@@ -81,9 +81,12 @@ def boleta_estudiante(estudiante_id: int) -> dict[str, Any]:
         for m in materias:
             fila = next((f for f in _filas(conn, m) if f["estudiante_id"] == estudiante_id), None)
             if fila and any(fila[c] is not None for c in COMPONENTES):
+                pesos = pesos_de(conn, m["id"])
                 notas.append({
                     "materia": m["nombre"], "periodo": m["periodo"],
-                    **{c: fila[c] for c in COMPONENTES},
+                    # Cada componente en puntos (lo que vale en la nota final), no en escala 0-100
+                    **{c: None if fila[c] is None else round(fila[c] * pesos[c] / 100, 2) for c in COMPONENTES},
+                    "pesos": {c: pesos[c] for c in COMPONENTES},
                     "completa": fila["completa"], "nota_final": fila["nota_final"],
                 })
 
@@ -332,8 +335,11 @@ def excel_boleta(estudiante_id: int) -> Response:
             [x["codigo"], x["nombre"], x["fecha"], x["puntuacion"], x["total"], x["nota"], "sí" if x["aprobado"] else "no"]
             for x in d["examenes"]
         ],
-        "Notas por materia": [["Materia", "Periodo", *[ETIQUETAS_NOTA[c] for c in columnas], "Nota final"]] + [
+        "Notas por materia": [["Materia", "Periodo", *[f"{ETIQUETAS_NOTA[c]} (puntos)" for c in columnas], "Nota final (de 100)"]] + [
             [n["materia"], n["periodo"], *["" if n[c] is None else n[c] for c in columnas], n["nota_final"]]
             for n in d["notas"]
+        ],
+        "Valor de cada componente": [["Materia", "Periodo", *[f"{ETIQUETAS_NOTA[c]} (valor)" for c in columnas]]] + [
+            [n["materia"], n["periodo"], *[n["pesos"][c] for c in columnas]] for n in d["notas"]
         ],
     })

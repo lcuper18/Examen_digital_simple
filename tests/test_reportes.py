@@ -90,6 +90,10 @@ def test_boleta_del_estudiante(client):
     assert len(b["examenes"]) == 1 and b["examenes"][0]["nota"] == 100.0 and b["examenes"][0]["aprobado"]
     assert sum(t["aciertos"] for t in b["examenes"][0]["temas"]) == 70
     assert len(b["notas"]) == 1 and b["notas"][0]["nota_final"] == 80.0
+    # Cada componente va en puntos sobre su valor (80 % de un componente de 25 = 20), no en escala 0-100
+    n = b["notas"][0]
+    assert n["pesos"]["trabajo_cotidiano"] == 25 and n["trabajo_cotidiano"] == 20.0
+    assert sum(n[c] for c in n["pesos"]) == n["nota_final"]
     assert client.get("/api/docente/reportes/boleta/999", headers=hd).status_code == 404
 
 

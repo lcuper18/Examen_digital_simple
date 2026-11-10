@@ -105,9 +105,9 @@
     const notas = d.notas.length ? `<table class="rep-tabla"><thead><tr><th>Materia</th><th class="num">Periodo</th>
       ${comps.map(c => `<th class="num">${NOTAS_ETIQUETA[c]}</th>`).join('')}<th class="num">Nota final</th></tr></thead><tbody>
       ${d.notas.map(n => `<tr><td>${Panel.esc(n.materia)}</td><td class="num">${n.periodo}</td>
-        ${comps.map(c => `<td class="num">${num(n[c])}</td>`).join('')}
+        ${comps.map(c => `<td class="num">${num(n[c], 2)} <small class="rep-valor">/${num(n.pesos[c])}</small></td>`).join('')}
         <td class="num ${clase(n.nota_final, minima)}">${num(n.nota_final)}${n.completa ? '' : '*'}</td></tr>`).join('')}
-      </tbody></table><p class="rep-meta">* Nota parcial: faltan componentes por calificar.</p>`
+      </tbody></table><p class="rep-meta">Cada componente se muestra en puntos sobre lo que vale en la nota final (por ejemplo 18 /25). * Nota parcial: faltan componentes por calificar.</p>`
       : '<p class="rep-vacio">Sin notas registradas por materia.</p>';
     return encabezado('Boleta de calificaciones', d.institucion,
         `${Panel.esc(d.estudiante.nombre)} · Sección ${Panel.esc(d.estudiante.seccion)} · Cédula ${Panel.esc(d.estudiante.cedula)}`) +

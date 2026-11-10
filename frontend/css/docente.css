@@ -352,3 +352,4 @@
   .doc-menu { position: fixed; left: 8px !important; right: 8px; top: auto !important; bottom: 8px; min-width: 0; padding: 8px; box-shadow: var(--shadow-2); }
   .doc-menu-item { min-height: 48px; }
 }
+.rep-valor { color: var(--text-muted); font-size: var(--text-xs); }
