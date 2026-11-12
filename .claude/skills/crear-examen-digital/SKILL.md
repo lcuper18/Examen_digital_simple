@@ -26,7 +26,7 @@ Los .docx se leen con python-docx (`pip install python-docx`; no hay pandoc): re
 7. Una sola respuesta correcta indiscutible. 4 opciones (a–d), sin «todas/ninguna de las anteriores».
 
 ## 3. Construir
-1. Redactar el banco en un JSON (formato en la cabecera de `scripts/construir_examen.py`, ejemplo completo en `ejemplo_banco_GCS02.json`) dentro del scratchpad. Código nuevo, con sufijo de período (`GCS02`, `ADM02`).
+1. Redactar el banco en un JSON (formato en la cabecera de `scripts/construir_examen.py`, ejemplo completo en `ejemplo_banco_GCS02.json`) dentro del scratchpad. Código nuevo, con sufijo de período (`GCS02`, `ADM02`). El sufijo (01/02) importa: mientras el examen no esté vinculado a una materia en la pestaña Exámenes, la boleta lo asigna al período que indica el sufijo.
 2. Desde la raíz del proyecto:
    `python3 .claude/skills/crear-examen-digital/scripts/construir_examen.py <banco.json>`
    El script reparte la letra correcta por igual (n/4 por letra), exige que la correcta no sea la más larga en más del 35 %, revisa opciones/preguntas repetidas, escribe el JSON y registra el código. Si falla por longitud, acortar correctas o alargar incorrectas en el banco y repetir.
@@ -41,4 +41,4 @@ Los .docx se leen con python-docx (`pip install python-docx`; no hay pandoc): re
 - Cómo se alinea con el examen en papel y qué partes (correspondencia, respuesta corta, caso) no están en la plataforma.
 - Letras: 15/15/15/15 y cuántas correctas son la opción más larga.
 - Cómo probarlo: servidor en el puerto **8090** (el 8000 lo usa Docker en esa Mac; el 8001 chocaba con Packet Tracer), `http://<IP>:8090`, IP con `ipconfig getifaddr en0` (puede cambiar). Probar con un estudiante de la sección y **borrar el intento** de prueba en Resultados (un intento por estudiante y examen).
-- Lanzar el servidor con `run_in_terminal` (queda en el panel de Terminal); en segundo plano se apaga si la app se cierra.
+- El docente abre la app **Lectiva** (Dock o Escritorio); si hay que lanzar el servidor a mano, usar `.venv/bin/python -m uvicorn backend.main:app --host 0.0.0.0 --port 8090` con `run_in_terminal` (queda en el panel de Terminal; en segundo plano se apaga si la app se cierra). Tras cambiar código, reiniciar el servidor (botón «Reiniciar servidor» de la app).

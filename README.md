@@ -5,7 +5,7 @@ Plataforma de gestión educativa: exámenes en línea, asistencia, actividades, 
 ## Requisitos
 
 - Python 3.10+
-- Dependencias en `requirements.txt` (fastapi, uvicorn, bcrypt)
+- Dependencias en `requirements.txt` (fastapi, uvicorn, bcrypt, openpyxl)
 
 ## Instalación
 
@@ -59,18 +59,19 @@ Se entra con la contraseña del docente.
 
 - **Resumen:** tablero con totales, alertas que requieren atención (intentos vencidos, muchas salidas de pestaña, logins bloqueados, claves temporales pendientes), quién está presentando examen ahora y actividad reciente.
 - **Resultados:** lista de intentos con filtro por examen y sección, nota, estado (enviado / sin enviar), salidas de la pestaña y detalle pregunta por pregunta. Permite **reiniciar** un intento (el estudiante puede presentar el examen de nuevo) y exportar a CSV.
-- **Notas:** por materia (sección y periodo), tabla editable **en puntos**, como en las hojas del docente. Por defecto: Trabajo cotidiano 25, Tareas 10, Prueba 01 22.5, Prueba 02 22.5, Proyecto 15 y Asistencia 5 (suman 100; se pueden cambiar por materia en **Ajustes**). La nota final se calcula al escribir (un componente vacío cuenta como 0). **Importar exámenes vinculados** copia la nota de los exámenes que, en la pestaña Exámenes, se vincularon a esa materia y componente (también se puede importar un código a mano). **Importar hoja…** carga un CSV (`;`) o Excel en puntos (Id o Nombre, TC, Tareas, Prueba1, Prueba2, Proyecto, Asistencia). Exporta a CSV.
+- **Notas:** por materia (sección y periodo), tabla editable **en puntos**, como en las hojas del docente. Por defecto: Trabajo cotidiano 25, Tareas 10, Prueba 01 22.5, Prueba 02 22.5, Proyecto 15 y Asistencia 5 (suman 100; se pueden cambiar por materia en **Ajustes**). La nota final se calcula al escribir (un componente vacío cuenta como 0). El menú **Importar / exportar** agrupa las acciones: *Notas de los exámenes vinculados…* copia la nota de los exámenes que, en la pestaña Exámenes, se vincularon a esa materia y componente (pide confirmación porque reemplaza Prueba 1 y 2); *Un examen como prueba…* importa un código a mano como Prueba 1 o Prueba 2; *Hoja de notas (Excel o CSV)…* carga un CSV (`;`) o Excel en puntos (Id o Nombre, TC, Tareas, Prueba1, Prueba2, Proyecto, Asistencia); y *Descargar notas en CSV* exporta a Excel.
 
 - **Estudiantes:** reinicio de contraseña (clave temporal aleatoria que se muestra una sola vez; el estudiante debe crear la suya), desbloqueo de login, activar/desactivar, cambio de sección, alta, baja, importación CSV y hoja imprimible de credenciales por sección.
 - **Exámenes:** habilitar/deshabilitar, ventana de inicio y restricción por sección. Por intento: tiempo extra, cerrar y calificar, anular, marcar sospechoso y reiniciar. Las respuestas se guardan en el servidor mientras el estudiante responde.
-- **Reportes:** boleta del estudiante, resultado por examen (estadísticas, distribución, rendimiento por tema, clasificación), preguntas críticas y notas por sección y periodo. Cada uno se imprime o guarda como PDF desde el navegador y se exporta a Excel.
+- **Reportes:** boleta del estudiante (ver abajo), resultado por examen (estadísticas, distribución, rendimiento por tema, clasificación), preguntas críticas y notas por sección y periodo. Cada uno se imprime o guarda como PDF desde el navegador y se exporta a Excel.
+  - **Boleta del estudiante:** sigue el grupo elegido arriba (solo lista a los estudiantes de ese grupo). Se elige el **período**: 1.º, 2.º o **General** (todos los períodos), que agrega la tabla **Nota anual** (promedio simple de los períodos). Cada componente se muestra **en puntos sobre lo que vale** (por ejemplo `20 /25`), no en escala de 0 a 100. Los exámenes se asignan al período de la materia a la que están vinculados o, si no hay vínculo, por el sufijo del código (`EMP02` → 2.º período). El Excel respeta el período y, en General, agrega la hoja «Nota anual».
   - **Acta de calificaciones:** con el formato oficial (Dirección Regional, circuito, centro educativo, docente, asignatura, nivel, sección, período; tabla Id, Nombre y Nota entera con redondeo escolar; línea de firma). Imprimir/PDF o Excel.
   - **Informe para encargados:** una hoja por estudiante (o de toda la sección) con los componentes en puntos, la nota, la asistencia, el detalle de actividades con la observación para el estudiante y las pendientes, y firmas del docente y del encargado. Nunca incluye la nota interna.
-  - **Registro de notas (en puntos):** CSV (`;`, coma decimal) o Excel en el mismo formato de tus hojas; se puede volver a cargar con **Importar hoja…** en Notas.
+  - **Registro de notas (en puntos):** CSV (`;`, coma decimal) o Excel en el mismo formato de tus hojas; se puede volver a cargar con *Hoja de notas (Excel o CSV)…* en Notas.
   - El consolidado por sección ahora muestra el estado (Aprobado, Reprobó N o Incompleto).
 - **Asistencia:** se pasa lista por fecha y materia (presente, ausente, tardía de menos o más de 10 min, ausencia y tardía justificadas, con observación). El porcentaje de ausencias injustificadas sobre las lecciones impartidas da los puntos de asistencia según el artículo 37 del Reglamento de Evaluación (0-<10 % = 5, <20 % = 4, <30 % = 3, <40 % = 2, <50 % = 1, desde 50 % = 0; tardía injustificada de menos de 10 min = media ausencia, de más de 10 min = una ausencia). Cada vez que se guarda o elimina una lista, el componente Asistencia de Notas se recalcula (si ya habías escrito ese componente a mano, se reemplaza desde la primera lista que guardes). Resumen del período, Excel e informe imprimible.
 - **Actividades:** tareas, proyectos y otras actividades por materia, con rúbrica opcional (criterios con sus puntos). Se califica por criterio, con estado (entregado, tardío, sin entrega, en revisión, exonerado), observación para el estudiante y nota interna que nunca se muestra. El componente de Notas se calcula solo: puntos obtenidos entre los posibles de las actividades ya calificadas (sin entrega cuenta 0; en revisión y exonerado no cuentan). **Importar hoja (Excel)** carga hojas como `Calificacion_*.xlsx` (columnas de criterios con sus puntos entre paréntesis, Estado, Observaciones y Notas internas), emparejando por nombre.
-- **Publicar a estudiantes (Notas):** por materia, el botón **Publicar a estudiantes** muestra a cada estudiante, en **Ver mis notas** (pantalla del código del examen), sus componentes en puntos, su nota, su asistencia y sus actividades con la observación para el estudiante. Cada estudiante solo ve lo suyo y solo de las materias publicadas de su sección; la nota interna nunca se muestra. **Ocultar a estudiantes** lo retira.
+- **Mis notas para estudiantes (publicación en Notas):** por materia, el interruptor «Visible / Oculta para los estudiantes» muestra a cada estudiante, en **Ver mis notas** (pantalla del código del examen), sus componentes en puntos, su nota, su asistencia y sus actividades con la observación para el estudiante. Cada estudiante solo ve lo suyo y solo de las materias publicadas de su sección; la nota interna nunca se muestra. Apagar el interruptor lo retira.
 - **Seguimiento:** cada estudiante tiene una **Ficha** (botón en Estudiantes y en el Resumen) con teléfono, datos del encargado, adecuación, historial por materia, exámenes presentados y un registro de observaciones (anecdótico, logro, conducta, familia, apoyo) que solo ve el docente. **Importar encargados (Excel)** carga esos datos desde `Lista_Alumnos.xlsx` por cédula («NO posee» en ADECUACIÓN no cuenta como adecuación). El **Resumen** lista a los estudiantes en riesgo del período actual: nota proyectada bajo la mínima, ausencias injustificadas sobre el umbral, actividades sin entrega y exámenes vinculados sin presentar.
 - **Ajustes:** datos institucionales (institución, dirección regional, circuito, docente, curso lectivo), nota mínima de aprobación, ponderación por materia y las direcciones (IP y nombre `.local`) para que los estudiantes entren.
 - **Bitácora:** registro de las acciones del docente (nunca guarda contraseñas).
@@ -92,11 +93,15 @@ python -m pytest -q
 ## Estructura
 
 ```
-backend/        FastAPI: main.py, database.py, security.py, ratelimit.py, barajado.py, routes/
-frontend/       index.html, css/, js/app.js, fonts/, static/
+backend/        FastAPI: main.py, database.py, security.py, ratelimit.py, barajado.py, version.py, routes/
+frontend/       index.html (estudiante), docente.html (panel docente), css/, js/app.js, js/docente/ (un módulo por pestaña), fonts/, static/
 data/           codigos.json, examenes/*.json, estudiantes.example.csv
-scripts/        iniciar.sh, iniciar.bat
+mac/            app de Mac en Swift (Lectiva.swift) y su icono (icono.swift)
+scripts/        iniciar.sh, iniciar.bat, mac/instalar_app.sh
+respaldos/      copias de la base de datos (no se sube a git)
+logs/           servidor.log de la app de Mac (no se sube a git)
 tests/          pytest
+.claude/skills/ crear-examen-digital: elabora exámenes para la plataforma
 ```
 
 ## Cierre del curso lectivo
@@ -117,14 +122,24 @@ bash scripts/mac/instalar_app.sh
 
 Compila la app, la instala en Aplicaciones, crea el acceso directo en el Escritorio y la agrega al Dock. Al abrirla:
 - muestra la **versión** del sistema (se define en `backend/version.py`);
-- **levanta el servidor** (si ya había uno corriendo, lo usa y no lo apaga al salir);
+- **levanta el servidor** (si ya había uno corriendo, lo usa);
 - muestra la **dirección para los estudiantes** (`http://<IP>:8090`) con un código QR, el nombre `.local` y un botón para copiarla. Si la IP cambia al reconectarse al wifi, la ventana lo avisa y se actualiza sola;
 - mantiene la Mac despierta mientras el servidor corre.
 
-Botones: **Abrir panel docente**, **Ver registro** (`logs/servidor.log`) y **Detener servidor y salir**. Si cierras la ventana, el sistema se detiene (pide confirmación). Si macOS pregunta por conexiones entrantes de Python, permítelas.
+Botones: **Abrir panel docente**, **Ver registro** (`logs/servidor.log`) y **Detener servidor y salir**. Al salir, la app **apaga el servidor y libera el puerto** (también si ya estaba corriendo), pero solo si es el de Lectiva, nunca otro programa; si cierras la ventana, el sistema se detiene (pide confirmación). El instalador retira la versión anterior llamada «Examen Digital» (app, acceso directo e icono del Dock). Tras actualizar el código, usa **Reiniciar servidor** en la ventana de la app. Si macOS pregunta por conexiones entrantes de Python, permítelas.
 
 ## Apariencia
 
-Panel docente: menú lateral agrupado (en tablet y celular es un cajón con el botón «Menú»), selector único de grupo, período y materia en la cabecera, pasar lista de un toque, hojas de notas con teclado (Enter y flechas) e inicio con accesos rápidos y primeros pasos. App del estudiante: formularios con etiquetas visibles, opciones del examen que se pueden usar con teclado y «Mis notas» pensado para el celular.
+Panel docente: menú lateral agrupado (en tablet y celular es un cajón con el botón «Menú»), selector único de grupo, período y materia en la cabecera (Grupo y Período como botones de un toque; si al cambiarlos la materia cambia sola, un aviso lo indica), menús de acciones agrupados (en el celular se anclan abajo), pasar lista de un toque, hojas de notas con teclado (Enter y flechas) e inicio con accesos rápidos y primeros pasos. App del estudiante: formularios con etiquetas visibles, opciones del examen que se pueden usar con teclado y «Mis notas» pensado para el celular.
 
 La plataforma sigue el tema claro u oscuro del dispositivo y tiene un botón (sol o luna) para cambiarlo; la preferencia se recuerda en el navegador. Los colores, espacios y tipografía viven en `frontend/css/base.css`.
+
+## Solución de problemas
+
+- **La interfaz se ve sin colores o con botones sin estilo:** recarga sin caché (⌘⇧R en Mac, Ctrl+Shift+R en Windows). El servidor ya indica al navegador que revalide los archivos, pero una copia vieja puede quedar la primera vez.
+- **Puerto ocupado:** la app de Mac lo avisa. Cierra la otra copia con **Detener servidor y salir**, o cambia el puerto con la variable `PORT` (la app de Mac usa el 8090, definido en `mac/Lectiva.swift`).
+- **Los cambios de código no se ven:** reinicia el servidor (botón **Reiniciar servidor** de la app) y recarga el panel.
+
+## Nombres heredados
+
+La plataforma se llamaba «Examen Digital». Por compatibilidad se conservan el archivo de base de datos `examen_db.sqlite`, la variable `EXAMEN_SECRET_KEY`, la carpeta del proyecto `Examen_digital_simple` y el nombre del repositorio en GitHub, para no romper datos ni rutas.
