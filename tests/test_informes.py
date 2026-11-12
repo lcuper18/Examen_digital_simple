@@ -85,3 +85,33 @@ def test_consolidado_marca_aprobado_reprobado_o_incompleto(client):
     estados = {e["estudiante_id"]: e["estado"] for e in d["estudiantes"]}
     assert estados[1] == "Incompleto"   # las otras dos materias del periodo no tienen notas
     assert all(e["reprobadas"] >= 0 for e in d["estudiantes"])
+
+
+def test_plantilla_del_colegio_se_rellena_con_su_formato(client):
+    hd, mid = _preparar(client)
+    # Ana completa; Luis sin Proyecto (debe ir 0 y avisarse)
+    _guardar_notas(client, hd, mid,
+                   dict(trabajo_cotidiano=100, tareas=70, prueba01=84.9777, prueba02=51.7, proyecto=68.3333, asistencia=100),
+                   dict(trabajo_cotidiano=50, tareas=0, prueba01=40, prueba02=60, proyecto=None, asistencia=40))
+    # Plantilla como la del colegio: BOM, CRLF, ';', orden no alfabético y un estudiante que no está en Lectiva
+    plantilla = ("﻿Id;Nombre;Trabajo cotidiano;Tareas;Prueba;Proyecto;Asistencia\r\n"
+                 "703440226;MORA RUIZ LUIS;0;0;0;0;0\r\n"
+                 "999999999;OTRO ESTUDIANTE;0;0;0;0;0\r\n"
+                 "102340567;PEREZ SOTO ANA;0;0;0;0;0\r\n").encode("utf-8")
+    d = client.post(f"/api/docente/informes/plantilla-colegio?materia_id={mid}", headers=hd, content=plantilla).json()
+    texto = d["contenido"]
+    assert texto.startswith("﻿Id;Nombre;Trabajo cotidiano;Tareas;Prueba;Proyecto;Asistencia\r\n")
+    lineas = texto.split("\r\n")
+    # mismo orden y nombres de la plantilla; Prueba = 19.12 + 11.63 = 30.75; punto decimal
+    assert lineas[1] == "703440226;MORA RUIZ LUIS;12.5;0;22.5;0;2"
+    assert lineas[2] == "999999999;OTRO ESTUDIANTE;0;0;0;0;0"
+    assert lineas[3] == "102340567;PEREZ SOTO ANA;25;7;30.75;10.25;5"
+    assert "," not in texto.replace("Trabajo cotidiano", "")
+    av = d["avisos"]
+    assert av["sin_pareja"] == ["OTRO ESTUDIANTE"] and av["fuera_de_plantilla"] == []
+    assert av["incompletos"] == [{"nombre": "MORA RUIZ LUIS", "componentes": ["Proyecto"]}]
+    assert d["columnas"] == ["Trabajo cotidiano", "Tareas", "Prueba", "Proyecto", "Asistencia"]
+
+    sin_columnas = "Id;Nombre;Otra\r\n1;X;0\r\n".encode("utf-8")
+    assert client.post(f"/api/docente/informes/plantilla-colegio?materia_id={mid}", headers=hd, content=sin_columnas).status_code == 400
+    assert client.post(f"/api/docente/informes/plantilla-colegio?materia_id={mid}", content=plantilla).status_code == 401

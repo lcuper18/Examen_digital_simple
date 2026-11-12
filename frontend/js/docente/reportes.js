@@ -8,6 +8,7 @@
     acta: 'Acta de calificaciones',
     encargados: 'Informe para encargados',
     registro: 'Registro de notas (en puntos)',
+    colegio: 'Notas para el sistema del colegio (plantilla)',
   };
   const NOTAS_ETIQUETA = {
     trabajo_cotidiano: 'Trabajo cotidiano', tareas: 'Tareas', prueba01: 'Prueba 1', prueba02: 'Prueba 2', proyecto: 'Proyecto', asistencia: 'Asistencia',
@@ -42,6 +43,7 @@
     $('r-parametros').innerHTML = {
       acta: materia,
       registro: materia,
+      colegio: materia + `<label>Plantilla del colegio (CSV) <input type="file" id="r-plantilla" accept=".csv,text/csv"></label>`,
       encargados: grupo + `<label>Estudiante <select id="r-estudiante"></select></label>`,
       boleta: (ctx ? `<p class="doc-muted doc-ctx-aviso">Grupo elegido arriba: <strong>${Panel.esc(ctx.seccion)}</strong></p>` : '') + `<label>Estudiante <select id="r-estudiante">${opciones(
         catalogos.estudiantes.filter(e => !ctx || e.seccion === ctx.seccion), e => e.id, e => Panel.nombre(e))}</select></label>
@@ -70,6 +72,7 @@
     $('r-imprimir').disabled = true;
     $('r-excel').disabled = true;
     $('r-csv').disabled = true;
+    $('r-csv').textContent = 'Para Excel (CSV)';
   }
 
   // ---------- Constructores de reporte ----------
@@ -233,6 +236,30 @@
         <td class="num ${clase(f.nota_final, d.nota_minima)}">${num(f.nota_final)}</td></tr>`).join('')}</tbody></table>`;
   }
 
+  function htmlColegio(d, materia) {
+    const av = d.avisos;
+    const lista = (titulo, items) => items.length
+      ? `<p class="rep-meta"><strong>${titulo}</strong></p><ul>${items.map(x => `<li>${x}</li>`).join('')}</ul>` : '';
+    const avisos = lista('Sin calificar (van en 0):', av.incompletos.map(i => `${Panel.esc(i.nombre)}: ${Panel.esc(i.componentes.join(', '))}`)) +
+      lista('En la plantilla pero no en Lectiva (se dejan como venían):', av.sin_pareja.map(n => Panel.esc(n))) +
+      lista('En Lectiva pero no en la plantilla (no se incluyen):', av.fuera_de_plantilla.map(n => Panel.esc(n)));
+    return encabezado(`Notas para el sistema del colegio · ${materia.nombre}`, '',
+        `Sección ${Panel.esc(materia.seccion)} · ${materia.periodo}.º período · puntos con punto decimal; Prueba = Prueba 1 + Prueba 2`) +
+      (avisos ? `<div class="doc-aviso-error" role="status"><div>${avisos}</div></div>` : '<p class="rep-meta">Todos los estudiantes de la plantilla tienen sus notas completas.</p>') +
+      `<table class="rep-tabla"><thead><tr><th>Id</th><th>Nombre</th>${d.columnas.map(c => `<th class="num">${Panel.esc(c)}</th>`).join('')}</tr></thead><tbody>
+      ${d.filas.map(f => `<tr${f.emparejado ? '' : ' class="doc-fila-anulada"'}><td>${Panel.esc(f.id || '')}</td><td>${Panel.esc(f.nombre)}</td>
+        ${f.valores.map(v => `<td class="num">${Panel.esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table>
+      <p class="rep-meta">Sube el archivo descargado tal cual al sistema del colegio. Si lo abres y lo guardas en Excel, puede cambiar los puntos decimales por comas.</p>`;
+  }
+
+  function descargarTexto(contenido, nombre) {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([contenido], { type: 'text/csv;charset=utf-8' }));
+    a.download = nombre;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+
   async function generar() {
     const tipo = $('r-tipo').value;
     const q = (id) => ($(id) ? $(id).value : '');
@@ -248,6 +275,13 @@
       actual = { titulo: `Registro ${d.materia.nombre}`, html: htmlRegistro(d, d.materia),
         excel: [`/api/docente/informes/registro/excel?materia_id=${id}`, `registro_${id}.xlsx`],
         csv: [`/api/docente/informes/registro?materia_id=${id}`, `registro_${id}.csv`] };
+    } else if (tipo === 'colegio') {
+      const archivo = $('r-plantilla') && $('r-plantilla').files[0];
+      if (!archivo) return Panel.toast('Elige la plantilla CSV que te dio el colegio', 'error');
+      const id = Panel.contexto.id(), m = Panel.contexto.materia();
+      const d = await Panel.subir(`/api/docente/informes/plantilla-colegio?materia_id=${id}`, archivo);
+      actual = { titulo: `Notas ${m.seccion} P${m.periodo} ${m.nombre}`, html: htmlColegio(d, m), excel: null,
+        csvTexto: [d.contenido, d.nombre_archivo] };
     } else if (tipo === 'encargados') {
       const s = Panel.contexto.materia().seccion, p = Panel.contexto.materia().periodo, e = q('r-estudiante');
       const d = await Panel.json(`/api/docente/informes/encargados?seccion=${encodeURIComponent(s)}&periodo=${p}${e ? `&estudiante_id=${e}` : ''}`);
@@ -274,7 +308,8 @@
     $('r-salida').innerHTML = `<div class="rep">${actual.html}</div>`;
     $('r-imprimir').disabled = false;
     $('r-excel').disabled = !actual.excel;
-    $('r-csv').disabled = !actual.csv;
+    $('r-csv').disabled = !actual.csv && !actual.csvTexto;
+    if (actual.csvTexto) $('r-csv').textContent = 'Descargar CSV para el colegio';
   }
 
   Panel.registrar('reportes', 'Reportes', {
@@ -294,7 +329,10 @@
       $('r-generar').addEventListener('click', run(generar));
       $('r-imprimir').addEventListener('click', () => actual && Panel.imprimirHtml(actual.titulo, actual.html));
       $('r-excel').addEventListener('click', () => actual && actual.excel && Panel.descargar(actual.excel[0], actual.excel[1]));
-      $('r-csv').addEventListener('click', () => actual && actual.csv && Panel.descargar(actual.csv[0], actual.csv[1]));
+      $('r-csv').addEventListener('click', () => {
+        if (actual && actual.csvTexto) descargarTexto(...actual.csvTexto);
+        else if (actual && actual.csv) Panel.descargar(actual.csv[0], actual.csv[1]);
+      });
     },
     usaContexto: true,
     async mostrar() {

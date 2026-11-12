@@ -4,14 +4,17 @@ Informes routes - Acta de calificaciones, informe para encargados y registro de 
 import csv
 import io
 import json
+import re
+from decimal import ROUND_HALF_UP, Decimal
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Response
+from fastapi import APIRouter, Depends, HTTPException, Request, Response
 
 from backend import database, security
 from backend.routes.actividades import ESTADOS as ESTADOS_ACTIVIDAD
 from backend.routes.asistencia import _resumen
 from backend.routes.notas import COMPONENTES, ETIQUETAS, _filas, _materia, nota_minima, pesos_de
+from backend.hojas import emparejar, sin_tildes
 from backend.routes.reportes import _xlsx
 
 router = APIRouter(
@@ -130,6 +133,103 @@ def registro_excel(materia_id: int) -> Response:
     return _xlsx(f"registro_{materia['seccion']}_P{materia['periodo']}_{materia_id}.xlsx", {
         "Notas": [["Id", "Nombre", *[ETIQUETAS[c] for c in COMPONENTES], "Nota"]] + filas,
     })
+
+
+# ---------- Plantilla del sistema del colegio ----------
+
+# Columna de la plantilla (normalizada: sin tildes, minúsculas, sin espacios) -> componentes de Lectiva que suma
+COLUMNAS_PLANTILLA = {
+    "trabajocotidiano": ("trabajo_cotidiano",), "tc": ("trabajo_cotidiano",),
+    "tareas": ("tareas",), "tarea": ("tareas",),
+    "prueba": ("prueba01", "prueba02"), "pruebas": ("prueba01", "prueba02"),
+    "prueba1": ("prueba01",), "prueba01": ("prueba01",), "prueba2": ("prueba02",), "prueba02": ("prueba02",),
+    "proyecto": ("proyecto",), "asistencia": ("asistencia",),
+}
+
+
+def _clave(texto: str) -> str:
+    return re.sub(r"\W", "", sin_tildes(texto or "").lower())
+
+
+def puntos_texto(valor: float) -> str:
+    """Puntos con punto decimal, hasta 2 decimales (medio hacia arriba) y sin ceros sobrantes: 17.625 -> '17.63'."""
+    texto = str(Decimal(str(valor)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP).normalize())
+    texto = format(Decimal(texto), "f")
+    return texto.rstrip("0").rstrip(".") if "." in texto else texto
+
+
+@router.post("/plantilla-colegio")
+async def plantilla_colegio(request: Request, materia_id: int) -> dict[str, Any]:
+    """
+    Rellena la plantilla CSV del sistema del colegio con las notas en puntos de una materia.
+    Respeta su codificación (BOM), separador, fin de línea, orden de filas, nombres y columnas desconocidas.
+    La columna «Prueba» suma Prueba 1 y Prueba 2; un componente sin nota se escribe 0 (y se avisa).
+    """
+    datos = await request.body()
+    bom = datos.startswith(b"\xef\xbb\xbf")
+    try:
+        texto = datos.decode("utf-8-sig")
+    except UnicodeDecodeError:
+        texto = datos.decode("latin-1")
+    fin = "\r\n" if "\r\n" in texto else "\n"
+    lineas = texto.splitlines()
+    if not lineas:
+        raise HTTPException(status_code=400, detail="La plantilla está vacía")
+    separador = ";" if lineas[0].count(";") >= lineas[0].count(",") else ","
+    filas = list(csv.reader(lineas, delimiter=separador))
+    cab = [_clave(c) for c in filas[0]]
+    c_id = next((i for i, c in enumerate(cab) if c in ("id", "cedula", "identificacion")), None)
+    c_nombre = next((i for i, c in enumerate(cab) if c in ("nombre", "estudiante", "nombrecompleto")), None)
+    columnas = {i: COLUMNAS_PLANTILLA[c] for i, c in enumerate(cab) if c in COLUMNAS_PLANTILLA}
+    if (c_id is None and c_nombre is None) or not columnas:
+        raise HTTPException(status_code=400, detail="La plantilla debe tener las columnas Id o Nombre y los componentes (Trabajo cotidiano, Tareas, Prueba…)")
+
+    with database.get_db_context() as conn:
+        materia = _materia(conn, materia_id)
+        pesos = pesos_de(conn, materia_id)
+        notas = {f["estudiante_id"]: f for f in _filas(conn, materia)}
+        buscar = emparejar(conn.execute(
+            "SELECT id, cedula, nombre, apellido1, apellido2 FROM estudiantes WHERE seccion = ?", (materia["seccion"],)
+        ).fetchall())
+
+    salida, vista, sin_pareja, incompletos, usados = [filas[0]], [], [], [], set()
+    for fila in filas[1:]:
+        if not any(c.strip() for c in fila):
+            salida.append(fila)
+            continue
+        fila = fila + [""] * (len(filas[0]) - len(fila))
+        ident = fila[c_id].strip() if c_id is not None else None
+        nombre = fila[c_nombre].strip() if c_nombre is not None else ""
+        eid = buscar(cedula=ident or None, nombre=nombre)
+        if eid is None or eid not in notas:
+            sin_pareja.append(nombre or ident)
+            salida.append(fila)
+            vista.append({"id": ident, "nombre": nombre, "valores": [fila[i] for i in columnas], "emparejado": False})
+            continue
+        usados.add(eid)
+        f = notas[eid]
+        faltan = sorted({ETIQUETAS[c] for comps in columnas.values() for c in comps if f[c] is None},
+                        key=lambda e: list(ETIQUETAS.values()).index(e))
+        if faltan:
+            incompletos.append({"nombre": nombre or _nombre_acta(f), "componentes": faltan})
+        for i, comps in columnas.items():
+            # cada componente redondeado como en la pestaña Notas; la Prueba suma esos valores
+            fila[i] = puntos_texto(sum(Decimal(puntos_texto((f[c] or 0) * pesos[c] / 100)) for c in comps))
+        salida.append(fila)
+        vista.append({"id": ident, "nombre": nombre, "valores": [fila[i] for i in columnas], "emparejado": True})
+
+    buffer = io.StringIO()
+    csv.writer(buffer, delimiter=separador, lineterminator=fin).writerows(salida)
+    fuera = [_nombre_acta(f) for eid, f in notas.items() if eid not in usados]
+    seccion = re.sub(r"[^\w-]", "", materia["seccion"])
+    return {
+        "ok": True,
+        "contenido": ("\ufeff" if bom else "") + buffer.getvalue(),
+        "nombre_archivo": f"notas_{seccion}_P{materia['periodo']}_{materia_id}.csv",
+        "columnas": [filas[0][i] for i in columnas],
+        "filas": vista,
+        "avisos": {"sin_pareja": sin_pareja, "fuera_de_plantilla": fuera, "incompletos": incompletos},
+    }
 
 
 # ---------- Informe para encargados ----------
