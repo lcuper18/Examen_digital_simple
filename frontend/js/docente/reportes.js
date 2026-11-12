@@ -37,13 +37,16 @@
     const examen = `<label>Examen <select id="r-examen">${opciones(catalogos.examenes, e => e.codigo, e => `${e.codigo} · ${e.nombre}`)}</select></label>`;
     const ctx = Panel.contexto.materia();
     const materia = ctx ? `<p class="doc-muted doc-ctx-aviso">Materia elegida arriba: <strong>${Panel.esc(ctx.seccion)} · ${ctx.periodo}.º período · ${Panel.esc(ctx.nombre)}</strong></p>` : '';
+    const periodos = ctx ? [...new Set(catalogos.materias.filter(m => m.seccion === ctx.seccion).map(m => m.periodo))].sort() : [1, 2];
     const grupo = ctx ? `<p class="doc-muted doc-ctx-aviso">Grupo elegido arriba: <strong>${Panel.esc(ctx.seccion)} · ${ctx.periodo}.º período</strong></p>` : '';
     $('r-parametros').innerHTML = {
       acta: materia,
       registro: materia,
       encargados: grupo + `<label>Estudiante <select id="r-estudiante"></select></label>`,
-      boleta: `<label>Estudiante <select id="r-estudiante">${opciones(
-        catalogos.estudiantes, e => e.id, e => `${Panel.nombre(e)} (${e.seccion})`)}</select></label>`,
+      boleta: (ctx ? `<p class="doc-muted doc-ctx-aviso">Grupo elegido arriba: <strong>${Panel.esc(ctx.seccion)}</strong></p>` : '') + `<label>Estudiante <select id="r-estudiante">${opciones(
+        catalogos.estudiantes.filter(e => !ctx || e.seccion === ctx.seccion), e => e.id, e => Panel.nombre(e))}</select></label>
+        <label>Período <select id="r-periodo">${periodos.map(p => `<option value="${p}">${p}.º período</option>`).join('')}
+          <option value="">General (todos los períodos)</option></select></label>`,
       examen: examen + seccion,
       criticas: examen + seccion,
       seccion: grupo,
@@ -51,6 +54,7 @@
     if (tipo === 'encargados') {
       llenarEstudiantes();
     }
+    if (tipo === 'boleta' && ctx && $('r-periodo')) $('r-periodo').value = String(ctx.periodo);
     limpiarSalida();
   }
 
@@ -102,16 +106,23 @@
         Nota <span class="${clase(x.nota, minima)}">${num(x.nota)}</span> (${x.aprobado ? 'Aprobado' : 'Reprobado'})</p>
       ${tablaTemas(x.temas)}`).join('') : '<p class="rep-vacio">Aún no ha presentado exámenes.</p>';
     const comps = Object.keys(NOTAS_ETIQUETA);
-    const notas = d.notas.length ? `<table class="rep-tabla"><thead><tr><th>Materia</th><th class="num">Periodo</th>
+    const general = d.periodo === null;
+    const alcance = general ? 'Resultado general (todos los períodos)' : `${d.periodo}.º período`;
+    const notas = d.notas.length ? `<table class="rep-tabla"><thead><tr><th>Materia</th>${general ? '<th class="num">Periodo</th>' : ''}
       ${comps.map(c => `<th class="num">${NOTAS_ETIQUETA[c]}</th>`).join('')}<th class="num">Nota final</th></tr></thead><tbody>
-      ${d.notas.map(n => `<tr><td>${Panel.esc(n.materia)}</td><td class="num">${n.periodo}</td>
+      ${d.notas.map(n => `<tr><td>${Panel.esc(n.materia)}</td>${general ? `<td class="num">${n.periodo}</td>` : ''}
         ${comps.map(c => `<td class="num">${num(n[c], 2)} <small class="rep-valor">/${num(n.pesos[c])}</small></td>`).join('')}
         <td class="num ${clase(n.nota_final, minima)}">${num(n.nota_final)}${n.completa ? '' : '*'}</td></tr>`).join('')}
       </tbody></table><p class="rep-meta">Cada componente se muestra en puntos sobre lo que vale en la nota final (por ejemplo 18 /25). * Nota parcial: faltan componentes por calificar.</p>`
       : '<p class="rep-vacio">Sin notas registradas por materia.</p>';
+    const anual = general && d.anual.length ? `<h2>Nota anual (promedio de los períodos)</h2>
+      <table class="rep-tabla"><thead><tr><th>Materia</th><th class="num">1.º período</th><th class="num">2.º período</th><th class="num">Anual</th></tr></thead><tbody>
+      ${d.anual.map(a => `<tr><td>${Panel.esc(a.materia)}</td><td class="num">${num(a.p1)}</td><td class="num">${num(a.p2)}</td>
+        <td class="num ${clase(a.anual, minima)}">${num(a.anual)}${a.completa ? '' : '*'}</td></tr>`).join('')}
+      </tbody></table><p class="rep-meta">* Anual parcial: falta un período o componentes por calificar.</p>` : '';
     return encabezado('Boleta de calificaciones', d.institucion,
-        `${Panel.esc(d.estudiante.nombre)} · Sección ${Panel.esc(d.estudiante.seccion)} · Cédula ${Panel.esc(d.estudiante.cedula)}`) +
-      `<h2>Exámenes presentados</h2>${examenes}<h2>Notas por materia</h2>${notas}
+        `${Panel.esc(d.estudiante.nombre)} · Sección ${Panel.esc(d.estudiante.seccion)} · Cédula ${Panel.esc(d.estudiante.cedula)} · ${alcance}`) +
+      `<h2>Exámenes presentados</h2>${examenes}<h2>Notas por materia</h2>${notas}${anual}
       <div class="rep-firma"><div>Docente</div><div>Sello institucional</div></div>`;
   }
 
@@ -242,10 +253,11 @@
       const d = await Panel.json(`/api/docente/informes/encargados?seccion=${encodeURIComponent(s)}&periodo=${p}${e ? `&estudiante_id=${e}` : ''}`);
       actual = { titulo: `Informe encargados ${s} P${p}`, html: htmlEncargados(d), excel: null };
     } else if (tipo === 'boleta') {
-      const id = q('r-estudiante');
-      if (!id) return Panel.toast('No hay estudiantes', 'error');
-      const d = await Panel.json(`/api/docente/reportes/boleta/${id}`);
-      actual = { titulo: `Boleta ${d.estudiante.nombre}`, html: htmlBoleta(d), excel: [`/api/docente/reportes/boleta/${id}/excel`, `boleta_${d.estudiante.username}.xlsx`] };
+      const id = q('r-estudiante'), per = q('r-periodo');
+      if (!id) return Panel.toast('No hay estudiantes en este grupo', 'error');
+      const d = await Panel.json(`/api/docente/reportes/boleta/${id}${param('periodo', per)}`);
+      actual = { titulo: `Boleta ${d.estudiante.nombre}${per ? ` P${per}` : ' general'}`, html: htmlBoleta(d),
+        excel: [`/api/docente/reportes/boleta/${id}/excel${param('periodo', per)}`, `boleta_${d.estudiante.username}${per ? `_P${per}` : ''}.xlsx`] };
     } else if (tipo === 'examen') {
       const c = q('r-examen'), s = q('r-seccion');
       const d = await Panel.json(`/api/docente/reportes/examen/${c}${param('seccion', s)}`);

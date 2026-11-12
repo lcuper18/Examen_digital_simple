@@ -97,6 +97,27 @@ def test_boleta_del_estudiante(client):
     assert client.get("/api/docente/reportes/boleta/999", headers=hd).status_code == 404
 
 
+def test_boleta_por_periodo_y_general(client):
+    hd = _docente(client)
+    materias = [m for m in client.get("/api/docente/materias", headers=hd).json()["materias"] if m["seccion"] == "11-1"]
+    mat = materias[0]["nombre"]
+    por_periodo = {m["periodo"]: m["id"] for m in materias if m["nombre"] == mat}
+    for per, valor in ((1, 60), (2, 80)):
+        notas = dict(trabajo_cotidiano=valor, tareas=valor, prueba01=valor, prueba02=valor, proyecto=valor, asistencia=valor)
+        client.put("/api/docente/notas", headers=hd, json={"materia_id": por_periodo[per], "notas": [{"estudiante_id": 1, **notas}]})
+
+    p2 = client.get("/api/docente/reportes/boleta/1?periodo=2", headers=hd).json()
+    assert p2["periodo"] == 2 and [n["periodo"] for n in p2["notas"]] == [2] and p2["anual"] == []
+
+    general = client.get("/api/docente/reportes/boleta/1", headers=hd).json()
+    assert general["periodo"] is None and sorted(n["periodo"] for n in general["notas"]) == [1, 2]
+    anual = next(a for a in general["anual"] if a["materia"] == mat)
+    assert anual["p1"] == 60.0 and anual["p2"] == 80.0 and anual["anual"] == 70.0
+
+    assert client.get("/api/docente/reportes/boleta/1?periodo=3", headers=hd).status_code == 400
+    assert client.get("/api/docente/reportes/boleta/1/excel?periodo=2", headers=hd).status_code == 200
+
+
 def test_reporte_de_seccion(client):
     hd = _docente(client)
     with database.get_db_context() as conn:

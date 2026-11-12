@@ -62,9 +62,26 @@ def desglose_por_tema(preguntas: list[dict[str, Any]], semilla: int, respuestas:
 
 # ---------- Boleta del estudiante ----------
 
+def _periodo_del_examen(conn, codigo: str) -> int | None:
+    """Período al que pertenece un examen: el de la materia a la que está vinculado; si no hay vínculo,
+    el que indica el sufijo del código (EMP02 → 2). None si no se puede saber."""
+    fila = conn.execute(
+        "SELECT m.periodo FROM examenes_config c JOIN materias m ON m.id = c.materia_id WHERE c.codigo = ?", (codigo,)
+    ).fetchone()
+    if fila:
+        return fila["periodo"]
+    sufijo = codigo[-2:]
+    return int(sufijo) if sufijo.isdigit() and int(sufijo) in (1, 2) else None
+
+
 @router.get("/boleta/{estudiante_id}")
-def boleta_estudiante(estudiante_id: int) -> dict[str, Any]:
-    """Boleta consolidada: exámenes presentados (con desglose por tema) y notas por materia."""
+def boleta_estudiante(estudiante_id: int, periodo: int | None = None) -> dict[str, Any]:
+    """
+    Boleta consolidada: exámenes presentados (con desglose por tema) y notas por materia.
+    Con `periodo` (1 o 2) solo trae ese período; sin él, es el resultado general con la nota anual por materia.
+    """
+    if periodo is not None and periodo not in (1, 2):
+        raise HTTPException(status_code=400, detail="El período debe ser 1 o 2")
     minima = nota_minima()
     with database.get_db_context() as conn:
         est = conn.execute("SELECT * FROM estudiantes WHERE id = ?", (estudiante_id,)).fetchone()
@@ -75,8 +92,11 @@ def boleta_estudiante(estudiante_id: int) -> dict[str, Any]:
             "ORDER BY fecha_fin", (estudiante_id,)
         ).fetchall()
         materias = conn.execute(
-            "SELECT * FROM materias WHERE seccion = ? ORDER BY periodo, nombre", (est["seccion"],)
+            "SELECT * FROM materias WHERE seccion = ? AND (? IS NULL OR periodo = ?) ORDER BY periodo, nombre",
+            (est["seccion"], periodo, periodo),
         ).fetchall()
+        if periodo is not None:
+            intentos = [i for i in intentos if _periodo_del_examen(conn, i["codigo_examen"]) in (periodo, None)]
         notas = []
         for m in materias:
             fila = next((f for f in _filas(conn, m) if f["estudiante_id"] == estudiante_id), None)
@@ -89,6 +109,20 @@ def boleta_estudiante(estudiante_id: int) -> dict[str, Any]:
                     "pesos": {c: pesos[c] for c in COMPONENTES},
                     "completa": fila["completa"], "nota_final": fila["nota_final"],
                 })
+
+    # Nota anual por materia (promedio simple de los períodos con nota); solo en el resultado general
+    anual = []
+    if periodo is None:
+        por_materia: dict[str, dict[str, Any]] = {}
+        for n in notas:
+            f = por_materia.setdefault(n["materia"], {"materia": n["materia"], "p1": None, "p2": None, "completa": True})
+            f[f"p{n['periodo']}"] = n["nota_final"]
+            f["completa"] = f["completa"] and n["completa"]
+        for f in por_materia.values():
+            finales = [v for v in (f["p1"], f["p2"]) if v is not None]
+            f["anual"] = round(sum(finales) / len(finales), 1)
+            f["completa"] = f["completa"] and len(finales) == 2
+            anual.append(f)
 
     codigos = load_codigos()
     examenes, institucion = [], _institucion()
@@ -108,7 +142,7 @@ def boleta_estudiante(estudiante_id: int) -> dict[str, Any]:
             "id": est["id"], "nombre": f"{est['nombre']} {est['apellido1']} {est['apellido2'] or ''}".strip(),
             "cedula": est["cedula"], "seccion": est["seccion"], "username": est["username"],
         },
-        "examenes": examenes, "notas": notas,
+        "periodo": periodo, "examenes": examenes, "notas": notas, "anual": anual,
     }
 
 
@@ -327,10 +361,10 @@ def excel_seccion(seccion: str, periodo: int) -> Response:
 
 
 @router.get("/boleta/{estudiante_id}/excel")
-def excel_boleta(estudiante_id: int) -> Response:
-    d = boleta_estudiante(estudiante_id)
+def excel_boleta(estudiante_id: int, periodo: int | None = None) -> Response:
+    d = boleta_estudiante(estudiante_id, periodo)
     columnas = COMPONENTES
-    return _xlsx(f"boleta_{d['estudiante']['username']}.xlsx", {
+    hojas = {
         "Exámenes": [["Código", "Examen", "Fecha", "Puntuación", "Total", "Nota (0-100)", "Aprobado"]] + [
             [x["codigo"], x["nombre"], x["fecha"], x["puntuacion"], x["total"], x["nota"], "sí" if x["aprobado"] else "no"]
             for x in d["examenes"]
@@ -342,4 +376,11 @@ def excel_boleta(estudiante_id: int) -> Response:
         "Valor de cada componente": [["Materia", "Periodo", *[f"{ETIQUETAS_NOTA[c]} (valor)" for c in columnas]]] + [
             [n["materia"], n["periodo"], *[n["pesos"][c] for c in columnas]] for n in d["notas"]
         ],
-    })
+    }
+    if d["periodo"] is None:
+        hojas["Nota anual"] = [["Materia", "1.º período", "2.º período", "Nota anual (promedio)"]] + [
+            [a["materia"], "" if a["p1"] is None else a["p1"], "" if a["p2"] is None else a["p2"], a["anual"]]
+            for a in d["anual"]
+        ]
+    sufijo = "" if d["periodo"] is None else f"_P{d['periodo']}"
+    return _xlsx(f"boleta_{d['estudiante']['username']}{sufijo}.xlsx", hojas)
