@@ -116,6 +116,11 @@
           <p><span id="aj-suma" class="doc-pill"></span></p>
           <button class="btn btn-primary" id="btn-guardar-pesos">Guardar ponderación</button>
         </section>
+        <section aria-labelledby="aj-t5">
+          <h2 id="aj-t5">Contraseña del docente</h2>
+          <p class="doc-muted">Protege el panel docente. Cámbiala si alguien más la conoce; se guarda cifrada en este computador.</p>
+          <button class="btn btn-secondary" id="btn-cambiar-clave">Cambiar contraseña…</button>
+        </section>
         <section aria-labelledby="aj-t4">
           <h2 id="aj-t4">Cierre del curso lectivo</h2>
           <p class="doc-muted">Guarda una copia completa de la base y un Excel con las notas finales, y deja el sistema limpio para el siguiente curso.
@@ -134,6 +139,7 @@
       $('btn-guardar-ajustes').addEventListener('click', run(guardarAjustes));
       $('aj-pesos').addEventListener('input', sumarPesos);
       $('btn-guardar-pesos').addEventListener('click', run(guardarPesos));
+      $('btn-cambiar-clave').addEventListener('click', run(Panel.cambiarClaveDocente));
       $('btn-cerrar-curso').addEventListener('click', run(cerrarCurso));
     },
     usaContexto: true,

@@ -120,6 +120,7 @@ Panel.FRASES = {
   cambiar_seccion: 'Cambiaste a un estudiante de grupo', reiniciar_password: 'Reiniciaste una contraseña', reiniciar_seccion: 'Reiniciaste las contraseñas de un grupo',
   desbloquear_login: 'Desbloqueaste el acceso de un estudiante', reiniciar_intento: 'Permitiste repetir un examen', anular_intento: 'Anulaste un intento de examen',
   restaurar_intento: 'Restauraste un intento de examen', marcar_sospechoso: 'Marcaste un intento como sospechoso', quitar_sospechoso: 'Quitaste la marca de sospechoso',
+  exigir_cambio_clave: 'Pediste a un grupo que cambie su contraseña', cambiar_clave_docente: 'Cambiaste tu contraseña del panel',
   cerrar_intento: 'Cerraste un examen en curso', tiempo_extra: 'Diste tiempo extra', cierre_curso: 'Cerraste el curso lectivo',
 };
 Panel.frase = (accion) => Panel.FRASES[accion] || accion.replace(/_/g, ' ');
@@ -482,6 +483,35 @@ Panel.irA = async function (id) {
   }
 };
 
+// ========== CONTRASEÑA DEL DOCENTE ==========
+// Muestra el aviso fijo mientras se use la contraseña de fábrica (que es pública).
+Panel.avisoClave = function (deFabrica) {
+  $('doc-aviso-clave').hidden = !deFabrica;
+};
+
+Panel.cambiarClaveDocente = async function () {
+  for (;;) {
+    const datos = await Panel.dialogo({
+      titulo: 'Cambiar la contraseña del docente',
+      cuerpo: `<p class="doc-muted">Usa al menos 8 caracteres. Se guarda cifrada en este computador.</p>
+        <label class="doc-campo">Contraseña actual <input type="password" id="clave-actual" autocomplete="current-password"></label>
+        <label class="doc-campo">Contraseña nueva <input type="password" id="clave-nueva" autocomplete="new-password" minlength="8"></label>
+        <label class="doc-campo">Repite la nueva <input type="password" id="clave-repetir" autocomplete="new-password"></label>`,
+      botones: [{ texto: 'Cancelar', valor: null }, { texto: 'Cambiar contraseña', primario: true, valor: f => ({
+        actual: f.querySelector('#clave-actual').value, nueva: f.querySelector('#clave-nueva').value,
+        repetir: f.querySelector('#clave-repetir').value }) }],
+    });
+    if (!datos) return false;
+    if (datos.nueva !== datos.repetir) { Panel.toast('Las contraseñas nuevas no coinciden', 'error'); continue; }
+    try {
+      await Panel.json('/api/docente/cambiar-password', { method: 'POST', body: { actual: datos.actual, nueva: datos.nueva } });
+    } catch (e) { Panel.toast(e.message, 'error'); continue; }
+    Panel.avisoClave(false);
+    Panel.toast('Contraseña cambiada. Úsala la próxima vez que entres.');
+    return true;
+  }
+};
+
 // ========== CONTEXTO: grupo, período y materia compartidos por las pestañas ==========
 // Las pestañas con `usaContexto: true` leen Panel.contexto.materia() en lugar de tener su propio selector.
 Panel.contexto = {
@@ -491,6 +521,7 @@ Panel.contexto = {
   async cargar() {
     const [data, ajustes] = await Promise.all([Panel.json('/api/docente/materias'), Panel.json('/api/docente/ajustes')]);
     this.materias = data.materias;
+    Panel.avisoClave(ajustes.clave_de_fabrica);
     let guardada = null;
     try { guardada = Number(localStorage.getItem('contextoMateria')) || null; } catch (e) { /* sin almacenamiento */ }
     const periodo = Number(ajustes.ajustes.periodo_actual);
@@ -569,6 +600,7 @@ Panel.mostrarPanel = function () {
 
 document.addEventListener('DOMContentLoaded', () => {
   $('doc-login-btn').addEventListener('click', Panel.entrar);
+  $('doc-aviso-clave-btn').addEventListener('click', () => Panel.cambiarClaveDocente());
   $('doc-password').addEventListener('keypress', e => { if (e.key === 'Enter') Panel.entrar(); });
   $('doc-logout').addEventListener('click', () => Panel.salir());
   $('doc-nav').addEventListener('click', e => {

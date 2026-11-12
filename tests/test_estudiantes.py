@@ -130,3 +130,19 @@ def test_resumen_del_tablero(client):
     client.post(f"/api/examen/{CODIGO}/enviar", headers=h, json={"respuestas": {}})
     r = client.get("/api/docente/resumen", headers=hd).json()
     assert r["intentos"]["enviados"] == 1 and r["intentos"]["promedio"] == 0.0 and r["en_curso"] == []
+
+
+def test_exigir_cambio_de_clave_a_una_seccion_no_cambia_la_clave(client):
+    hd = _docente(client)
+    with database.get_db_context() as conn:
+        conn.execute("UPDATE estudiantes SET debe_cambiar_password = 0")
+        conn.commit()
+    r = client.post("/api/docente/estudiantes/exigir-cambio-seccion", headers=hd, json={"seccion": "11-1"})
+    assert r.status_code == 200 and r.json()["estudiantes"] >= 1
+    with database.get_db_context() as conn:
+        marcados = conn.execute("SELECT seccion, debe_cambiar_password FROM estudiantes").fetchall()
+    assert all((f["debe_cambiar_password"] == 1) == (f["seccion"] == "11-1") for f in marcados)
+    # entra con la misma clave de siempre, pero se le pide crear una nueva
+    d = client.post("/api/login", json={"username": "ana.perez", "password": "ANA1234"}).json()
+    assert d["ok"] and d["estudiante"]["debe_cambiar_password"] is True
+    assert client.post("/api/docente/estudiantes/exigir-cambio-seccion", json={"seccion": "11-1"}).status_code == 401

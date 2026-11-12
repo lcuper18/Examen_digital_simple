@@ -12,11 +12,22 @@ from backend import database, ratelimit, security
 
 router = APIRouter(prefix="/api", tags=["auth"])
 
-# Hash SHA-256 de la contraseña del docente (sobrescribible con DOCENTE_PASSWORD_HASH)
-TEACHER_PASSWORD_HASH = os.environ.get(
-    "DOCENTE_PASSWORD_HASH",
-    "849018898d5676cde9c6723b4604bd196d65e33c25304ec6e71fd7cc56af9a98",
-)
+# Clave de fábrica del docente (SHA-256). Solo sirve hasta que se cambia desde Ajustes: la nueva se guarda
+# con bcrypt en la base. Opcionalmente se puede fijar con la variable DOCENTE_PASSWORD_HASH.
+HASH_DE_FABRICA = "849018898d5676cde9c6723b4604bd196d65e33c25304ec6e71fd7cc56af9a98"
+TEACHER_PASSWORD_HASH = os.environ.get("DOCENTE_PASSWORD_HASH", HASH_DE_FABRICA)
+CLAVE_DOCENTE_AJUSTE = "docente_password_hash"
+
+
+def hash_docente(conn) -> str:
+    """Hash vigente: el guardado desde Ajustes, o el de la variable de entorno / de fábrica."""
+    fila = conn.execute("SELECT valor FROM ajustes WHERE clave = ?", (CLAVE_DOCENTE_AJUSTE,)).fetchone()
+    return fila["valor"] if fila else TEACHER_PASSWORD_HASH
+
+
+def clave_de_fabrica(conn) -> bool:
+    """True mientras el docente siga con la contraseña que viene en el código (que es pública)."""
+    return hash_docente(conn) == HASH_DE_FABRICA
 
 
 class LoginRequest(BaseModel):
@@ -160,7 +171,9 @@ def verificar_docente(request: VerificarDocenteRequest, http: Request) -> Verifi
     """
     clave = f"docente:{http.client.host if http.client else '?'}"
     ratelimit.verificar(clave)
-    if database.verify_password(request.password, TEACHER_PASSWORD_HASH):
+    with database.get_db_context() as conn:
+        vigente = hash_docente(conn)
+    if database.verify_password(request.password, vigente):
         ratelimit.limpiar(clave)
         token = security.create_token("docente", security.ROLE_DOCENTE, security.TOKEN_TTL_DOCENTE)
         return VerificarDocenteResponse(ok=True, token=token)

@@ -48,3 +48,30 @@ def test_barajado_es_determinista_y_conserva_la_respuesta_correcta():
     assert [p["tema"] for p in x] == sorted(p["tema"] for p in x)  # temas en su orden
     for p in x:
         assert p["opciones"][barajado.letra_correcta_mostrada(p)] == "B"
+
+
+def _entrar_docente(client, clave="docente2026"):
+    r = client.post("/api/verificar-docente", json={"password": clave}).json()
+    return {"Authorization": f"Bearer {r['token']}"} if r["ok"] else None
+
+
+def test_clave_de_fabrica_del_docente_se_detecta_y_se_cambia(client):
+    hd = _entrar_docente(client)
+    assert client.get("/api/docente/ajustes", headers=hd).json()["clave_de_fabrica"] is True
+
+    cambiar = lambda actual, nueva: client.post("/api/docente/cambiar-password", headers=hd, json={"actual": actual, "nueva": nueva})
+    assert cambiar("incorrecta", "NuevaClave2026").status_code == 400          # la actual debe ser correcta
+    assert cambiar("docente2026", "corta").status_code == 400                   # mínimo 8 caracteres
+    assert cambiar("docente2026", "docente2026").status_code == 400             # no puede seguir siendo la de fábrica
+    assert cambiar("docente2026", "NuevaClave2026").status_code == 200
+
+    # la nueva entra, la de fábrica ya no, y la base guarda un bcrypt (no la clave ni el SHA-256 público)
+    assert _entrar_docente(client, "docente2026") is None
+    hd = _entrar_docente(client, "NuevaClave2026")
+    assert hd is not None
+    d = client.get("/api/docente/ajustes", headers=hd).json()
+    assert d["clave_de_fabrica"] is False and "docente_password_hash" not in d["ajustes"]
+    with database.get_db_context() as conn:
+        guardado = conn.execute("SELECT valor FROM ajustes WHERE clave = 'docente_password_hash'").fetchone()[0]
+    assert guardado.startswith("$2") and "NuevaClave2026" not in guardado
+    assert client.post("/api/docente/cambiar-password", json={"actual": "x", "nueva": "OtraClave2026"}).status_code == 401

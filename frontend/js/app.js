@@ -380,12 +380,8 @@ function updateExamMetadata() {
 }
 
 function submitExam() {
-  // Detener el timer si está corriendo
-  if (timerInterval) {
-    clearInterval(timerInterval);
-    timerInterval = null;
-  }
-
+  // El reloj NO se detiene aquí: si el estudiante cancela el aviso de preguntas sin responder,
+  // debe seguir corriendo y el examen se envía solo al acabarse el tiempo. sendExam() lo detiene al enviar.
   const unanswered = answers.filter(a => a === null).length;
   if (unanswered > 0) {
     document.getElementById('warning-message').textContent =
@@ -1064,6 +1060,9 @@ function forceSubmit() {
     el.style.pointerEvents = 'none';
     el.style.opacity = '0.5';
   });
+
+  // Si el aviso de preguntas sin responder estaba abierto, se cierra: el tiempo terminó
+  closeWarningModal();
 
   // Detener el timer si no se hizo ya
   if (timerInterval) {

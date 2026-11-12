@@ -42,26 +42,26 @@ Acceso local: http://localhost:8090 · Red: http://IP:8090 (el puerto se cambia 
 | Variable | Uso |
 |----------|-----|
 | `PORT` | Puerto al ejecutar `python -m backend.main` (por defecto 8090). |
-| `DOCENTE_PASSWORD_HASH` | Hash de la contraseña del docente (SHA-256 hexadecimal o bcrypt). Si no se define, se usa un valor por defecto: **cámbialo antes de usarlo en producción**. |
+| `DOCENTE_PASSWORD_HASH` | Opcional. Hash (SHA-256 hexadecimal o bcrypt) de la contraseña inicial del docente. Normalmente no se usa: la contraseña se cambia desde **Ajustes** y se guarda cifrada en la base. |
 | `EXAMEN_SECRET_KEY` | Clave para firmar sesiones. Si no existe, se genera en `.secret_key`. |
 | `ESTUDIANTES_CSV` | Ruta alternativa al CSV de estudiantes. |
 
 ## Cómo funciona un examen
 
-1. El estudiante inicia sesión y escribe el código del examen.
+1. El estudiante inicia sesión (los estudiantes nuevos deben crear su propia contraseña) y escribe el código del examen.
 2. El servidor crea el intento, baraja preguntas (dentro de cada tema) y opciones, y calcula el tiempo restante. **Nunca envía las respuestas correctas.**
 3. Al enviar, el servidor califica y cierra el intento (uno por estudiante y examen).
 4. El docente ve nota y detalle en el panel docente (`/docente`) o con "Acceso docente" al terminar el examen.
 
 ## Panel docente (`/docente`)
 
-Se entra con la contraseña del docente.
+Se entra con la contraseña del docente. Mientras se use la contraseña de fábrica (que es pública, está en el código del proyecto), el panel muestra un aviso fijo con **Cambiar ahora**; también se cambia en **Ajustes → Contraseña del docente** (mínimo 8 caracteres, se guarda con bcrypt).
 
 - **Resumen:** tablero con totales, alertas que requieren atención (intentos vencidos, muchas salidas de pestaña, logins bloqueados, claves temporales pendientes), quién está presentando examen ahora y actividad reciente.
 - **Resultados:** lista de intentos con filtro por examen y sección, nota, estado (enviado / sin enviar), salidas de la pestaña y detalle pregunta por pregunta. Permite **reiniciar** un intento (el estudiante puede presentar el examen de nuevo) y exportar a CSV.
 - **Notas:** por materia (sección y periodo), tabla editable **en puntos**, como en las hojas del docente. Por defecto: Trabajo cotidiano 25, Tareas 10, Prueba 01 22.5, Prueba 02 22.5, Proyecto 15 y Asistencia 5 (suman 100; se pueden cambiar por materia en **Ajustes**). La nota final se calcula al escribir (un componente vacío cuenta como 0). El menú **Importar / exportar** agrupa las acciones: *Notas de los exámenes vinculados…* copia la nota de los exámenes que, en la pestaña Exámenes, se vincularon a esa materia y componente (pide confirmación porque reemplaza Prueba 1 y 2); *Un examen como prueba…* importa un código a mano como Prueba 1 o Prueba 2; *Hoja de notas (Excel o CSV)…* carga un CSV (`;`) o Excel en puntos (Id o Nombre, TC, Tareas, Prueba1, Prueba2, Proyecto, Asistencia); y *Descargar notas en CSV* exporta a Excel.
 
-- **Estudiantes:** reinicio de contraseña (clave temporal aleatoria que se muestra una sola vez; el estudiante debe crear la suya), desbloqueo de login, activar/desactivar, cambio de sección, alta, baja, importación CSV y hoja imprimible de credenciales por sección.
+- **Estudiantes:** **Pedir cambio de clave** a un grupo (cada estudiante crea su propia clave la próxima vez que entre, sin cambiarle la actual; no lo hagas durante un examen), reinicio de contraseña (clave temporal aleatoria que se muestra una sola vez; el estudiante debe crear la suya), desbloqueo de login, activar/desactivar, cambio de sección, alta, baja, importación CSV y hoja imprimible de credenciales por sección.
 - **Exámenes:** habilitar/deshabilitar, ventana de inicio y restricción por sección. Por intento: tiempo extra, cerrar y calificar, anular, marcar sospechoso y reiniciar. Las respuestas se guardan en el servidor mientras el estudiante responde.
 - **Reportes:** boleta del estudiante (ver abajo), resultado por examen (estadísticas, distribución, rendimiento por tema, clasificación), preguntas críticas y notas por sección y periodo. Cada uno se imprime o guarda como PDF desde el navegador y se exporta a Excel.
   - **Boleta del estudiante:** sigue el grupo elegido arriba (solo lista a los estudiantes de ese grupo). Se elige el **período**: 1.º, 2.º o **General** (todos los períodos), que agrega la tabla **Nota anual** (promedio simple de los períodos). Cada componente se muestra **en puntos sobre lo que vale** (por ejemplo `20 /25`), no en escala de 0 a 100. Los exámenes se asignan al período de la materia a la que están vinculados o, si no hay vínculo, por el sufijo del código (`EMP02` → 2.º período). El Excel respeta el período y, en General, agrega la hoja «Nota anual».

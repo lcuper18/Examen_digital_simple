@@ -7,6 +7,7 @@
     importar_estudiantes: 'Importó estudiantes', configurar_examen: 'Configuró examen',
     reiniciar_intento: 'Reinició intento', tiempo_extra: 'Dio tiempo extra', anular_intento: 'Anuló intento',
     restaurar_intento: 'Restauró intento', marcar_sospechoso: 'Marcó sospechoso', quitar_sospechoso: 'Quitó marca de sospechoso',
+    exigir_cambio_clave: 'Pidió cambio de clave a un grupo', cambiar_clave_docente: 'Cambió su contraseña',
     cerrar_intento: 'Cerró intento', guardar_notas: 'Guardó notas', importar_prueba: 'Importó prueba a notas',
   };
 

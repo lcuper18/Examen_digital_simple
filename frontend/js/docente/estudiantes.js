@@ -200,6 +200,19 @@
     await hojaCredenciales(`Credenciales · sección ${seccion}`, r.credenciales.map(c => ({ ...c, seccion })));
   }
 
+  async function exigirCambioSeccion() {
+    const seccion = $('e-seccion').value;
+    if (!seccion) return Panel.toast('Elige primero una sección en el filtro', 'error');
+    const ok = await Panel.confirmar(
+      `Cada estudiante activo de ${seccion} tendrá que crear su propia contraseña la próxima vez que entre. No se les cambia la actual. ` +
+      'No lo hagas mientras presentan un examen: no podrían enviarlo hasta cambiarla.',
+      { titulo: 'Pedir cambio de contraseña', texto: 'Pedir cambio' });
+    if (!ok) return;
+    const r = await Panel.json('/api/docente/estudiantes/exigir-cambio-seccion', { method: 'POST', body: { seccion } });
+    await cargar();
+    Panel.toast(`Se pidió el cambio de contraseña a ${r.estudiantes} estudiantes de ${seccion}`);
+  }
+
   Panel.registrar('estudiantes', 'Estudiantes', {
     init(el) {
       el.innerHTML = `
@@ -209,6 +222,7 @@
           <button class="btn btn-primary" id="e-nuevo">Nuevo estudiante</button>
           <button class="btn btn-secondary" id="e-importar">Importar CSV</button>
           <button class="btn btn-secondary" id="e-credenciales">Credenciales de sección</button>
+          <button class="btn btn-secondary" id="e-exigir-cambio">Pedir cambio de clave</button>
           <button class="btn btn-secondary" id="e-encargados">Importar encargados (Excel)…</button>
         </div>
         <p id="e-resumen" class="doc-muted" aria-live="polite"></p>
@@ -233,6 +247,7 @@
       $('e-nuevo').addEventListener('click', run(nuevo));
       $('e-importar').addEventListener('click', run(importar));
       $('e-credenciales').addEventListener('click', run(credencialesSeccion));
+      $('e-exigir-cambio').addEventListener('click', run(exigirCambioSeccion));
       $('e-encargados').addEventListener('click', run(importarEncargados));
       $('tabla-estudiantes').addEventListener('click', e => {
         if (e.target.dataset.ficha) run(() => Panel.abrirFicha(Number(e.target.dataset.ficha)))();

@@ -8,7 +8,8 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 
-from backend import bitacora, database, security
+from backend import bitacora, database, ratelimit, security
+from backend.routes.auth import CLAVE_DOCENTE_AJUSTE, HASH_DE_FABRICA, clave_de_fabrica, hash_docente
 from backend.version import VERSION
 
 router = APIRouter(
@@ -28,7 +29,34 @@ def config_publica() -> dict[str, Any]:
 @router.get("/ajustes")
 def obtener_ajustes() -> dict[str, Any]:
     with database.get_db_context() as conn:
-        return {"ok": True, "ajustes": database.leer_ajustes(conn)}
+        return {"ok": True, "ajustes": database.leer_ajustes(conn), "clave_de_fabrica": clave_de_fabrica(conn)}
+
+
+class CambiarClaveDocente(BaseModel):
+    actual: str
+    nueva: str
+
+
+@router.post("/cambiar-password")
+def cambiar_password_docente(request: CambiarClaveDocente) -> dict[str, Any]:
+    """Cambia la contraseña del docente (se guarda con bcrypt). Pide la actual y una nueva distinta de la de fábrica."""
+    ratelimit.verificar("docente-cambio")
+    with database.get_db_context() as conn:
+        if not database.verify_password(request.actual, hash_docente(conn)):
+            ratelimit.registrar_fallo("docente-cambio", maximo=5)
+            raise HTTPException(status_code=400, detail="La contraseña actual no es correcta")
+        if len(request.nueva) < 8:
+            raise HTTPException(status_code=400, detail="La nueva contraseña debe tener al menos 8 caracteres")
+        if database.verify_password(request.nueva, HASH_DE_FABRICA) or request.nueva == request.actual:
+            raise HTTPException(status_code=400, detail="Elige una contraseña distinta de la actual y de la de fábrica")
+        conn.execute(
+            "INSERT INTO ajustes (clave, valor) VALUES (?, ?) ON CONFLICT (clave) DO UPDATE SET valor = excluded.valor",
+            (CLAVE_DOCENTE_AJUSTE, database.hash_password(request.nueva)),
+        )
+        bitacora.registrar(conn, "cambiar_clave_docente", "")
+        conn.commit()
+    ratelimit.limpiar("docente-cambio")
+    return {"ok": True}
 
 
 class GuardarAjustes(BaseModel):

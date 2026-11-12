@@ -130,7 +130,9 @@ RESPALDOS_DIR = PROJECT_ROOT / "respaldos"
 def leer_ajustes(conn: sqlite3.Connection) -> dict[str, str]:
     """Ajustes guardados sobre los valores por defecto."""
     ajustes = dict(AJUSTES_DEFAULT)
-    ajustes.update({r["clave"]: r["valor"] for r in conn.execute("SELECT clave, valor FROM ajustes")})
+    # El hash de la contraseña del docente vive en la misma tabla, pero nunca se devuelve como ajuste
+    ajustes.update({r["clave"]: r["valor"] for r in conn.execute("SELECT clave, valor FROM ajustes")
+                    if r["clave"] != "docente_password_hash"})
     return ajustes
 
 
@@ -420,8 +422,8 @@ def ensure_students() -> int:
             try:
                 cursor.execute(
                     """INSERT INTO estudiantes
-                    (cedula, nombre, apellido1, apellido2, seccion, username, password_hash)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                    (cedula, nombre, apellido1, apellido2, seccion, username, password_hash, debe_cambiar_password)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, 1)""",
                     (cedula, nombre, apellido1, apellido2, seccion, username, password_hash)
                 )
                 insertados += 1

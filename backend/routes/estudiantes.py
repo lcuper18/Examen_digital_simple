@@ -177,6 +177,21 @@ class ReiniciarSeccion(BaseModel):
     seccion: str
 
 
+@router.post("/exigir-cambio-seccion")
+def exigir_cambio_seccion(request: ReiniciarSeccion) -> dict[str, Any]:
+    """
+    Obliga a cada estudiante activo de la sección a crear su propia contraseña la próxima vez que entre,
+    sin cambiarle la actual. Las claves iniciales se deducen del nombre y la cédula, así que conviene hacerlo.
+    """
+    with database.get_db_context() as conn:
+        cantidad = conn.execute(
+            "UPDATE estudiantes SET debe_cambiar_password = 1 WHERE seccion = ? AND activo = 1", (request.seccion,)
+        ).rowcount
+        bitacora.registrar(conn, "exigir_cambio_clave", f"{request.seccion}: {cantidad} estudiantes")
+        conn.commit()
+    return {"ok": True, "seccion": request.seccion, "estudiantes": cantidad}
+
+
 @router.post("/reiniciar-seccion")
 def reiniciar_seccion(request: ReiniciarSeccion) -> dict[str, Any]:
     """Genera contraseñas temporales para toda una sección (hoja de credenciales)."""
