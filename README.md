@@ -1,6 +1,6 @@
-# Examen Digital Simple v2
+# Lectiva
 
-Plataforma de examen digital con login de estudiantes, calificación en el servidor y registro de intentos.
+Plataforma de gestión educativa: exámenes en línea, asistencia, actividades, notas por componente, reportes e informes, con panel docente y app del estudiante. (Antes «Examen Digital».)
 
 ## Requisitos
 
@@ -109,7 +109,7 @@ Al arrancar y cada hora, el servidor guarda una copia de la base de datos por d�
 
 ## Abrir el sistema con un clic (Mac)
 
-Para instalar la aplicación **Examen Digital** (una sola vez, o cada vez que cambie la versión):
+Para instalar la aplicación **Lectiva** (una sola vez, o cada vez que cambie la versión):
 
 ```bash
 bash scripts/mac/instalar_app.sh

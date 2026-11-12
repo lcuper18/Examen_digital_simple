@@ -1,9 +1,9 @@
 ---
 name: crear-examen-digital
-description: Elabora un examen de selección única para la plataforma Examen Digital (JSON en data/examenes + código en data/codigos.json) a partir del documento de temas, la tabla de especificaciones y los materiales de estudio del docente. Úsala cuando el docente pida "el examen de <subárea/grupo>", "un examen nuevo para la plataforma" o similar.
+description: Elabora un examen de selección única para la plataforma Lectiva (JSON en data/examenes + código en data/codigos.json) a partir del documento de temas, la tabla de especificaciones y los materiales de estudio del docente. Úsala cuando el docente pida "el examen de <subárea/grupo>", "un examen nuevo para la plataforma" o similar.
 ---
 
-# Crear un examen para la plataforma Examen Digital
+# Crear un examen para la plataforma Lectiva
 
 Resultado: `data/examenes/<Archivo>.json`, la entrada en `data/codigos.json`, una prueba automática y una copia en Word para revisión del docente. Los ejemplos reales son `ADM02` y `GCS02` (ver `ejemplo_banco_GCS02.json`).
 

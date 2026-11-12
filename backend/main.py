@@ -1,6 +1,6 @@
 """
-Examen Digital Simple v2 - Backend FastAPI
-Plataforma de examen digital con login de estudiantes y registro de intentos.
+Lectiva - Backend FastAPI
+Plataforma de gestión educativa: exámenes, asistencia, actividades, notas, reportes e informes.
 """
 import asyncio
 import os
@@ -47,8 +47,8 @@ async def _respaldo_diario() -> None:
 
 # Crear aplicación FastAPI (el frontend se sirve desde el mismo origen: no se requiere CORS)
 app = FastAPI(
-    title="Examen Digital",
-    description="API para plataforma de examen digital",
+    title="Lectiva",
+    description="API de Lectiva, plataforma de gestión educativa",
     version=VERSION,
     lifespan=lifespan,
 )

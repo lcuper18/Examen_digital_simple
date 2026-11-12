@@ -1,5 +1,5 @@
 #!/bin/bash
-# Examen Digital Simple v2 - Script de inicio (Linux/Mac)
+# Lectiva - Script de inicio (Linux/Mac)
 # Uso: bash scripts/iniciar.sh
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -24,7 +24,7 @@ IP=$(hostname -I 2>/dev/null | awk '{print $1}')
 
 echo "=============================================="
 VERSION=$(python3 -c "from backend.version import VERSION; print(VERSION)" 2>/dev/null || echo "?")
-echo "  EXAMEN DIGITAL  ·  versión $VERSION"
+echo "  LECTIVA  ·  versión $VERSION"
 echo "=============================================="
 echo ""
 echo "  Acceso local:   http://localhost:8090"

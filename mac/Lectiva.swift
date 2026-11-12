@@ -1,4 +1,4 @@
-// Examen Digital para Mac: abre el sistema con un clic.
+// Lectiva para Mac: abre el sistema con un clic.
 // Levanta el servidor, muestra la versión y la dirección con la que se conectan los estudiantes (con QR),
 // vigila que la IP no cambie y detiene el servidor (liberando el puerto) al salir.
 import Cocoa
@@ -165,7 +165,7 @@ final class Servidor {
     }
 
     /// Detiene el servidor y deja libre el puerto: el proceso que lanzó esta app y, si quedó otro servidor
-    /// de Examen Digital escuchando en el puerto (iniciado desde la terminal o por otra copia), también ese.
+    /// de Lectiva escuchando en el puerto (iniciado desde la terminal o por otra copia), también ese.
     func detener() {
         temporizador?.invalidate()
         if let p = proceso, p.isRunning {
@@ -193,7 +193,7 @@ final class Servidor {
         return String(data: datos, encoding: .utf8) ?? ""
     }
 
-    /// Termina a quien siga escuchando en el puerto, pero solo si es el servidor de Examen Digital
+    /// Termina a quien siga escuchando en el puerto, pero solo si es el servidor de Lectiva
     /// (uvicorn con backend.main:app); nunca otro programa que use ese puerto.
     private func liberarPuerto() {
         func escuchando() -> [pid_t] {
@@ -242,7 +242,7 @@ final class Ventana: NSObject, NSApplicationDelegate, NSWindowDelegate {
         construirMenu()
         construirVentana()
         actividad = ProcessInfo.processInfo.beginActivity(options: [.idleSystemSleepDisabled, .userInitiated],
-                                                          reason: "Servidor de Examen Digital en el aula")
+                                                          reason: "Servidor de Lectiva en el aula")
         refrescarIP(inicial: true)
         temporizadorIP = Timer.scheduledTimer(withTimeInterval: 5, repeats: true) { [weak self] _ in self?.refrescarIP(inicial: false) }
         servidor.iniciar()
@@ -267,10 +267,10 @@ final class Ventana: NSObject, NSApplicationDelegate, NSWindowDelegate {
             guard let r = ruta, FileManager.default.fileExists(atPath: r + "/backend/main.py") else { return nil }
             return URL(fileURLWithPath: r)
         }
-        if let u = valida(Bundle.main.object(forInfoDictionaryKey: "ExamenDigitalProyecto") as? String) { return u }
+        if let u = valida(Bundle.main.object(forInfoDictionaryKey: "LectivaProyecto") as? String) { return u }
         if let u = valida(UserDefaults.standard.string(forKey: "proyecto")) { return u }
         let panel = NSOpenPanel()
-        panel.message = "Elige la carpeta del proyecto Examen_digital_simple"
+        panel.message = "Elige la carpeta del proyecto de Lectiva"
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
         NSApp.activate(ignoringOtherApps: true)
@@ -290,7 +290,7 @@ final class Ventana: NSObject, NSApplicationDelegate, NSWindowDelegate {
         let app = NSMenuItem()
         barra.addItem(app)
         let menu = NSMenu()
-        menu.addItem(withTitle: "Salir de Examen Digital", action: #selector(pedirSalir), keyEquivalent: "q").target = self
+        menu.addItem(withTitle: "Salir de Lectiva", action: #selector(pedirSalir), keyEquivalent: "q").target = self
         app.submenu = menu
         NSApp.mainMenu = barra
     }
@@ -307,7 +307,7 @@ final class Ventana: NSObject, NSApplicationDelegate, NSWindowDelegate {
         icono.imageScaling = .scaleProportionallyUpOrDown
         icono.widthAnchor.constraint(equalToConstant: 64).isActive = true
         icono.heightAnchor.constraint(equalToConstant: 64).isActive = true
-        let titulo = NSTextField(labelWithString: "Examen Digital")
+        let titulo = NSTextField(labelWithString: "Lectiva")
         etiqueta(titulo, tam: 26, peso: .bold)
         versionTxt.stringValue = "Versión \(version)"
         etiqueta(versionTxt, tam: 13, color: .secondaryLabelColor)
@@ -369,7 +369,7 @@ final class Ventana: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
         ventana = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 540, height: 680),
                            styleMask: [.titled, .closable, .miniaturizable], backing: .buffered, defer: false)
-        ventana.title = "Examen Digital"
+        ventana.title = "Lectiva"
         ventana.delegate = self
         ventana.isReleasedWhenClosed = false
         let contenido = NSView()

@@ -1,5 +1,5 @@
 """
-Backend package for Examen Digital Simple v2.
+Backend de Lectiva, plataforma de gestión educativa.
 """
 from . import database
 from .routes import auth_router, examenes_router, intentos_router

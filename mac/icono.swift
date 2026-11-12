@@ -1,4 +1,4 @@
-// Dibuja el icono de Examen Digital (1024 x 1024) y lo guarda como PNG: swift icono.swift salida.png
+// Dibuja el icono de Lectiva (1024 x 1024) y lo guarda como PNG: swift icono.swift salida.png
 import Cocoa
 
 let lado: CGFloat = 1024

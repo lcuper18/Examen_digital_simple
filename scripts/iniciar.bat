@@ -1,10 +1,10 @@
 @echo off
 setlocal enabledelayedexpansion
 chcp 65001 >nul 2>&1
-title Examen Digital - Servidor
+title Lectiva - Servidor
 
 echo ==============================================
-echo   EXAMEN DIGITAL - INICIANDO SERVIDOR
+echo   LECTIVA - INICIANDO SERVIDOR
 echo ==============================================
 echo.
 

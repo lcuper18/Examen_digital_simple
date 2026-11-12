@@ -1,5 +1,5 @@
 """
-Database module for Examen Digital.
+Base de datos de Lectiva.
 Provides SQLite connection and table creation.
 """
 import csv

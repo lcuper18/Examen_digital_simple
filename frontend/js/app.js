@@ -343,7 +343,7 @@ function generateDynamicTemaGroups(questions) {
 function updateExamMetadata() {
   // Si no hay examData, limpiar los campos
   if (!examData || !examData.titulo) {
-    document.getElementById('exam-title-header').textContent = 'Examen Digital';
+    document.getElementById('exam-title-header').textContent = 'Examen';
     document.getElementById('exam-subtitle-header').textContent = 'Cargando...';
     document.getElementById('exam-specialty').textContent = '';
     document.getElementById('exam-professor').textContent = '';
@@ -351,7 +351,7 @@ function updateExamMetadata() {
     return;
   }
 
-  document.getElementById('exam-title-header').textContent = examData.titulo || 'Examen Digital';
+  document.getElementById('exam-title-header').textContent = examData.titulo || 'Examen';
   document.getElementById('exam-subtitle-header').textContent =
     `${examData.institucion || ''} · ${examData.nivel || ''} · ${questions.length} preguntas`;
 
@@ -683,7 +683,7 @@ function createPDF() {
 
   doc.setFontSize(12);
   doc.setFont("helvetica", "normal");
-  doc.text("Examen Digital - Resultados", 105, 28, { align: "center" });
+  doc.text("Lectiva - Resultados del examen", 105, 28, { align: "center" });
 
   // Línea separadora
   doc.setLineWidth(0.5);
@@ -807,7 +807,7 @@ function createPDF() {
     doc.setFontSize(9);
     doc.setTextColor(128);
     doc.text(`Página ${i} de ${pageCount}`, 105, 290, { align: "center" });
-    doc.text(`${institucionNombre} - Examen Digital`, 20, 290);
+    doc.text(`${institucionNombre} - Lectiva`, 20, 290);
     doc.text(new Date().toLocaleDateString(), 170, 290);
   }
 

@@ -1,4 +1,4 @@
-# Plan de Desarrollo: Examen Digital v3
+# Plan de Desarrollo: Lectiva (antes Examen Digital) v3
 
 ## Panel de Administración Docente + Despliegue en Producción
 
