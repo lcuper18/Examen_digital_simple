@@ -2,7 +2,7 @@
 
 Lectiva (antes «Examen Digital») es una plataforma de gestión educativa para el aula: exámenes en línea, asistencia,
 actividades con rúbrica, notas por componente, reportes e informes, con panel docente y app del estudiante.
-Versión actual: **4.0.0** (definida en `backend/version.py`).
+Versión actual: **4.1.0** (definida en `backend/version.py`).
 
 ---
 
@@ -34,6 +34,7 @@ El servidor corre en la computadora del docente, dentro de la red del aula; los 
 | v1 | abr-may 2026 | Examen estático cargado desde JSON, con diseño propio y banco de preguntas por especialidad. |
 | v2 | jun 2026 | Backend FastAPI + SQLite, login de estudiantes, códigos de examen, PDF de resultados, scripts de inicio para Mac, Linux y Windows. |
 | v3 | oct-nov 2026 | Calificación en el servidor con sesión firmada; seguridad (bcrypt, límite de intentos, barajado por estudiante); **panel docente** modular (resultados, notas, estudiantes, exámenes, reportes, boleta, Excel); exámenes ADM02, GCS02, EMP02 y SQA02 y la skill `crear-examen-digital`; **fases 0-5** (ajustes y ponderación por materia, asistencia por lección, actividades con rúbrica, acta e informes, «Mis notas» con publicación controlada, ficha de seguimiento y cierre del curso lectivo); **etapas de diseño 1-5** (sistema de diseño claro/oscuro, menú lateral y selector global, pasar lista táctil, inicio útil, app del estudiante accesible); respaldos automáticos; app de Mac. |
+| v4.1.0 | nov 2026 | Contraseña del docente editable desde Ajustes; reloj del examen corregido; cambio de clave obligatorio para estudiantes nuevos y «Pedir cambio de clave» por grupo; plantilla del colegio en Reportes. |
 | **v4.0.0 · Lectiva** | nov 2026 | Cambio de nombre a Lectiva; selector Grupo/Período con botones de un toque y aviso al cambiar la materia; menú **Importar / exportar** agrupado; boleta limitada al grupo elegido, con período 1.º, 2.º o General (nota anual) y componentes en puntos sobre su valor; puerto 8090 (el 8001 chocaba con Packet Tracer); «Detener servidor y salir» libera el puerto; encabezados sin caché para evitar interfaz sin estilos. |
 
 ### Sobre el plan v3 original
@@ -45,23 +46,59 @@ ponderaciones configurables, reportes con Excel y una suite de pruebas.
 
 ---
 
-## Pendientes
+## Hecho en la ronda de mejoras (v4.1.0)
 
-### Datos y funcionalidad
-- [ ] **Vincular cada examen a su materia y componente** en la pestaña Exámenes (hoy ninguno lo está). Con el vínculo, «Notas de los exámenes vinculados» importa Prueba 1/2 con un clic, y la boleta ya no depende del sufijo del código para saber el período.
-- [ ] Revisar con el docente la nota anual (hoy promedio simple de los períodos) por si el reglamento pide otra fórmula.
+- [x] **Contraseña del docente editable desde Ajustes** (guardada con bcrypt). Mientras se use la de fábrica, que es pública, el panel muestra un aviso fijo con «Cambiar ahora».
+- [x] **Reloj del examen:** ya no se congela si el estudiante cancela el aviso de preguntas sin responder; el examen se envía solo al acabarse el tiempo.
+- [x] **Claves de estudiantes:** los estudiantes nuevos deben cambiar su clave al entrar y el docente puede pedirlo a un grupo con «Pedir cambio de clave» en Estudiantes.
+- [x] **Plantilla del colegio:** Reportes rellena el CSV del sistema del colegio (Prueba = Prueba 1 + Prueba 2, puntos con punto decimal).
+
+---
+
+## Pendientes priorizados
+
+### Prioridad alta: robustez del examen y de los datos
+- [ ] **Envío doble y arranque simultáneo del examen:** dos envíos a la vez pueden pasar la verificación y el último sobrescribe la nota; dos inicios simultáneos dan error 500 (`backend/routes/examenes.py`). Bloquear con `UPDATE … WHERE fecha_fin IS NULL` y capturar el índice único.
+- [ ] **Reintento sin conexión:** si falla el envío no hay reintento automático ni escucha de `online`; las respuestas pueden perderse (`frontend/js/app.js`).
+- [ ] **Reanudar el examen tras recargar** sin volver a escribir el código.
+- [ ] **Exámenes en curso:** deshabilitar un examen o pasar su fecha límite no detiene los intentos abiertos; agregar «cerrar y calificar a todos».
+- [ ] **Claves foráneas apagadas:** al borrar un estudiante quedan asistencia, calificaciones y observaciones huérfanas (`backend/routes/estudiantes.py`).
+- [ ] **Respaldo fuera del disco:** elegir en Ajustes una carpeta externa (iCloud, Drive, USB); hoy las copias están en el mismo equipo.
+- [ ] **Límite de tamaño** en las cargas de archivos (CSV y Excel).
+- [ ] **Sesión del estudiante:** invalidar el token al reiniciar su clave (hoy dura 12 horas).
+
+### Prioridad media: uso diario del docente
+- [ ] **Vínculo examen-materia:** mostrar a qué materia está vinculado cada examen, permitir varias materias o secciones y elegir el examen desde una lista en «Un examen como prueba…». Hoy ninguno está vinculado y la boleta usa el sufijo del código.
+- [ ] **Ajustes sin materias:** la pestaña usa el selector de materia y queda oculta si no hay ninguna; separar los datos institucionales y la contraseña del contexto.
+- [ ] **Resultados:** búsqueda por estudiante, paginación y menú de acciones como en las otras pestañas.
+- [ ] **Bitácora:** filtros y etiquetas legibles (unificar con `Panel.FRASES`).
+- [ ] **Confirmaciones y avisos:** activar/desactivar estudiante, borrar una observación de la ficha, y aviso al salir con cambios sin guardar.
+- [ ] **Cambio de sección** con lista en vez de texto libre; secciones permitidas del examen con casillas.
+- [ ] **Cierre del curso:** reiniciar también la configuración de exámenes para que no se repitan códigos viejos.
+- [ ] Revisar con el docente la **nota anual** (hoy promedio simple de los períodos).
+
+### Prioridad media: app del estudiante
+- [ ] **PWA:** manifest, ícono y `theme-color` para instalarla en el celular.
+- [ ] **Reloj basado en la hora de fin** en lugar de un contador, para que no se desfase si el teléfono se bloquea.
+- [ ] **Accesibilidad:** avisos y resultados como diálogos reales (foco, `aria-modal`) y estados que no dependan solo del color.
+- [ ] **«Mis notas»:** cerrar sesión si el token venció.
+
+### Diseño pendiente
+- [ ] Resumen compacto del selector de contexto en el celular (una línea que abre una hoja).
+- [ ] Título de la sección junto al selector.
+- [ ] Revisar los botones segmentados en el tema claro.
 
 ### Idiomas y marca
-- [ ] **Internacionalización:** separar los textos de la interfaz en archivos de idioma y agregar un selector (inglés, francés, portugués y chino simplificado; hoy todo está en español).
-- [ ] Nombre de marca en chino simplificado, elegido por significado y revisado por un hablante nativo.
-- [ ] **Verificar la marca y el dominio «Lectiva»** (base de marcas de la OMPI, Registro Nacional de Costa Rica; dominios `.com`, `.app`, `.cr`).
+- [ ] **Internacionalización:** separar los textos en archivos de idioma y agregar un selector (inglés, francés, portugués y chino simplificado; hoy todo está en español).
+- [ ] Nombre de marca en chino simplificado, revisado por un hablante nativo.
+- [ ] **Verificar la marca y el dominio «Lectiva»** (OMPI, Registro Nacional de Costa Rica; `.com`, `.app`, `.cr`).
 
-### Diseño
-- [ ] Resumen compacto del selector de contexto en el celular (una línea que abre una hoja con Grupo, Período y Materia).
-- [ ] Título de la sección junto al selector, para que se vea en qué pestaña se está.
-- [ ] Revisar el aspecto de los botones segmentados en el tema claro y con distintos navegadores.
+### Calidad interna
+- [ ] Unificar utilidades repetidas (`num`, fechas, etiquetas de componentes, `escapeHtml`) en `core.js` y quitar código muerto.
+- [ ] **Rendimiento:** cachear `codigos.json` y los exámenes; evitar recalcular `_filas` por materia en la boleta y las alertas.
+- [ ] **Pruebas** para portal, asistencia, seguimiento, bitácora y `/red`.
 
 ### Opcional
-- [ ] Renombrar la carpeta del proyecto y el repositorio de GitHub (requiere reinstalar la app de Mac, que guarda la ruta).
+- [ ] Renombrar la carpeta del proyecto y el repositorio de GitHub (obliga a reinstalar la app de Mac).
 - [ ] Renombrar el archivo de base de datos y la variable `EXAMEN_SECRET_KEY` con una migración que no pierda datos.
-- [ ] Despliegue en la nube con HTTPS, solo si se necesita acceso fuera del aula (lo que quedó del plan v3).
+- [ ] Despliegue en la nube con HTTPS, solo si se necesita acceso fuera del aula.
