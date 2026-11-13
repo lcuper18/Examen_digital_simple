@@ -11,11 +11,11 @@ Versión actual: **4.7.0** (definida en `backend/version.py`).
 | Componente | Tecnología |
 |------------|-----------|
 | Servidor | Python 3.12 + FastAPI + Uvicorn, puerto **8090** |
-| Base de datos | SQLite (modo WAL), archivo `examen_db.sqlite`; copia diaria en `respaldos/` (últimas 30) |
-| Seguridad | Contraseñas con bcrypt, sesiones firmadas, límite de intentos de login (`ratelimit.py`), bitácora de acciones |
+| Base de datos | SQLite (modo WAL), archivo `examen_db.sqlite`; copia diaria en `respaldos/` (últimas 30) y copia externa horaria verificada en la carpeta que se elija en Ajustes (iCloud, disco o USB) |
+| Seguridad | Contraseñas con bcrypt (la del docente se cambia desde Ajustes), sesiones firmadas con versión (reiniciar o cambiar la clave de un estudiante cierra sus sesiones), límite de intentos de login (`ratelimit.py`), claves foráneas activas, límite de tamaño en las cargas (5 MB), bitácora de acciones |
 | Interfaz | HTML, CSS y JavaScript sin frameworks; tema claro/oscuro; PDF con jsPDF; Excel con openpyxl |
 | Panel docente | `/docente` (`frontend/docente.html` + un módulo por pestaña en `frontend/js/docente/`) |
-| App del estudiante | `/` (`frontend/index.html`): examen, «Mis notas», pensada para el celular |
+| App del estudiante | `/` (`frontend/index.html`): examen con reintento si se cae la red, «Mis notas»; se puede añadir a la pantalla de inicio del celular |
 | App de Mac | `mac/Lectiva.swift` (Swift/AppKit): levanta el servidor local, muestra la dirección y el QR para los estudiantes, lo apaga al salir |
 | Pruebas | pytest (`tests/`) |
 
@@ -73,6 +73,21 @@ ponderaciones configurables, reportes con Excel y una suite de pruebas.
 - [x] **Respaldo fuera del equipo:** carpeta externa elegida en Ajustes (sugiere iCloud Drive y discos conectados), copia horaria verificada y atómica, últimas 30, «Respaldar ahora», aviso en el Inicio y paso en «Primeros pasos».
 - [x] **Vínculo examen-materia:** un examen puede alimentar las notas de varias materias, cada una con su componente (tabla `examen_vinculos`, con migración automática de los vínculos anteriores). Exámenes muestra «Va a las notas de» y marca «Sin vincular»; Configurar tiene la lista de materias por período; «Un examen como prueba…» elige de una lista.
 - [x] **Plantilla del colegio:** Reportes rellena el CSV del sistema del colegio (Prueba = Prueba 1 + Prueba 2, puntos con punto decimal).
+
+---
+
+## Para retomar (cierre del 12 de noviembre de 2026)
+
+Estado: la plataforma está en la **versión 4.7.0**, subida a GitHub (`master`) y con la app de Mac reinstalada. Pasan las 115 pruebas.
+
+**Pendiente de tu lado (no se puede hacer desde el código):**
+- Activar la **copia de respaldo externa** en Ajustes → «Copia de respaldo externa» (hoy tus datos solo están en el computador).
+- Cambiar la **contraseña del docente** si todavía es la de fábrica (aviso amarillo del panel).
+- Decidir qué hacer con las **5 notas** de Prueba 2 que parecen ajustes manuales (GCS02: Calderón, Mena; SQA02: Elizondo, Moreno, Sibaja) **antes** de pulsar «Notas de los exámenes vinculados…»: importar reemplaza lo que haya en Prueba 1 y 2. Los cuatro exámenes del II Período ya están vinculados a Prueba 2.
+- Probar la app del estudiante en un **celular real** (añadir a la pantalla de inicio, examen, bloqueo de pantalla).
+- Probar la **plantilla del colegio** con un archivo que tenga decimales para confirmar que su sistema acepta el punto decimal.
+
+**Siguiente en el desarrollo (sugerido):** secciones permitidas del examen con casillas; reiniciar la configuración de exámenes al cerrar el curso; revisar la nota anual; luego el diseño del selector en el celular y, más adelante, idiomas y marca.
 
 ---
 
