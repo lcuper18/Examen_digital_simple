@@ -274,12 +274,12 @@ def importar_prueba(request: ImportarPrueba) -> dict[str, Any]:
         else:
             pares = [
                 (r["componente"], r["codigo"]) for r in conn.execute(
-                    "SELECT codigo, componente FROM examenes_config "
+                    "SELECT codigo, componente FROM examen_vinculos "
                     "WHERE materia_id = ? AND componente IN ('prueba01', 'prueba02')", (materia["id"],))
                 if request.componente in (None, r["componente"])
             ]
             if not pares:
-                raise HTTPException(status_code=400, detail="Esta materia no tiene exámenes vinculados")
+                raise HTTPException(status_code=400, detail="Esta materia no tiene exámenes vinculados. Vincúlalos en la pestaña Exámenes (Configurar…)")
         importadas = sum(_importar(conn, materia, comp, codigo) for comp, codigo in pares)
         conn.commit()
     return {"ok": True, "importadas": importadas, "examenes": [c for _, c in pares]}

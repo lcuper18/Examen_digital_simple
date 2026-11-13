@@ -353,3 +353,10 @@
   .doc-menu-item { min-height: 48px; }
 }
 .rep-valor { color: var(--text-muted); font-size: var(--text-xs); }
+
+/* Vínculo examen-materia (diálogo Configurar de Exámenes) */
+.doc-vinculos-grupo { margin: 0 0 10px; padding: 8px 12px; border: 1px solid var(--border-medium); border-radius: var(--radius-sm); }
+.doc-vinculos-grupo legend { padding: 0 6px; font-weight: 700; font-size: var(--text-sm); color: var(--text-secondary); }
+.doc-vinculo-fila { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 0; }
+.doc-vinculo-fila label { display: flex; align-items: center; gap: 8px; flex: 1; font-size: var(--text-sm); color: var(--text-primary); }
+.doc-vinculo-fila select { width: auto; min-width: 110px; }

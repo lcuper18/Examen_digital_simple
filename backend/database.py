@@ -372,9 +372,25 @@ def init_db() -> int:
             )
         """)
         _agregar_columnas(cursor, "examenes_config", {
-            "materia_id": "INTEGER",  # materia y componente (prueba01/prueba02) donde se importa la nota
+            "materia_id": "INTEGER",  # obsoleto: los vínculos viven en examen_vinculos (se copian al migrar)
             "componente": "TEXT",
         })
+
+        # Un examen puede alimentar las notas de varias materias (p. ej. el mismo examen en 11-1 y 11-2)
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS examen_vinculos (
+                codigo TEXT NOT NULL,
+                materia_id INTEGER NOT NULL,
+                componente TEXT NOT NULL,
+                PRIMARY KEY (codigo, materia_id),
+                FOREIGN KEY (materia_id) REFERENCES materias(id)
+            )
+        """)
+        cursor.execute(
+            "INSERT OR IGNORE INTO examen_vinculos (codigo, materia_id, componente) "
+            "SELECT codigo, materia_id, componente FROM examenes_config "
+            "WHERE materia_id IS NOT NULL AND componente IS NOT NULL"
+        )
 
         # Bitácora de acciones del docente
         cursor.execute("""

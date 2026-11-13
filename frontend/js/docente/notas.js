@@ -88,11 +88,21 @@
   }
 
   async function importar() {
+    const { examenes } = await Panel.json('/api/docente/examenes');
+    const materia = Panel.contexto.materia();
+    // Sugiere el examen ya vinculado a esta materia o, si no hay, el que corresponde al período por el sufijo del código
+    const vinculado = examenes.find(x => x.vinculos.some(v => v.materia_id === materia.id));
+    const palabra = materia.nombre.split(' ')[0].toLowerCase();
+    const candidatos = examenes.filter(x => x.codigo.endsWith(`0${materia.periodo}`));
+    const delPeriodo = candidatos.find(x => x.nombre.toLowerCase().includes(palabra)) || candidatos[0];
+    const sugerido = (vinculado || delPeriodo || examenes[0] || {}).codigo;
+    const compSugerido = vinculado ? vinculado.vinculos.find(v => v.materia_id === materia.id).componente : 'prueba02';
     const r = await Panel.dialogo({
       titulo: 'Importar un examen como prueba',
-      cuerpo: `<label class="doc-campo">Código del examen (ej. SGC01) <input type="text" id="imp-codigo" autocomplete="off"></label>
+      cuerpo: `<label class="doc-campo">Examen
+          <select id="imp-codigo">${examenes.map(x => `<option value="${Panel.esc(x.codigo)}" ${x.codigo === sugerido ? 'selected' : ''}>${Panel.esc(x.codigo)} · ${Panel.esc(x.nombre)}</option>`).join('')}</select></label>
         <label class="doc-campo">Guardar como
-          <select id="imp-componente"><option value="prueba01">${ETIQUETAS.prueba01}</option><option value="prueba02">${ETIQUETAS.prueba02}</option></select></label>`,
+          <select id="imp-componente"><option value="prueba01" ${compSugerido === 'prueba01' ? 'selected' : ''}>${ETIQUETAS.prueba01}</option><option value="prueba02" ${compSugerido === 'prueba02' ? 'selected' : ''}>${ETIQUETAS.prueba02}</option></select></label>`,
       botones: [{ texto: 'Cancelar', valor: null },
         { texto: 'Importar', primario: true, valor: f => {
           const codigo = f.querySelector('#imp-codigo').value.trim();

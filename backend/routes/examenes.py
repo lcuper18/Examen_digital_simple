@@ -306,6 +306,15 @@ def listar_examenes() -> dict[str, Any]:
     codigos = load_codigos()
     with database.get_db_context() as conn:
         configs = {r["codigo"]: r for r in conn.execute("SELECT * FROM examenes_config")}
+        vinculos: dict[str, list[dict[str, Any]]] = {}
+        for r in conn.execute(
+            "SELECT v.codigo, v.materia_id, v.componente, m.seccion, m.periodo, m.nombre FROM examen_vinculos v "
+            "JOIN materias m ON m.id = v.materia_id ORDER BY m.seccion, m.periodo, m.nombre"
+        ):
+            vinculos.setdefault(r["codigo"], []).append({
+                "materia_id": r["materia_id"], "componente": r["componente"],
+                "seccion": r["seccion"], "periodo": r["periodo"], "nombre": r["nombre"],
+            })
         conteos = {
             r["codigo_examen"]: r for r in conn.execute(
                 "SELECT codigo_examen, "
@@ -325,8 +334,7 @@ def listar_examenes() -> dict[str, Any]:
             "desde": c["desde"] if c else None,
             "hasta": c["hasta"] if c else None,
             "secciones": [x for x in (c["secciones"] or "").split(",") if x] if c else [],
-            "materia_id": c["materia_id"] if c else None,
-            "componente": c["componente"] if c else None,
+            "vinculos": vinculos.get(codigo, []),
             "enviados": (n["enviados"] or 0) if n else 0,
             "en_curso": (n["en_curso"] or 0) if n else 0,
             "anulados": (n["anulados"] or 0) if n else 0,
@@ -353,13 +361,17 @@ def cerrar_examenes_en_curso(codigo: str) -> dict[str, Any]:
     return {"ok": True, "cerrados": len(abiertos)}
 
 
+class VinculoExamen(BaseModel):
+    materia_id: int            # materia donde se importa la nota de este examen
+    componente: str            # "prueba01" | "prueba02"
+
+
 class ConfigExamen(BaseModel):
     habilitado: bool = True
     desde: str | None = None
     hasta: str | None = None
     secciones: list[str] = []
-    materia_id: int | None = None      # materia donde se importa la nota de este examen
-    componente: str | None = None      # "prueba01" | "prueba02"
+    vinculos: list[VinculoExamen] | None = None   # None = no cambiar los vínculos; [] = quitarlos todos
 
 
 @docente_router.put("/examenes/{codigo}")
@@ -374,28 +386,35 @@ def configurar_examen(codigo: str, request: ConfigExamen) -> dict[str, Any]:
         raise HTTPException(status_code=400, detail="Fecha no válida")
     if desde and hasta and hasta <= desde:
         raise HTTPException(status_code=400, detail="La fecha final debe ser posterior a la inicial")
-    if (request.materia_id is None) != (request.componente is None):
-        raise HTTPException(status_code=400, detail="Indica la materia y el componente, o ninguno")
-    if request.componente not in (None, "prueba01", "prueba02"):
-        raise HTTPException(status_code=400, detail="componente debe ser prueba01 o prueba02")
+    vinculos = request.vinculos
+    if vinculos is not None:
+        if any(v.componente not in ("prueba01", "prueba02") for v in vinculos):
+            raise HTTPException(status_code=400, detail="componente debe ser prueba01 o prueba02")
+        if len({v.materia_id for v in vinculos}) != len(vinculos):
+            raise HTTPException(status_code=400, detail="Una materia no puede estar vinculada dos veces al mismo examen")
     with database.get_db_context() as conn:
-        if request.materia_id is not None and not conn.execute(
-                "SELECT 1 FROM materias WHERE id = ?", (request.materia_id,)).fetchone():
-            raise HTTPException(status_code=404, detail="Materia no encontrada")
+        for v in vinculos or []:
+            if not conn.execute("SELECT 1 FROM materias WHERE id = ?", (v.materia_id,)).fetchone():
+                raise HTTPException(status_code=404, detail="Materia no encontrada")
         conn.execute(
-            "INSERT INTO examenes_config (codigo, habilitado, desde, hasta, secciones, materia_id, componente) "
-            "VALUES (?, ?, ?, ?, ?, ?, ?) "
+            "INSERT INTO examenes_config (codigo, habilitado, desde, hasta, secciones) "
+            "VALUES (?, ?, ?, ?, ?) "
             "ON CONFLICT (codigo) DO UPDATE SET habilitado = excluded.habilitado, desde = excluded.desde, "
-            "hasta = excluded.hasta, secciones = excluded.secciones, "
-            "materia_id = excluded.materia_id, componente = excluded.componente",
+            "hasta = excluded.hasta, secciones = excluded.secciones",
             (codigo, int(request.habilitado), desde.isoformat() if desde else None,
-             hasta.isoformat() if hasta else None, ",".join(s.strip() for s in request.secciones if s.strip()),
-             request.materia_id, request.componente),
+             hasta.isoformat() if hasta else None, ",".join(s.strip() for s in request.secciones if s.strip())),
         )
+        if vinculos is not None:
+            conn.execute("DELETE FROM examen_vinculos WHERE codigo = ?", (codigo,))
+            conn.executemany(
+                "INSERT INTO examen_vinculos (codigo, materia_id, componente) VALUES (?, ?, ?)",
+                [(codigo, v.materia_id, v.componente) for v in vinculos],
+            )
         bitacora.registrar(
             conn, "configurar_examen",
             f"{codigo}: {'habilitado' if request.habilitado else 'deshabilitado'}"
-            + (f", secciones {','.join(request.secciones)}" if request.secciones else ""),
+            + (f", secciones {','.join(request.secciones)}" if request.secciones else "")
+            + (f", vinculado a {len(vinculos)} materia(s)" if vinculos is not None else ""),
         )
         conn.commit()
     return {"ok": True}

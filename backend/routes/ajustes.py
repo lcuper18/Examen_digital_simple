@@ -106,7 +106,7 @@ def primeros_pasos() -> dict[str, Any]:
             ("encargados", "Importa los datos de los encargados de tus estudiantes",
              cuenta("SELECT COUNT(*) FROM estudiantes WHERE COALESCE(encargado_nombre, '') <> ''") > 0, "estudiantes"),
             ("vinculos", "Vincula cada examen a su materia para importar las notas con un clic",
-             cuenta("SELECT COUNT(*) FROM examenes_config WHERE materia_id IS NOT NULL") > 0, "examenes"),
+             cuenta("SELECT COUNT(*) FROM examen_vinculos") > 0, "examenes"),
             ("lista", "Pasa tu primera lista de asistencia", cuenta("SELECT COUNT(*) FROM sesiones") > 0, "asistencia"),
             ("actividad", "Crea o importa una actividad con su rúbrica", cuenta("SELECT COUNT(*) FROM actividades") > 0, "actividades"),
             ("publicar", "Publica las notas de una materia para tus estudiantes",

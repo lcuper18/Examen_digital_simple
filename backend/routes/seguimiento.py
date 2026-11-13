@@ -213,7 +213,8 @@ def calcular_alertas(conn, seccion: str | None = None, estudiante_id: int | None
             "SELECT c.estudiante_id, COUNT(*) AS n FROM calificaciones c JOIN actividades a ON a.id = c.actividad_id "
             "WHERE a.materia_id = ? AND c.estado = 'sin_entrega' GROUP BY c.estudiante_id", (m["id"],))}
         examenes = [r["codigo"] for r in conn.execute(
-            "SELECT codigo FROM examenes_config WHERE materia_id = ? AND habilitado = 1", (m["id"],))]
+            "SELECT v.codigo FROM examen_vinculos v LEFT JOIN examenes_config c ON c.codigo = v.codigo "
+            "WHERE v.materia_id = ? AND COALESCE(c.habilitado, 1) = 1", (m["id"],))]
         presentados = {(r["estudiante_id"], r["codigo_examen"]) for r in conn.execute(
             "SELECT estudiante_id, codigo_examen FROM intentos WHERE fecha_fin IS NOT NULL AND anulado = 0")}
         for f in _filas(conn, m):

@@ -65,11 +65,10 @@ def desglose_por_tema(preguntas: list[dict[str, Any]], semilla: int, respuestas:
 def _periodo_del_examen(conn, codigo: str) -> int | None:
     """Período al que pertenece un examen: el de la materia a la que está vinculado; si no hay vínculo,
     el que indica el sufijo del código (EMP02 → 2). None si no se puede saber."""
-    fila = conn.execute(
-        "SELECT m.periodo FROM examenes_config c JOIN materias m ON m.id = c.materia_id WHERE c.codigo = ?", (codigo,)
-    ).fetchone()
-    if fila:
-        return fila["periodo"]
+    periodos = {r["periodo"] for r in conn.execute(
+        "SELECT m.periodo FROM examen_vinculos v JOIN materias m ON m.id = v.materia_id WHERE v.codigo = ?", (codigo,))}
+    if len(periodos) == 1:
+        return periodos.pop()
     sufijo = codigo[-2:]
     return int(sufijo) if sufijo.isdigit() and int(sufijo) in (1, 2) else None
 

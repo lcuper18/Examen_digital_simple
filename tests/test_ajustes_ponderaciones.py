@@ -51,14 +51,20 @@ def test_importar_examen_vinculado_a_materia(client):
 
     # sin vínculo no hay nada que importar
     assert client.post("/api/docente/notas/importar-prueba", headers=hd, json={"materia_id": mid}).status_code == 400
-    # componente inválido o materia sin componente
-    assert client.put(f"/api/docente/examenes/{CODIGO}", headers=hd, json={"materia_id": mid}).status_code == 400
-    assert client.put(f"/api/docente/examenes/{CODIGO}", headers=hd,
-                      json={"materia_id": mid, "componente": "tareas"}).status_code == 400
-    assert client.put(f"/api/docente/examenes/{CODIGO}", headers=hd,
-                      json={"materia_id": mid, "componente": "prueba02"}).status_code == 200
+    # componente inválido, materia inexistente o repetida
+    ruta = f"/api/docente/examenes/{CODIGO}"
+    assert client.put(ruta, headers=hd, json={"vinculos": [{"materia_id": mid, "componente": "tareas"}]}).status_code == 400
+    assert client.put(ruta, headers=hd, json={"vinculos": [{"materia_id": 9999, "componente": "prueba02"}]}).status_code == 404
+    assert client.put(ruta, headers=hd, json={"vinculos": [{"materia_id": mid, "componente": "prueba01"},
+                                                         {"materia_id": mid, "componente": "prueba02"}]}).status_code == 400
+    assert client.put(ruta, headers=hd, json={"vinculos": [{"materia_id": mid, "componente": "prueba02"}]}).status_code == 200
     listado = client.get("/api/docente/examenes", headers=hd).json()["examenes"]
-    assert next(e for e in listado if e["codigo"] == CODIGO)["componente"] == "prueba02"
+    v = next(e for e in listado if e["codigo"] == CODIGO)["vinculos"]
+    assert [(x["materia_id"], x["componente"], x["seccion"], x["periodo"]) for x in v] == [(mid, "prueba02", "11-1", 1)]
+    # guardar otros datos sin mandar «vinculos» no los borra; mandar [] sí
+    assert client.put(ruta, headers=hd, json={"habilitado": False}).status_code == 200
+    assert len(next(e for e in client.get("/api/docente/examenes", headers=hd).json()["examenes"] if e["codigo"] == CODIGO)["vinculos"]) == 1
+    client.put(ruta, headers=hd, json={"habilitado": True})
 
     r = client.post("/api/docente/notas/importar-prueba", headers=hd, json={"materia_id": mid})
     assert r.json()["importadas"] == 1 and r.json()["examenes"] == [CODIGO]
@@ -90,7 +96,7 @@ def test_primeros_pasos_se_marcan_solos(client):
 
     mid = _materia(client, hd)
     client.put("/api/docente/ajustes", headers=hd, json={"ajustes": {"institucion": "CTP Prueba"}})
-    client.put(f"/api/docente/examenes/{CODIGO}", headers=hd, json={"materia_id": mid, "componente": "prueba01"})
+    client.put(f"/api/docente/examenes/{CODIGO}", headers=hd, json={"vinculos": [{"materia_id": mid, "componente": "prueba01"}]})
     client.put("/api/docente/asistencia/sesion", headers=hd, json={
         "materia_id": mid, "fecha": "2026-03-02", "lecciones": 1, "registros": [{"estudiante_id": 1, "estado": "P"}]})
     client.put(f"/api/docente/materias/{mid}/publicacion", headers=hd, json={"publicado": True})

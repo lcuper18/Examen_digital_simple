@@ -85,7 +85,7 @@ def test_alertas_de_riesgo_asistencia_pendientes_y_examenes(client):
         client.put("/api/docente/asistencia/sesion", headers=hd, json={
             "materia_id": mid, "fecha": dia, "lecciones": 2,
             "registros": [{"estudiante_id": 1, "estado": "P"}, {"estudiante_id": 2, "estado": "A" if dia < "2026-03-04" else "P"}]})
-    client.put("/api/docente/examenes/SGC01", headers=hd, json={"materia_id": mid, "componente": "prueba02"})
+    client.put("/api/docente/examenes/SGC01", headers=hd, json={"vinculos": [{"materia_id": mid, "componente": "prueba02"}]})
 
     d = client.get("/api/docente/alertas", headers=hd).json()
     assert d["periodo"] == 1
