@@ -111,7 +111,9 @@ En **Ajustes → Cierre del curso lectivo**: guarda en `respaldos/` una copia co
 
 ## Respaldos
 
-Al arrancar y cada hora, el servidor guarda una copia de la base de datos por día en `respaldos/` (se conservan las últimas 30). La base usa el modo WAL, por lo que pueden aparecer archivos `examen_db.sqlite-wal` y `-shm` junto a ella.
+- **Copia local:** al arrancar y cada hora, el servidor guarda una copia de la base de datos por día en `respaldos/` (se conservan las últimas 30). La base usa el modo WAL, por lo que pueden aparecer archivos `examen_db.sqlite-wal` y `-shm` junto a ella.
+- **Copia externa (recomendada):** en **Ajustes → Copia de respaldo externa** eliges una carpeta fuera del computador (iCloud Drive, un disco externo o una memoria USB; Lectiva sugiere las que encuentra). Lectiva crea ahí la carpeta `Lectiva respaldos` y guarda `lectiva_respaldo_AAAA-MM-DD.sqlite`, **cada hora mientras la app esté abierta** (se reescribe durante el día, así incluye tu trabajo reciente) y conserva los últimos 30 días. Cada copia se verifica antes de reemplazar la anterior, así que una memoria desconectada a medias no daña la copia buena. **Respaldar ahora** hace una copia al instante. Si la copia falla (por ejemplo, la memoria USB está desconectada) o pasan 2 días sin copia, el Inicio muestra un aviso. Contiene datos personales de los estudiantes: elige un lugar privado. La primera vez, macOS puede pedir permiso a Lectiva para acceder a esa carpeta (Ajustes del Sistema → Privacidad y seguridad → Archivos y carpetas).
+- **Restaurar:** cierra Lectiva, copia el archivo de respaldo al proyecto con el nombre `examen_db.sqlite` (guarda antes el actual por si acaso) y abre Lectiva de nuevo.
 
 ## Abrir el sistema con un clic (Mac)
 

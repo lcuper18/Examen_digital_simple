@@ -67,7 +67,7 @@
       : '<li class="doc-pending">Por ahora nadie está en riesgo según las notas, la asistencia y las entregas registradas.</li>';
 
     $('res-alertas').innerHTML = d.alertas.length
-      ? d.alertas.map(a => `<li><span class="doc-pill ${a.tipo === 'vencido' || a.tipo === 'sospechosos' ? 'warn' : 'wait'}">${Panel.esc(Panel.ETIQUETA_ALERTA[a.tipo] || a.tipo)}</span>
+      ? d.alertas.map(a => `<li><span class="doc-pill ${a.tipo === 'vencido' || a.tipo === 'sospechosos' || a.tipo === 'respaldo' ? 'warn' : 'wait'}">${Panel.esc(Panel.ETIQUETA_ALERTA[a.tipo] || a.tipo)}</span>
           ${Panel.esc(a.texto)} <button type="button" class="doc-enlace" data-ir="${Panel.esc(a.ir)}">Ver</button></li>`).join('')
       : '<li class="doc-pending">Sin avisos de exámenes ni de cuentas.</li>';
 

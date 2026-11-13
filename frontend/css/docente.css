@@ -360,3 +360,5 @@
 .doc-vinculo-fila { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px 0; }
 .doc-vinculo-fila label { display: flex; align-items: center; gap: 8px; flex: 1; font-size: var(--text-sm); color: var(--text-primary); }
 .doc-vinculo-fila select { width: auto; min-width: 110px; }
+
+.doc-actions-fila { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }

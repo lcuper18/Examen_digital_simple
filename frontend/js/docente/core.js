@@ -105,7 +105,7 @@ Panel.descargar = async function (url, nombre) {
 Panel.ETIQUETA_ALERTA = {
   riesgo: 'En riesgo', asistencia: 'Ausencias', pendientes: 'Sin entrega', examen: 'Examen pendiente',
   vencido: 'Tiempo agotado', salidas: 'Salió de la pestaña', bloqueados: 'Acceso bloqueado', temporales: 'Clave temporal',
-  sospechosos: 'Intento sospechoso',
+  sospechosos: 'Intento sospechoso', respaldo: 'Copia de respaldo',
 };
 
 Panel.FRASES = {

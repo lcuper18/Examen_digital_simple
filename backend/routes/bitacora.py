@@ -1,11 +1,12 @@
 """
 Bitácora routes - Consulta del registro de acciones del docente.
 """
+from datetime import datetime, timezone
 from typing import Any
 
 from fastapi import APIRouter, Depends
 
-from backend import database, security
+from backend import database, respaldo_externo, security
 
 router = APIRouter(
     prefix="/api/docente", tags=["bitacora"], dependencies=[Depends(security.require_docente)]
@@ -71,6 +72,14 @@ def resumen() -> dict[str, Any]:
         alertas.append({"tipo": "bloqueados", "texto": f"{len(bloqueados)} estudiante(s) con el login bloqueado por intentos fallidos", "ir": "estudiantes"})
     if est["temporales"]:
         alertas.append({"tipo": "temporales", "texto": f"{est['temporales']} estudiante(s) aún no han cambiado su clave temporal", "ir": "estudiantes"})
+    with database.get_db_context() as conn:
+        copia = respaldo_externo.estado(conn)
+    if copia["carpeta"]:
+        if copia["error"]:
+            alertas.append({"tipo": "respaldo", "texto": f"La copia de respaldo externa falló: {copia['error']}", "ir": "ajustes"})
+        elif copia["ultimo"] and (datetime.now(timezone.utc) - datetime.fromisoformat(copia["ultimo"])).days >= 2:
+            dias = (datetime.now(timezone.utc) - datetime.fromisoformat(copia["ultimo"])).days
+            alertas.append({"tipo": "respaldo", "texto": f"Hace {dias} días que no se hace la copia de respaldo externa", "ir": "ajustes"})
     if stats["sospechosos"]:
         alertas.append({"tipo": "sospechosos", "texto": f"{stats['sospechosos']} intento(s) marcado(s) como sospechoso", "ir": "resultados"})
 

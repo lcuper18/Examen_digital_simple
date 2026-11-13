@@ -130,9 +130,10 @@ RESPALDOS_DIR = PROJECT_ROOT / "respaldos"
 def leer_ajustes(conn: sqlite3.Connection) -> dict[str, str]:
     """Ajustes guardados sobre los valores por defecto."""
     ajustes = dict(AJUSTES_DEFAULT)
-    # El hash de la contraseña del docente vive en la misma tabla, pero nunca se devuelve como ajuste
+    # Estas claves viven en la misma tabla pero no son ajustes: el hash de la contraseña del docente y el estado
+    # de la copia externa (ruta del disco, errores). Se leen aparte y nunca se devuelven como ajuste.
     ajustes.update({r["clave"]: r["valor"] for r in conn.execute("SELECT clave, valor FROM ajustes")
-                    if r["clave"] != "docente_password_hash"})
+                    if r["clave"] != "docente_password_hash" and not r["clave"].startswith("respaldo_externo_")})
     return ajustes
 
 

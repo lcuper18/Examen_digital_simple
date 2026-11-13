@@ -29,6 +29,49 @@
     Panel.toast('Ajustes guardados');
   }
 
+  // ---------- Copia de respaldo externa ----------
+  function pintarRespaldo(r) {
+    const cuando = r.ultimo ? new Date(r.ultimo).toLocaleString('es-CR', { dateStyle: 'medium', timeStyle: 'short' }) : null;
+    $('aj-resp-estado').innerHTML = !r.carpeta
+      ? '<span class="doc-pill wait">Sin configurar</span> <span class="doc-muted">Hoy tus datos solo están en este computador.</span>'
+      : r.error
+        ? `<span class="doc-pill warn">Falló</span> ${Panel.esc(r.error)}`
+        : `<span class="doc-pill ok">Activa</span> Última copia: <strong>${cuando ? Panel.esc(cuando) : 'todavía ninguna'}</strong>`;
+    $('aj-resp-destino').textContent = r.carpeta ? `Se guarda en: ${r.destino}` : '';
+    $('aj-resp-carpeta').value = r.carpeta || '';
+    $('aj-resp-sug').innerHTML = r.sugerencias.length
+      ? 'Sugerencias: ' + r.sugerencias.map(s => `<button type="button" class="btn btn-secondary" data-ruta="${Panel.esc(s.ruta)}">${Panel.esc(s.nombre)}</button>`).join(' ')
+      : '<span class="doc-muted">No encontré iCloud Drive ni discos conectados; escribe la ruta de una carpeta.</span>';
+    $('btn-resp-ahora').disabled = !r.carpeta;
+    $('btn-resp-quitar').disabled = !r.carpeta;
+  }
+
+  async function cargarRespaldo() {
+    pintarRespaldo(await Panel.json('/api/docente/respaldo'));
+  }
+
+  async function guardarRespaldo() {
+    const r = await Panel.json('/api/docente/respaldo', { method: 'PUT', body: { carpeta: $('aj-resp-carpeta').value } });
+    pintarRespaldo(r);
+    if (r.copia.ok) Panel.toast('Carpeta guardada y primera copia hecha');
+    else Panel.toast(r.copia.error || 'No se pudo hacer la copia', 'error');
+  }
+
+  async function respaldarAhora() {
+    const r = await Panel.json('/api/docente/respaldo/ahora', { method: 'POST' });
+    pintarRespaldo(r);
+    if (r.copia.ok) Panel.toast('Copia externa hecha');
+    else Panel.toast(r.copia.error || 'No se pudo hacer la copia', 'error');
+  }
+
+  async function quitarRespaldo() {
+    const ok = await Panel.confirmar('Lectiva dejará de hacer la copia externa. Las copias que ya están en esa carpeta no se borran.',
+      { titulo: 'Dejar de usar la copia externa', texto: 'Dejar de usar', peligro: true });
+    if (!ok) return;
+    pintarRespaldo((await Panel.json('/api/docente/respaldo', { method: 'PUT', body: { carpeta: '' } })));
+    Panel.toast('Copia externa desactivada');
+  }
+
   async function cargarRed() {
     const red = await Panel.json('/api/docente/red');
     $('aj-red').innerHTML = `
@@ -116,6 +159,22 @@
           <p><span id="aj-suma" class="doc-pill"></span></p>
           <button class="btn btn-primary" id="btn-guardar-pesos">Guardar ponderación</button>
         </section>
+        <section aria-labelledby="aj-t6">
+          <h2 id="aj-t6">Copia de respaldo externa</h2>
+          <p class="doc-muted">Lectiva guarda tus datos en este computador. Una copia en otro lugar (iCloud Drive, un disco externo o una memoria USB)
+            te protege si el computador se daña o se pierde. Se actualiza cada hora mientras Lectiva esté abierta y se conservan los últimos 30 días.</p>
+          <p class="doc-muted"><strong>Contiene datos personales de tus estudiantes:</strong> elige un lugar privado.</p>
+          <p id="aj-resp-estado" aria-live="polite"></p>
+          <label class="doc-campo">Carpeta (ruta completa)
+            <input type="text" id="aj-resp-carpeta" placeholder="/Volumes/MI-USB o la carpeta de iCloud Drive" autocomplete="off"></label>
+          <p id="aj-resp-sug" class="doc-pills"></p>
+          <p class="doc-muted" id="aj-resp-destino"></p>
+          <div class="doc-actions-fila">
+            <button class="btn btn-primary" id="btn-resp-guardar">Guardar y respaldar ahora</button>
+            <button class="btn btn-secondary" id="btn-resp-ahora">Respaldar ahora</button>
+            <button class="btn btn-secondary" id="btn-resp-quitar">Dejar de usar</button>
+          </div>
+        </section>
         <section aria-labelledby="aj-t5">
           <h2 id="aj-t5">Contraseña del docente</h2>
           <p class="doc-muted">Protege el panel docente. Cámbiala si alguien más la conoce; se guarda cifrada en este computador.</p>
@@ -140,11 +199,15 @@
       $('aj-pesos').addEventListener('input', sumarPesos);
       $('btn-guardar-pesos').addEventListener('click', run(guardarPesos));
       $('btn-cambiar-clave').addEventListener('click', run(Panel.cambiarClaveDocente));
+      $('btn-resp-guardar').addEventListener('click', run(() => Panel.conCarga($('btn-resp-guardar'), guardarRespaldo, 'Copiando…')));
+      $('btn-resp-ahora').addEventListener('click', run(() => Panel.conCarga($('btn-resp-ahora'), respaldarAhora, 'Copiando…')));
+      $('btn-resp-quitar').addEventListener('click', run(quitarRespaldo));
+      $('aj-resp-sug').addEventListener('click', e => { if (e.target.dataset.ruta) $('aj-resp-carpeta').value = e.target.dataset.ruta; });
       $('btn-cerrar-curso').addEventListener('click', run(cerrarCurso));
     },
     usaContexto: true,
     async mostrar() {
-      await Promise.all([cargarAjustes(), cargarMaterias(), cargarRed(), cargarCierre()]);
+      await Promise.all([cargarAjustes(), cargarMaterias(), cargarRed(), cargarCierre(), cargarRespaldo()]);
     },
   });
 })();

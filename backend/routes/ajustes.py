@@ -8,7 +8,7 @@ from typing import Any
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 
-from backend import bitacora, database, ratelimit, security
+from backend import bitacora, database, ratelimit, respaldo_externo, security
 from backend.routes.auth import CLAVE_DOCENTE_AJUSTE, HASH_DE_FABRICA, clave_de_fabrica, hash_docente
 from backend.version import VERSION
 
@@ -35,6 +35,47 @@ def obtener_ajustes() -> dict[str, Any]:
 class CambiarClaveDocente(BaseModel):
     actual: str
     nueva: str
+
+
+# ---------- Copia de respaldo externa ----------
+
+def _estado_respaldo(conn) -> dict[str, Any]:
+    return {"ok": True, **respaldo_externo.estado(conn), "sugerencias": respaldo_externo.sugerencias()}
+
+
+@router.get("/respaldo")
+def obtener_respaldo() -> dict[str, Any]:
+    with database.get_db_context() as conn:
+        return _estado_respaldo(conn)
+
+
+class ConfigurarRespaldo(BaseModel):
+    carpeta: str | None = None   # vacío = dejar de usar la copia externa
+
+
+@router.put("/respaldo")
+def configurar_respaldo(request: ConfigurarRespaldo) -> dict[str, Any]:
+    """Elige la carpeta externa (iCloud, disco o USB) y hace la primera copia; con vacío la desactiva."""
+    try:
+        resultado = respaldo_externo.configurar(request.carpeta)
+    except respaldo_externo.RespaldoError as error:
+        raise HTTPException(status_code=400, detail=str(error))
+    with database.get_db_context() as conn:
+        bitacora.registrar(conn, "configurar_respaldo", "desactivado" if resultado.get("desactivado") else "carpeta elegida")
+        conn.commit()
+        return {**_estado_respaldo(conn), "copia": resultado}
+
+
+@router.post("/respaldo/ahora")
+def respaldar_ahora() -> dict[str, Any]:
+    """Hace la copia externa en este momento."""
+    resultado = respaldo_externo.respaldar_externo()
+    if resultado.get("motivo") == "sin_configurar":
+        raise HTTPException(status_code=400, detail="Primero elige la carpeta de la copia externa")
+    with database.get_db_context() as conn:
+        bitacora.registrar(conn, "respaldo_externo", "correcto" if resultado["ok"] else f"falló: {resultado.get('error', '')}")
+        conn.commit()
+        return {**_estado_respaldo(conn), "copia": resultado}
 
 
 @router.post("/cambiar-password")
@@ -107,6 +148,8 @@ def primeros_pasos() -> dict[str, Any]:
              cuenta("SELECT COUNT(*) FROM estudiantes WHERE COALESCE(encargado_nombre, '') <> ''") > 0, "estudiantes"),
             ("vinculos", "Vincula cada examen a su materia para importar las notas con un clic",
              cuenta("SELECT COUNT(*) FROM examen_vinculos") > 0, "examenes"),
+            ("respaldo", "Elige una carpeta externa para la copia de respaldo (iCloud, disco o USB)",
+             bool(respaldo_externo._leer(conn, respaldo_externo.CLAVE_CARPETA)), "ajustes"),
             ("lista", "Pasa tu primera lista de asistencia", cuenta("SELECT COUNT(*) FROM sesiones") > 0, "asistencia"),
             ("actividad", "Crea o importa una actividad con su rúbrica", cuenta("SELECT COUNT(*) FROM actividades") > 0, "actividades"),
             ("publicar", "Publica las notas de una materia para tus estudiantes",

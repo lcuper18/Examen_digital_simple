@@ -11,7 +11,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 
-from backend import database
+from backend import database, respaldo_externo
 from backend.version import VERSION
 from backend.routes import (
     auth_router, bitacora_router, estudiantes_router, examenes_docente_router,
@@ -42,6 +42,13 @@ async def _respaldo_diario() -> None:
                 print(f"[INFO] Respaldo creado: {archivo.name}")
         except Exception as error:  # un respaldo fallido no debe tumbar el servidor
             print(f"[AVISO] No se pudo respaldar la base de datos: {error}")
+        try:
+            # Copia externa (si el docente eligió una carpeta): cada hora, para que incluya el trabajo del día
+            externo = await asyncio.to_thread(respaldo_externo.respaldar_externo)
+            if externo.get("motivo") == "error":
+                print(f"[AVISO] Copia de respaldo externa: {externo['error']}")
+        except Exception as error:
+            print(f"[AVISO] Copia de respaldo externa: {error}")
         await asyncio.sleep(3600)
 
 
