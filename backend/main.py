@@ -9,7 +9,7 @@ from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
 
 from backend import database, respaldo_externo
 from backend.version import VERSION
@@ -71,6 +71,18 @@ app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 app.mount("/fonts", StaticFiles(directory=str(FONTS_DIR)), name="fonts")
 app.mount("/js", StaticFiles(directory=str(JS_DIR)), name="js")
 app.mount("/css", StaticFiles(directory=str(CSS_DIR)), name="css")
+
+LIMITE_CUERPO = 10 * 1024 * 1024  # ninguna petición de Lectiva necesita más: las listas y hojas pesan unos KB
+
+
+@app.middleware("http")
+async def limitar_tamano(request, call_next):
+    """Rechaza de entrada (413) las peticiones con un cuerpo enorme, antes de leerlas o interpretarlas."""
+    declarado = request.headers.get("content-length")
+    if declarado and declarado.isdigit() and int(declarado) > LIMITE_CUERPO:
+        return JSONResponse(status_code=413, content={"detail": "La solicitud es demasiado grande (máximo 10 MB)"})
+    return await call_next(request)
+
 
 @app.middleware("http")
 async def revalidar_interfaz(request, call_next):

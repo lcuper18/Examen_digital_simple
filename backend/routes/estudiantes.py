@@ -61,7 +61,7 @@ def reiniciar_password(estudiante_id: int) -> dict[str, Any]:
         fila = _estudiante(conn, estudiante_id)
         temporal = database.generar_password_temporal()
         conn.execute(
-            "UPDATE estudiantes SET password_hash = ?, debe_cambiar_password = 1 WHERE id = ?",
+            "UPDATE estudiantes SET password_hash = ?, debe_cambiar_password = 1, sesion_version = sesion_version + 1 WHERE id = ?",
             (database.hash_password(temporal), estudiante_id),
         )
         bitacora.registrar(conn, "reiniciar_password", _nombre(fila))
@@ -136,7 +136,9 @@ def eliminar_estudiante(estudiante_id: int) -> dict[str, Any]:
                 status_code=409,
                 detail="El estudiante tiene intentos registrados; desactiva la cuenta en su lugar",
             )
-        conn.execute("DELETE FROM notas WHERE estudiante_id = ?", (estudiante_id,))
+        # Todo lo que cuelga del estudiante se elimina con él (antes quedaban asistencia, calificaciones y observaciones huérfanas)
+        for tabla in ("notas", "asistencia", "calificaciones", "observaciones"):
+            conn.execute(f"DELETE FROM {tabla} WHERE estudiante_id = ?", (estudiante_id,))
         conn.execute("DELETE FROM estudiantes WHERE id = ?", (estudiante_id,))
         bitacora.registrar(conn, "eliminar_estudiante", _nombre(fila))
         conn.commit()
@@ -204,7 +206,7 @@ def reiniciar_seccion(request: ReiniciarSeccion) -> dict[str, Any]:
         for f in filas:
             temporal = database.generar_password_temporal()
             conn.execute(
-                "UPDATE estudiantes SET password_hash = ?, debe_cambiar_password = 1 WHERE id = ?",
+                "UPDATE estudiantes SET password_hash = ?, debe_cambiar_password = 1, sesion_version = sesion_version + 1 WHERE id = ?",
                 (database.hash_password(temporal), f["id"]),
             )
             credenciales.append({"nombre": _nombre(f), "username": f["username"], "password_temporal": temporal})

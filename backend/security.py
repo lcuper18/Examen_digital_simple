@@ -48,9 +48,15 @@ def _sign(payload_b64: str) -> str:
     return _b64(hmac.new(_load_secret(), payload_b64.encode(), hashlib.sha256).digest())
 
 
-def create_token(sub: str, role: str, ttl: int) -> str:
-    """Crea un token firmado con sujeto, rol y expiración."""
-    payload = _b64(json.dumps({"sub": sub, "role": role, "exp": int(time.time()) + ttl}).encode())
+def create_token(sub: str, role: str, ttl: int, version: int | None = None) -> str:
+    """
+    Crea un token firmado con sujeto, rol y expiración. `version` (solo estudiantes) es la versión de sesión de la
+    cuenta: si el docente reinicia la contraseña, la versión sube y los tokens anteriores dejan de servir.
+    """
+    datos: dict[str, Any] = {"sub": sub, "role": role, "exp": int(time.time()) + ttl}
+    if version is not None:
+        datos["sv"] = version
+    payload = _b64(json.dumps(datos).encode())
     return f"{payload}.{_sign(payload)}"
 
 
@@ -89,13 +95,17 @@ def estudiante_actual(authorization: str | None = Header(default=None)) -> int:
     """
     from backend import database  # import diferido: database no depende de security
 
-    estudiante_id = estudiante_autenticado(authorization)
+    payload = _payload_from_header(authorization, ROLE_ESTUDIANTE)
+    estudiante_id = int(payload["sub"])
     with database.get_db_context() as conn:
         fila = conn.execute(
-            "SELECT activo, debe_cambiar_password FROM estudiantes WHERE id = ?", (estudiante_id,)
+            "SELECT activo, debe_cambiar_password, sesion_version FROM estudiantes WHERE id = ?", (estudiante_id,)
         ).fetchone()
     if fila is None or not fila["activo"]:
         raise HTTPException(status_code=401, detail="Cuenta desactivada o inexistente")
+    if payload.get("sv", 0) != fila["sesion_version"]:
+        # El docente reinició la contraseña (o ella misma la cambió) después de que se creó este token
+        raise HTTPException(status_code=401, detail="Tu sesión terminó. Vuelve a entrar con tu contraseña.")
     if fila["debe_cambiar_password"]:
         raise HTTPException(status_code=403, detail="Debes cambiar tu contraseña antes de continuar")
     return estudiante_id

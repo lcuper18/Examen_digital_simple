@@ -48,6 +48,9 @@ def test_reiniciar_password_obliga_a_cambiarla(client):
 
     ok = client.post("/api/cambiar-password", headers=h, json={"password_actual": temporal, "password_nueva": "NuevaClave1"})
     assert ok.status_code == 200
+    # cambiar la contraseña cierra las demás sesiones: el token viejo ya no sirve y la respuesta trae uno nuevo
+    assert client.post(f"/api/examen/{CODIGO}/iniciar", headers=h).status_code == 401
+    h = {"Authorization": f"Bearer {ok.json()['token']}"}
     assert client.post(f"/api/examen/{CODIGO}/iniciar", headers=h).status_code == 200
     assert client.post("/api/login", json={"username": "ana.perez", "password": "NuevaClave1"}).json()["ok"]
 
@@ -146,3 +149,63 @@ def test_exigir_cambio_de_clave_a_una_seccion_no_cambia_la_clave(client):
     d = client.post("/api/login", json={"username": "ana.perez", "password": "ANA1234"}).json()
     assert d["ok"] and d["estudiante"]["debe_cambiar_password"] is True
     assert client.post("/api/docente/estudiantes/exigir-cambio-seccion", json={"seccion": "11-1"}).status_code == 401
+
+
+def test_eliminar_un_estudiante_no_deja_datos_huerfanos(client):
+    from tests.test_actividades import _crear, _preparar
+
+    hd, mid = _preparar(client)          # 2 estudiantes en 11-1: Ana (1) y Luis (2)
+    # Luis tiene notas, asistencia, calificación de una actividad y una observación
+    client.put("/api/docente/notas", headers=hd, json={"materia_id": mid, "notas": [{"estudiante_id": 2, "tareas": 80}]})
+    client.put("/api/docente/asistencia/sesion", headers=hd, json={
+        "materia_id": mid, "fecha": "2026-03-02", "lecciones": 1, "registros": [{"estudiante_id": 2, "estado": "A"}]})
+    act = _crear(client, hd, mid).json()["id"]
+    client.put(f"/api/docente/actividades/{act}/calificaciones", headers=hd, json={"calificaciones": [
+        {"estudiante_id": 2, "estado": "entregado", "criterios": [{"puntos": 6}, {"puntos": 4}]}]})
+    client.post("/api/docente/estudiantes/2/observaciones", headers=hd,
+                json={"fecha": "2026-03-02", "tipo": "logro", "texto": "Muy buen trabajo"})
+
+    assert client.delete("/api/docente/estudiantes/2", headers=hd).status_code == 200
+    with database.get_db_context() as conn:
+        assert conn.execute("PRAGMA foreign_key_check").fetchall() == []
+        for tabla in ("notas", "asistencia", "calificaciones", "observaciones"):
+            assert conn.execute(f"SELECT COUNT(*) FROM {tabla} WHERE estudiante_id = 2").fetchone()[0] == 0, tabla
+        assert conn.execute("SELECT COUNT(*) FROM estudiantes WHERE id = 1").fetchone()[0] == 1   # Ana sigue
+
+
+def test_la_base_rechaza_datos_que_apuntan_a_un_estudiante_inexistente(client):
+    import sqlite3
+
+    import pytest
+
+    with database.get_db_context() as conn:
+        with pytest.raises(sqlite3.IntegrityError):
+            conn.execute("INSERT INTO observaciones (estudiante_id, fecha, tipo, texto) VALUES (999, '2026-03-02', 'logro', 'x')")
+
+
+def test_reiniciar_la_clave_cierra_las_sesiones_abiertas_del_estudiante(client):
+    hd = _docente(client)
+    h = login(client)                       # Ana tiene una sesión abierta (por ejemplo, otro teléfono)
+    assert client.post(f"/api/examen/{CODIGO}/iniciar", headers=h).status_code == 200
+
+    temporal = client.post("/api/docente/estudiantes/1/reiniciar-password", headers=hd).json()["password_temporal"]
+    sesion = client.put(f"/api/examen/{CODIGO}/progreso", headers=h, json={})
+    assert sesion.status_code == 401 and "sesión terminó" in sesion.json()["detail"]
+    assert client.get("/api/mis-notas", headers=h).status_code == 401
+
+    # con la temporal entra y crea su clave sin problema; Luis (otra cuenta) no se ve afectado
+    entrada = client.post("/api/login", json={"username": "ana.perez", "password": temporal}).json()
+    assert entrada["ok"]
+    assert client.post(f"/api/examen/{CODIGO}/iniciar", headers=login(client, "luis.mora", "LUI5678")).status_code == 200
+
+
+def test_reiniciar_la_seccion_tambien_cierra_las_sesiones_y_los_tokens_antiguos_siguen_valiendo_sin_reinicio(client):
+    from backend import security
+
+    hd = _docente(client)
+    # un token emitido antes de existir el versionado (sin «sv») sigue valiendo mientras no se reinicie la clave
+    viejo = {"Authorization": "Bearer " + security.create_token("2", security.ROLE_ESTUDIANTE, 3600)}
+    assert client.post(f"/api/examen/{CODIGO}/iniciar", headers=viejo).status_code == 200
+
+    client.post("/api/docente/estudiantes/reiniciar-seccion", headers=hd, json={"seccion": "11-2"})   # Luis está en 11-2
+    assert client.put(f"/api/examen/{CODIGO}/progreso", headers=viejo, json={}).status_code == 401

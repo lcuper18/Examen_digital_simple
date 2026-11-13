@@ -77,7 +77,7 @@ def login(request: LoginRequest, http: Request) -> LoginResponse:
         # Buscar estudiante por username
         cursor.execute(
             "SELECT id, cedula, nombre, apellido1, apellido2, seccion, username, password_hash, "
-            "activo, debe_cambiar_password FROM estudiantes WHERE username = ?",
+            "activo, debe_cambiar_password, sesion_version FROM estudiantes WHERE username = ?",
             (request.username,)
         )
         row = cursor.fetchone()
@@ -116,7 +116,7 @@ def login(request: LoginRequest, http: Request) -> LoginResponse:
             "debe_cambiar_password": bool(row["debe_cambiar_password"]),
         }
         token = security.create_token(
-            str(row["id"]), security.ROLE_ESTUDIANTE, security.TOKEN_TTL_ESTUDIANTE
+            str(row["id"]), security.ROLE_ESTUDIANTE, security.TOKEN_TTL_ESTUDIANTE, row["sesion_version"]
         )
         return LoginResponse(ok=True, estudiante=estudiante, token=token)
 
@@ -149,13 +149,16 @@ def cambiar_password(
         if not database.verify_password(request.password_actual, row["password_hash"]):
             ratelimit.registrar_fallo(clave)
             raise HTTPException(status_code=400, detail="La contraseña actual no es correcta")
+        # Al cambiar la contraseña se cierran las demás sesiones abiertas de la cuenta; esta recibe un token nuevo
         conn.execute(
-            "UPDATE estudiantes SET password_hash = ?, debe_cambiar_password = 0 WHERE id = ?",
+            "UPDATE estudiantes SET password_hash = ?, debe_cambiar_password = 0, sesion_version = sesion_version + 1 WHERE id = ?",
             (database.hash_password(request.password_nueva), estudiante_id),
         )
+        version = conn.execute("SELECT sesion_version FROM estudiantes WHERE id = ?", (estudiante_id,)).fetchone()[0]
         conn.commit()
     ratelimit.limpiar(f"cambio:{estudiante_id}")
-    return {"ok": True}
+    token = security.create_token(str(estudiante_id), security.ROLE_ESTUDIANTE, security.TOKEN_TTL_ESTUDIANTE, version)
+    return {"ok": True, "token": token}
 
 
 @router.post("/verificar-docente", response_model=VerificarDocenteResponse)

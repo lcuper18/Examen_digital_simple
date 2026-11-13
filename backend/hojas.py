@@ -5,10 +5,31 @@ import csv
 import io
 import re
 import unicodedata
+import zipfile
 from typing import Any
 
-from fastapi import HTTPException
+from fastapi import HTTPException, Request
 from openpyxl import load_workbook
+
+# Una hoja de notas o una lista de estudiantes pesa unos pocos KB; 5 MB es de sobra y evita que un archivo enorme
+# (o un .xlsx que se descomprime a cientos de MB) deje sin memoria al servidor.
+MAX_ARCHIVO_BYTES = 5 * 1024 * 1024
+MAX_XLSX_DESCOMPRIMIDO = 50 * 1024 * 1024
+
+
+async def leer_cuerpo(request: Request, maximo: int = MAX_ARCHIVO_BYTES) -> bytes:
+    """Lee el cuerpo de la petición (un archivo subido) y rechaza con 413 si pasa del máximo, sin cargarlo completo."""
+    detalle = f"El archivo es demasiado grande (máximo {maximo // (1024 * 1024)} MB)"
+    declarado = request.headers.get("content-length")
+    if declarado and declarado.isdigit() and int(declarado) > maximo:
+        raise HTTPException(status_code=413, detail=detalle)
+    partes, total = [], 0
+    async for trozo in request.stream():
+        total += len(trozo)
+        if total > maximo:
+            raise HTTPException(status_code=413, detail=detalle)
+        partes.append(trozo)
+    return b"".join(partes)
 
 
 def sin_tildes(texto: str) -> str:
@@ -49,11 +70,21 @@ def _filas_de(hoja) -> list[list[Any]]:
     return filas
 
 
+def _revisar_xlsx(datos: bytes) -> None:
+    """Un .xlsx es un zip: uno pequeño puede abrirse a cientos de MB. Se revisa el tamaño abierto antes de leerlo."""
+    try:
+        if sum(i.file_size for i in zipfile.ZipFile(io.BytesIO(datos)).infolist()) > MAX_XLSX_DESCOMPRIMIDO:
+            raise HTTPException(status_code=413, detail="El archivo de Excel es demasiado grande al abrirse")
+    except zipfile.BadZipFile:
+        raise HTTPException(status_code=400, detail="No se pudo leer el archivo de Excel")
+
+
 def leer_filas(datos: bytes) -> list[list[Any]]:
     """Filas de la primera hoja de un xlsx, o de un CSV (utf-8 con o sin BOM, separado por ';' o ',')."""
     if not datos:
         raise HTTPException(status_code=400, detail="El archivo está vacío")
     if datos[:2] == b"PK":
+        _revisar_xlsx(datos)
         try:
             hoja = load_workbook(io.BytesIO(datos), data_only=True, read_only=True).worksheets[0]
             return _filas_de(hoja)
@@ -72,6 +103,7 @@ def leer_hojas(datos: bytes) -> list[tuple[str, list[list[Any]]]]:
     """Todas las hojas de un xlsx como (nombre, filas)."""
     if datos[:2] != b"PK":
         raise HTTPException(status_code=400, detail="Se esperaba un archivo de Excel (.xlsx)")
+    _revisar_xlsx(datos)
     try:
         libro = load_workbook(io.BytesIO(datos), data_only=True, read_only=True)
         return [(h.title, _filas_de(h)) for h in libro.worksheets]

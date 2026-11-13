@@ -2,7 +2,7 @@
 
 Lectiva (antes «Examen Digital») es una plataforma de gestión educativa para el aula: exámenes en línea, asistencia,
 actividades con rúbrica, notas por componente, reportes e informes, con panel docente y app del estudiante.
-Versión actual: **4.6.0** (definida en `backend/version.py`).
+Versión actual: **4.7.0** (definida en `backend/version.py`).
 
 ---
 
@@ -34,6 +34,7 @@ El servidor corre en la computadora del docente, dentro de la red del aula; los 
 | v1 | abr-may 2026 | Examen estático cargado desde JSON, con diseño propio y banco de preguntas por especialidad. |
 | v2 | jun 2026 | Backend FastAPI + SQLite, login de estudiantes, códigos de examen, PDF de resultados, scripts de inicio para Mac, Linux y Windows. |
 | v3 | oct-nov 2026 | Calificación en el servidor con sesión firmada; seguridad (bcrypt, límite de intentos, barajado por estudiante); **panel docente** modular (resultados, notas, estudiantes, exámenes, reportes, boleta, Excel); exámenes ADM02, GCS02, EMP02 y SQA02 y la skill `crear-examen-digital`; **fases 0-5** (ajustes y ponderación por materia, asistencia por lección, actividades con rúbrica, acta e informes, «Mis notas» con publicación controlada, ficha de seguimiento y cierre del curso lectivo); **etapas de diseño 1-5** (sistema de diseño claro/oscuro, menú lateral y selector global, pasar lista táctil, inicio útil, app del estudiante accesible); respaldos automáticos; app de Mac. |
+| v4.7.0 | nov 2026 | Integridad y seguridad de los datos: la base hace cumplir las claves foráneas y eliminar un estudiante borra todo lo que cuelga de él; las cargas de archivos tienen límite de tamaño (5 MB, 10 MB en general) y se rechazan los Excel que se abren enormes; reiniciar o cambiar la contraseña de un estudiante cierra sus sesiones abiertas. |
 | v4.6.0 | nov 2026 | App del estudiante: se puede añadir a la pantalla de inicio del celular (ícono, manifiesto y barra del color de la página); el reloj del examen se calcula contra la hora de fin y se corrige al desbloquear el teléfono; avisos y resultados como diálogos reales (foco atrapado, Escape, `aria-modal`); preguntas contestadas y opción elegida con visto, no solo color; «Mis notas» vuelve a la entrada si la sesión venció. |
 | v4.5.0 | nov 2026 | Uso diario del docente: Ajustes disponible aunque no haya materias; Resultados con búsqueda, paginación y menú de acciones; Bitácora con búsqueda, filtro por acción y etiquetas legibles; confirmaciones al desactivar una cuenta y al eliminar una observación; cambio de sección con lista; aviso al cambiar de pestaña o cerrar con cambios sin guardar. |
 | v4.4.0 | nov 2026 | Copia de respaldo externa: en Ajustes se elige una carpeta (iCloud, disco o USB) donde Lectiva guarda cada hora una copia verificada de la base, con las últimas 30; aviso en el Inicio si falla o se atrasa. |
@@ -60,6 +61,9 @@ ponderaciones configurables, reportes con Excel y una suite de pruebas.
 - [x] **Reintento sin conexión:** si se cae la red o el servidor no responde, la app reintenta sola cada 5 s y apenas vuelve el wifi; un «ya enviado» tras reintentar se toma como éxito.
 - [x] **Continuar el examen tras recargar:** la pantalla del código muestra «Tienes un examen en curso… Continuar mi examen» sin volver a escribirlo.
 - [x] **Exámenes en curso:** botón «Cerrar y calificar los N en curso…» en Exámenes (deshabilitar un examen sigue sin detener a quienes ya lo iniciaron).
+- [x] **Claves foráneas:** la base las hace cumplir en cada conexión (rechaza datos huérfanos y aplica los borrados en cascada); eliminar un estudiante borra también su asistencia, calificaciones y observaciones. Se revisó tu base: no tenía huérfanos.
+- [x] **Límite de tamaño en las cargas:** 5 MB por archivo (CSV o Excel), 10 MB por petición, y un .xlsx que se descomprime a más de 50 MB se rechaza (un archivo pequeño puede esconder cientos de MB).
+- [x] **Sesión del estudiante:** el token lleva una versión de sesión; reiniciar la contraseña (una cuenta o un grupo) o que el estudiante la cambie cierra las demás sesiones abiertas.
 - [x] **Instalable en el celular:** manifiesto, íconos y metadatos para «Añadir a pantalla de inicio» (abre sin la barra del navegador). Sin modo sin conexión: eso exige HTTPS y Lectiva corre en la red del aula con `http://`.
 - [x] **Reloj basado en la hora de fin:** no se atrasa al bloquear el teléfono; al desbloquear se recalcula y se sincroniza con el servidor al instante.
 - [x] **Accesibilidad del estudiante:** aviso de preguntas sin contestar y resultados como diálogos (foco, Tab atrapado, Escape, `aria-modal`); visto en la pregunta contestada y en la opción elegida; flecha en las notas bajo el mínimo del panel docente.
@@ -73,11 +77,6 @@ ponderaciones configurables, reportes con Excel y una suite de pruebas.
 ---
 
 ## Pendientes priorizados
-
-### Prioridad alta: robustez del examen y de los datos
-- [ ] **Claves foráneas apagadas:** al borrar un estudiante quedan asistencia, calificaciones y observaciones huérfanas (`backend/routes/estudiantes.py`).
-- [ ] **Límite de tamaño** en las cargas de archivos (CSV y Excel).
-- [ ] **Sesión del estudiante:** invalidar el token al reiniciar su clave (hoy dura 12 horas).
 
 ### Prioridad media: uso diario del docente
 - [ ] **Secciones permitidas del examen** con casillas en vez de texto separado por comas.

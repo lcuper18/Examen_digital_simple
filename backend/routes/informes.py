@@ -14,7 +14,7 @@ from backend import database, security
 from backend.routes.actividades import ESTADOS as ESTADOS_ACTIVIDAD
 from backend.routes.asistencia import _resumen
 from backend.routes.notas import COMPONENTES, ETIQUETAS, _filas, _materia, nota_minima, pesos_de
-from backend.hojas import emparejar, sin_tildes
+from backend.hojas import emparejar, leer_cuerpo, sin_tildes
 from backend.routes.reportes import _xlsx
 
 router = APIRouter(
@@ -165,7 +165,7 @@ async def plantilla_colegio(request: Request, materia_id: int) -> dict[str, Any]
     Respeta su codificación (BOM), separador, fin de línea, orden de filas, nombres y columnas desconocidas.
     La columna «Prueba» suma Prueba 1 y Prueba 2; un componente sin nota se escribe 0 (y se avisa).
     """
-    datos = await request.body()
+    datos = await leer_cuerpo(request)
     bom = datos.startswith(b"\xef\xbb\xbf")
     try:
         texto = datos.decode("utf-8-sig")

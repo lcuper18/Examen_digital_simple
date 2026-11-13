@@ -11,7 +11,7 @@ from openpyxl import Workbook
 from pydantic import BaseModel, Field
 
 from backend import bitacora, database, security
-from backend.hojas import a_numero, leer_hojas, sin_tildes
+from backend.hojas import a_numero, leer_cuerpo, leer_hojas, sin_tildes
 from backend.routes.asistencia import _resumen
 from backend.routes.informes import _nombre_acta, agregar_materias
 from backend.routes.notas import COMPONENTES, ETIQUETAS, _filas, nota_minima, pesos_de
@@ -142,7 +142,7 @@ async def importar_encargados(request: Request) -> dict[str, Any]:
     Carga teléfono, encargado, dirección y adecuación desde una hoja como `Lista_Alumnos.xlsx`
     (una hoja por sección con encabezados «Cédula», «Cédula del encargado», «ADECUACIÓN»...). Empareja por cédula.
     """
-    hojas = leer_hojas(await request.body())
+    hojas = leer_hojas(await leer_cuerpo(request))
     with database.get_db_context() as conn:
         por_cedula = {re.sub(r"\D", "", r["cedula"]): r["id"] for r in conn.execute("SELECT id, cedula FROM estudiantes")}
         actualizados, sin_pareja, hojas_usadas = 0, [], 0

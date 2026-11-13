@@ -94,6 +94,9 @@ def get_db() -> sqlite3.Connection:
     conn = sqlite3.connect(DATABASE_PATH, timeout=10)
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA journal_mode=WAL")  # lecturas y escrituras simultáneas sin bloqueos
+    # SQLite no hace cumplir las claves foráneas si no se le pide en cada conexión: con esto la base rechaza dejar
+    # datos huérfanos (asistencia o notas de un estudiante que ya no existe) y aplica los ON DELETE CASCADE.
+    conn.execute("PRAGMA foreign_keys=ON")
     return conn
 
 
@@ -403,6 +406,9 @@ def init_db() -> int:
             )
         """)
 
+        # Versión de la sesión: se sube al reiniciar la contraseña y deja sin efecto los tokens anteriores del estudiante
+        _agregar_columnas(cursor, "estudiantes", {"sesion_version": "INTEGER NOT NULL DEFAULT 0"})
+
         # Un solo intento por estudiante y examen
         cursor.execute(
             "CREATE UNIQUE INDEX IF NOT EXISTS idx_intento_unico "
@@ -410,6 +416,10 @@ def init_db() -> int:
         )
 
         conn.commit()
+
+        huerfanos = conn.execute("PRAGMA foreign_key_check").fetchall()
+        if huerfanos:
+            print(f"[AVISO] {len(huerfanos)} registros apuntan a datos que ya no existen (revisa con PRAGMA foreign_key_check)")
 
     # Poblar estudiantes si la tabla está vacía
     return ensure_students()

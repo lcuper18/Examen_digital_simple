@@ -11,7 +11,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, Field
 
 from backend import bitacora, database, security
-from backend.hojas import a_numero, emparejar, leer_filas, sin_tildes
+from backend.hojas import a_numero, emparejar, leer_cuerpo, leer_filas, sin_tildes
 
 router = APIRouter(
     prefix="/api/docente", tags=["notas"], dependencies=[Depends(security.require_docente)]
@@ -301,7 +301,7 @@ async def importar_hoja(request: Request, materia_id: int) -> dict[str, Any]:
     `Notas/Periodo02/<sección>/*.csv`: columnas Id (cédula sin guiones) o Nombre, y los componentes
     (Trabajo cotidiano, Tareas, Prueba1, Prueba2, Proyecto, Asistencia). Las celdas vacías no cambian nada.
     """
-    filas = leer_filas(await request.body())
+    filas = leer_filas(await leer_cuerpo(request))
     cab = next((i for i, f in enumerate(filas) if any(
         re.sub(r"\W", "", sin_tildes(str(c or "")).lower()) in ALIAS_COMPONENTES for c in f)), None)
     if cab is None:

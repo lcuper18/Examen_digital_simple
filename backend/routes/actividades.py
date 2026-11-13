@@ -12,7 +12,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel, Field
 
 from backend import bitacora, database, security
-from backend.hojas import a_numero, emparejar, leer_filas
+from backend.hojas import a_numero, emparejar, leer_cuerpo, leer_filas
 from backend.routes.notas import _materia
 
 router = APIRouter(
@@ -281,7 +281,7 @@ async def importar_hoja(request: Request, materia_id: int, componente: str, nomb
     """
     if componente not in COMPONENTES_ACTIVIDAD:
         raise HTTPException(status_code=400, detail="Componente no válido")
-    filas = leer_filas(await request.body())
+    filas = leer_filas(await leer_cuerpo(request))
     cab = next((i for i, f in enumerate(filas) if any(str(c or "").strip().lower() == "estudiante" for c in f)), None)
     if cab is None:
         raise HTTPException(status_code=400, detail="No encontré la columna «Estudiante»")

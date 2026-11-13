@@ -124,6 +124,7 @@ async function performChangePassword() {
   const data = await response.json().catch(() => ({}));
   if (!response.ok) return mostrar(data.detail || 'No se pudo cambiar la contraseña');
 
+  if (data.token) authToken = data.token; // al cambiar la contraseña se cierran las otras sesiones; esta sigue con un token nuevo
   errorEl.style.display = 'none';
   ['change-actual', 'change-nueva', 'change-confirmar'].forEach(id => { document.getElementById(id).value = ''; });
   estudianteActual.debe_cambiar_password = false;
@@ -1123,7 +1124,11 @@ async function guardarProgreso() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ respuestas: respuestasPorNumero(), incidencias })
     });
-    if (response.status === 401) return logout();
+    if (response.status === 401) {
+      // Sesión cerrada (el docente reinició la contraseña o venció): lo respondido queda guardado y se retoma al volver a entrar
+      mostrarAviso('Tu sesión terminó. Vuelve a entrar con tu contraseña; tus respuestas están guardadas.');
+      return logout();
+    }
     const data = await response.json().catch(() => ({}));
     if (response.ok) {
       if (typeof data.segundos_restantes === 'number') {
