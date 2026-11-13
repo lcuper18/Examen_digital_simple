@@ -84,6 +84,8 @@
           Panel.toast('Observación agregada');
         }
         if (ev.target.dataset.borrarObs) {
+          if (!(await Panel.confirmar('Se eliminará esta observación del historial del estudiante.',
+            { titulo: 'Eliminar observación', texto: 'Eliminar', peligro: true }))) return;
           await Panel.json(`/api/docente/observaciones/${ev.target.dataset.borrarObs}`, { method: 'DELETE' });
           await recargarObs();
         }

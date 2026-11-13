@@ -108,11 +108,24 @@
       await Panel.json(`/api/docente/estudiantes/${id}/desbloquear`, { method: 'POST' });
       Panel.toast('Login desbloqueado');
     } else if (accion === 'activo') {
+      if (e.activo && !(await Panel.confirmar(
+        `${Panel.nombre(e)} no podrá entrar a Lectiva hasta que actives su cuenta de nuevo. Sus notas y exámenes se conservan.`,
+        { titulo: 'Desactivar cuenta', texto: 'Desactivar', peligro: true }))) return;
       await Panel.json(`/api/docente/estudiantes/${id}`, { method: 'PATCH', body: { activo: !e.activo } });
       Panel.toast(e.activo ? 'Cuenta desactivada' : 'Cuenta activada');
     } else if (accion === 'seccion') {
-      const nueva = await Panel.pedir('Nueva sección (ej. 11-1)', e.seccion, { titulo: 'Cambiar sección' });
-      if (!nueva) return;
+      // Lista de las secciones que ya existen (se puede escribir otra); evita errores de tipeo como «11 -1»
+      const existentes = [...$('e-seccion').options].map(o => o.value).filter(Boolean); // todas las secciones, no solo las del filtro
+      const nueva = await Panel.dialogo({
+        titulo: 'Cambiar sección',
+        cuerpo: `<p class="doc-muted">${Panel.esc(Panel.nombre(e))} está en <strong>${Panel.esc(e.seccion)}</strong>.</p>
+          <label class="doc-campo">Nueva sección
+            <input type="text" id="nueva-seccion" list="lista-secciones" value="${Panel.esc(e.seccion)}" autocomplete="off">
+            <datalist id="lista-secciones">${existentes.map(s => `<option value="${Panel.esc(s)}"></option>`).join('')}</datalist></label>`,
+        botones: [{ texto: 'Cancelar', valor: null },
+          { texto: 'Cambiar', primario: true, valor: f => f.querySelector('#nueva-seccion').value.trim() || null }],
+      });
+      if (!nueva || nueva === e.seccion) return;
       await Panel.json(`/api/docente/estudiantes/${id}`, { method: 'PATCH', body: { seccion: nueva } });
       Panel.toast('Sección actualizada');
     } else if (accion === 'eliminar') {

@@ -121,6 +121,7 @@ Panel.FRASES = {
   desbloquear_login: 'Desbloqueaste el acceso de un estudiante', reiniciar_intento: 'Permitiste repetir un examen', anular_intento: 'Anulaste un intento de examen',
   restaurar_intento: 'Restauraste un intento de examen', marcar_sospechoso: 'Marcaste un intento como sospechoso', quitar_sospechoso: 'Quitaste la marca de sospechoso',
   cerrar_examen_en_curso: 'Cerraste y calificaste los intentos abiertos de un examen',
+  configurar_respaldo: 'Configuraste la copia de respaldo externa', respaldo_externo: 'Hiciste la copia de respaldo externa',
   exigir_cambio_clave: 'Pediste a un grupo que cambie su contraseña', cambiar_clave_docente: 'Cambiaste tu contraseña del panel',
   cerrar_intento: 'Cerraste un examen en curso', tiempo_extra: 'Diste tiempo extra', cierre_curso: 'Cerraste el curso lectivo',
 };
@@ -243,6 +244,41 @@ Panel.ordenable = function (tabla, getters, estado, alCambiar) {
 Panel.th = (clave, texto) =>
   `<th scope="col" aria-sort="none"><button type="button" class="doc-th" data-orden="${clave}">${texto} <span class="doc-flecha" aria-hidden="true"></span></button></th>`;
 
+// Texto en minúscula y sin tildes, para buscar sin importar mayúsculas ni acentos
+Panel.norm = (texto) => String(texto ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+// ¿El texto contiene todas las palabras de la búsqueda? («jose artavia» encuentra «ARTAVIA MORA, JOSÉ»)
+Panel.coincide = (texto, busqueda) => {
+  const palabras = Panel.norm(busqueda).split(/\s+/).filter(Boolean);
+  const t = Panel.norm(texto);
+  return palabras.every(p => t.includes(p));
+};
+
+// Paginador para tablas largas. `contenedor` es un <nav> vacío bajo la tabla; `cortar(lista)` devuelve solo la página actual
+// y dibuja «‹ Anterior · Página 2 de 5 · Siguiente ›»; `reiniciar()` vuelve a la primera página (al cambiar filtros).
+Panel.paginador = function (contenedor, porPagina, alCambiar) {
+  const estado = { pagina: 1 };
+  contenedor.setAttribute('aria-label', 'Paginación');
+  contenedor.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-pag]');
+    if (!b || b.disabled) return;
+    estado.pagina += Number(b.dataset.pag);
+    alCambiar();
+  });
+  return {
+    reiniciar() { estado.pagina = 1; },
+    cortar(lista) {
+      const paginas = Math.max(1, Math.ceil(lista.length / porPagina));
+      estado.pagina = Math.min(Math.max(estado.pagina, 1), paginas);
+      contenedor.hidden = lista.length <= porPagina;
+      contenedor.innerHTML = `<button type="button" class="btn btn-secondary" data-pag="-1" ${estado.pagina === 1 ? 'disabled' : ''}>‹ Anterior</button>
+        <span class="doc-muted">Página ${estado.pagina} de ${paginas} · ${lista.length} resultados</span>
+        <button type="button" class="btn btn-secondary" data-pag="1" ${estado.pagina === paginas ? 'disabled' : ''}>Siguiente ›</button>`;
+      return lista.slice((estado.pagina - 1) * porPagina, estado.pagina * porPagina);
+    },
+  };
+};
+
 // ========== AVISOS ==========
 Panel.toast = function (mensaje, tipo = 'ok') {
   const t = document.createElement('div');
@@ -283,6 +319,8 @@ Panel.dialogo = function ({ titulo, cuerpo = '', botones = [{ texto: 'Cerrar', v
     };
     const valorBoton = (b) => (typeof b.valor === 'function' ? b.valor(fondo) : b.valor);
     const teclas = (e) => {
+      // Con un diálogo sobre otro (p. ej. una confirmación sobre la ficha) solo responde el de encima
+      if (fondo !== [...document.querySelectorAll('.doc-dialogo-fondo')].pop()) return;
       if (e.key === 'Escape') { e.stopPropagation(); cerrar(null); }
       if (e.key === 'Tab') {
         const foco = [...fondo.querySelectorAll('button, input, select, textarea')].filter(x => !x.disabled);
@@ -450,6 +488,12 @@ Panel.abrirMenu = function (abrir) {
 Panel.irA = async function (id) {
   const modulo = Panel.ordenados.find(m => m.id === id);
   if (!modulo) return;
+  // Al cambiar de pestaña con cambios sin guardar se pregunta antes de perderlos
+  const actual = Panel.ordenados.find(m => m.id === Panel.moduloActivo);
+  if (actual && actual.id !== id && actual.hayCambios && actual.hayCambios() &&
+      !(await Panel.confirmar('Tienes cambios sin guardar; se perderán si cambias de pestaña.', { texto: 'Salir sin guardar', peligro: true }))) {
+    return;
+  }
   Panel.moduloActivo = id;
   Panel.abrirMenu(false);
   document.querySelectorAll('.doc-nav-item').forEach(b => {
@@ -457,8 +501,9 @@ Panel.irA = async function (id) {
     b.classList.toggle('active', activa);
     if (activa) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
   });
-  $('doc-contexto').hidden = !modulo.usaContexto;
-  const sinMaterias = modulo.usaContexto && !Panel.contexto.id();
+  // Las pestañas con `contextoOpcional` (Ajustes) siguen disponibles aunque todavía no existan materias
+  $('doc-contexto').hidden = !modulo.usaContexto || !Panel.contexto.id();
+  const sinMaterias = modulo.usaContexto && !modulo.contextoOpcional && !Panel.contexto.id();
   $('doc-vacio-ctx').hidden = !sinMaterias;
   Panel.ordenados.forEach(m => { $(`tab-${m.id}`).hidden = m.id !== id || sinMaterias; });
   sessionStorage.setItem('docenteTab', id);
@@ -600,6 +645,11 @@ Panel.mostrarPanel = function () {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Cerrar o recargar la página con cambios sin guardar: el navegador pregunta antes
+  window.addEventListener('beforeunload', (e) => {
+    const m = Panel.ordenados && Panel.ordenados.find(x => x.id === Panel.moduloActivo);
+    if (m && m.hayCambios && m.hayCambios()) { e.preventDefault(); e.returnValue = ''; }
+  });
   $('doc-login-btn').addEventListener('click', Panel.entrar);
   $('doc-aviso-clave-btn').addEventListener('click', () => Panel.cambiarClaveDocente());
   $('doc-password').addEventListener('keypress', e => { if (e.key === 'Enter') Panel.entrar(); });

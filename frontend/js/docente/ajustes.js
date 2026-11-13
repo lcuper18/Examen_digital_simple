@@ -81,7 +81,13 @@
 
   function dibujarPesos() {
     const m = materias.find(x => x.id === Panel.contexto.id());
-    if (!m) return;
+    if (!m) {
+      $('aj-materia-txt').textContent = 'todavía no hay materias registradas';
+      $('aj-pesos').innerHTML = '';
+      $('aj-suma').textContent = '';
+      $('btn-guardar-pesos').disabled = true;
+      return;
+    }
     $('aj-materia-txt').textContent = `${m.seccion} · ${m.periodo}.º período · ${m.nombre}`;
     $('aj-pesos').innerHTML = componentes.map(c => `
       <label class="doc-campo">${etiquetas[c]} (puntos)
@@ -206,6 +212,7 @@
       $('btn-cerrar-curso').addEventListener('click', run(cerrarCurso));
     },
     usaContexto: true,
+    contextoOpcional: true, // los datos de la institución, la contraseña y la copia de respaldo no dependen de una materia
     async mostrar() {
       await Promise.all([cargarAjustes(), cargarMaterias(), cargarRed(), cargarCierre(), cargarRespaldo()]);
     },

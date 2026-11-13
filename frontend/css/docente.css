@@ -362,3 +362,8 @@
 .doc-vinculo-fila select { width: auto; min-width: 110px; }
 
 .doc-actions-fila { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+
+/* Paginación de tablas largas y barra de búsqueda */
+.doc-paginacion { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; margin-top: 12px; }
+.doc-paginacion[hidden] { display: none; }
+.doc-toolbar input[type="search"] { min-width: 220px; }

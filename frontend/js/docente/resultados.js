@@ -1,9 +1,11 @@
-// Pestaña Resultados: intentos de examen, detalle pregunta por pregunta y reinicio
+// Pestaña Resultados: intentos de examen con búsqueda y paginación, detalle pregunta por pregunta y acciones
 (function () {
   let intentos = [];
   let el;
   let ordenar = (l) => l;
   const orden = { clave: 'fecha', dir: -1 };
+  let paginas;
+  const POR_PAGINA = 25;
 
   const porcentaje = (i) => (i.total ? Math.round((i.puntuacion / i.total) * 1000) / 10 : 0);
 
@@ -37,11 +39,13 @@
     const examen = $('f-examen').value;
     const seccion = $('f-seccion').value;
     const estado = $('f-estado').value;
+    const buscar = $('f-buscar').value;
     const lista = intentos.filter(i =>
       (!examen || i.codigo_examen === examen) && (!seccion || i.seccion === seccion) &&
-      (!estado || (estado === 'sospechoso' ? i.sospechoso : estadoDe(i) === estado)));
+      (!estado || (estado === 'sospechoso' ? i.sospechoso : estadoDe(i) === estado)) &&
+      (!buscar.trim() || Panel.coincide(Panel.nombre(i), buscar)));
     const enviados = lista.filter(i => i.fecha_fin && !i.anulado);
-    const visibles = ordenar(lista);
+    const visibles = paginas.cortar(ordenar(lista));
     const promedio = enviados.length ? (enviados.reduce((s, i) => s + porcentaje(i), 0) / enviados.length).toFixed(1) : '—';
     $('res-resumen').textContent =
       `${lista.length} intentos · ${enviados.length} enviados · promedio ${promedio}` +
@@ -62,11 +66,23 @@
         <td>${duracionUsada(i)}${i.minutos_extra ? ` <small class="doc-muted">+${i.minutos_extra}</small>` : ''}</td>
         <td>${salidas}</td>
         <td class="doc-actions">
-          <button class="btn btn-secondary" data-ver="${i.id}">Detalle</button>
-          <button class="btn btn-secondary" data-acciones="${i.id}" aria-haspopup="dialog">Acciones…</button>
+          <button class="btn btn-primary" data-ver="${i.id}" aria-haspopup="dialog">Detalle</button>
+          <button class="btn btn-secondary" data-menu-int="${i.id}" aria-label="Más acciones de ${Panel.esc(Panel.nombre(i))}">⋯</button>
         </td>
       </tr>`;
-    }).join('') || '<tr><td colspan="8" class="doc-pending">Sin intentos</td></tr>';
+    }).join('') || '<tr><td colspan="8" class="doc-pending">Sin intentos con ese filtro.</td></tr>';
+    document.querySelectorAll('[data-menu-int]').forEach(b => {
+      const i = intentos.find(x => x.id === Number(b.dataset.menuInt));
+      const abierto = !i.fecha_fin && !i.anulado;
+      const fallo = (fn) => () => fn(i).catch(err => Panel.toast(err.message, 'error'));
+      Panel.menuDesplegable(b, [
+        ...(abierto ? [{ texto: 'Dar tiempo extra…', accion: fallo(tiempoExtra) }, { texto: 'Cerrar y calificar…', accion: fallo(cerrarIntento) }] : []),
+        { texto: i.anulado ? 'Restaurar intento' : 'Anular intento…', accion: fallo(anularIntento) },
+        { texto: i.sospechoso ? 'Quitar marca de sospechoso' : 'Marcar como sospechoso…', accion: fallo(marcarSospechoso) },
+        { separador: true },
+        { texto: 'Reiniciar (borrar el intento)…', accion: fallo(reiniciarIntento), peligro: true },
+      ]);
+    });
   }
 
   async function verDetalle(id) {
@@ -102,58 +118,53 @@
     });
   }
 
-  async function acciones(id) {
-    const i = intentos.find(x => x.id === id);
-    const abierto = !i.fecha_fin && !i.anulado;
-    const accion = await Panel.dialogo({
-      titulo: `${Panel.nombre(i)} · ${i.codigo_examen}`,
-      cuerpo: '<p class="doc-muted">Elige una acción sobre este intento:</p>',
-      botones: [
-        ...(abierto ? [{ texto: 'Dar tiempo extra', valor: 'tiempo' }, { texto: 'Cerrar y calificar', valor: 'cerrar' }] : []),
-        { texto: i.anulado ? 'Restaurar intento' : 'Anular intento', valor: 'anular' },
-        { texto: i.sospechoso ? 'Quitar marca de sospechoso' : 'Marcar sospechoso', valor: 'sospechoso' },
-        { texto: 'Reiniciar (borrar)', valor: 'reiniciar' },
-        { texto: 'Cancelar', valor: null },
-      ],
-    });
-    if (accion === 'tiempo') {
-      const m = await Panel.pedir('Minutos adicionales (1-240)', '10', { titulo: 'Tiempo extra' });
-      if (!m) return;
-      await Panel.json(`/api/docente/intentos/${id}/tiempo-extra`, { method: 'POST', body: { minutos: Number(m) } });
-      Panel.toast(`+${m} minutos. El estudiante los recibe en menos de 30 segundos.`);
-    } else if (accion === 'cerrar') {
-      if (!(await Panel.confirmar('Se calificará con las respuestas guardadas hasta ahora y el estudiante ya no podrá continuar.',
-        { titulo: 'Cerrar intento', texto: 'Cerrar y calificar', peligro: true }))) return;
-      const r = await Panel.json(`/api/docente/intentos/${id}/cerrar`, { method: 'POST' });
-      Panel.toast(`Intento cerrado: ${r.puntuacion}/${r.total}`);
-    } else if (accion === 'anular') {
-      if (i.anulado) {
-        await Panel.json(`/api/docente/intentos/${id}/anular`, { method: 'POST', body: { anulado: false } });
-        Panel.toast('Intento restaurado');
-      } else {
-        const motivo = await Panel.pedir('Motivo (opcional, queda en la bitácora)', '', { titulo: 'Anular intento' });
-        if (motivo === null && !(await Panel.confirmar('¿Anular sin indicar motivo?', { texto: 'Anular', peligro: true }))) return;
-        await Panel.json(`/api/docente/intentos/${id}/anular`, { method: 'POST', body: { anulado: true, motivo: motivo || '' } });
-        Panel.toast('Intento anulado: ya no cuenta en notas ni reportes');
-      }
-    } else if (accion === 'sospechoso') {
-      if (i.sospechoso) {
-        await Panel.json(`/api/docente/intentos/${id}/sospechoso`, { method: 'POST', body: { sospechoso: false } });
-      } else {
-        const nota = await Panel.pedir('Observación (qué te llamó la atención)', i.nota_docente || '', { titulo: 'Marcar sospechoso' });
-        if (nota === null) return;
-        await Panel.json(`/api/docente/intentos/${id}/sospechoso`, { method: 'POST', body: { sospechoso: true, nota } });
-      }
-      Panel.toast('Intento actualizado');
-    } else if (accion === 'reiniciar') {
-      if (!(await Panel.confirmar(
-        `Se borrará el resultado de ${Panel.nombre(i)} en ${i.codigo_examen} y podrá presentar el examen de nuevo.`,
-        { titulo: 'Reiniciar intento', texto: 'Reiniciar', peligro: true }))) return;
-      await Panel.json(`/api/docente/intentos/${id}`, { method: 'DELETE' });
-      Panel.toast('Intento reiniciado');
+  async function tiempoExtra(i) {
+    const m = await Panel.pedir('Minutos adicionales (1-240)', '10', { titulo: 'Tiempo extra' });
+    if (!m) return;
+    await Panel.json(`/api/docente/intentos/${i.id}/tiempo-extra`, { method: 'POST', body: { minutos: Number(m) } });
+    Panel.toast(`+${m} minutos. El estudiante los recibe en menos de 30 segundos.`);
+    await cargar();
+  }
+
+  async function cerrarIntento(i) {
+    if (!(await Panel.confirmar('Se calificará con las respuestas guardadas hasta ahora y el estudiante ya no podrá continuar.',
+      { titulo: 'Cerrar intento', texto: 'Cerrar y calificar', peligro: true }))) return;
+    const r = await Panel.json(`/api/docente/intentos/${i.id}/cerrar`, { method: 'POST' });
+    Panel.toast(`Intento cerrado: ${r.puntuacion}/${r.total}`);
+    await cargar();
+  }
+
+  async function anularIntento(i) {
+    if (i.anulado) {
+      await Panel.json(`/api/docente/intentos/${i.id}/anular`, { method: 'POST', body: { anulado: false } });
+      Panel.toast('Intento restaurado');
     } else {
-      return;
+      const motivo = await Panel.pedir('Motivo (opcional, queda en la bitácora)', '', { titulo: 'Anular intento' });
+      if (motivo === null && !(await Panel.confirmar('¿Anular sin indicar motivo?', { texto: 'Anular', peligro: true }))) return;
+      await Panel.json(`/api/docente/intentos/${i.id}/anular`, { method: 'POST', body: { anulado: true, motivo: motivo || '' } });
+      Panel.toast('Intento anulado: ya no cuenta en notas ni reportes');
     }
+    await cargar();
+  }
+
+  async function marcarSospechoso(i) {
+    if (i.sospechoso) {
+      await Panel.json(`/api/docente/intentos/${i.id}/sospechoso`, { method: 'POST', body: { sospechoso: false } });
+    } else {
+      const nota = await Panel.pedir('Observación (qué te llamó la atención)', i.nota_docente || '', { titulo: 'Marcar sospechoso' });
+      if (nota === null) return;
+      await Panel.json(`/api/docente/intentos/${i.id}/sospechoso`, { method: 'POST', body: { sospechoso: true, nota } });
+    }
+    Panel.toast('Intento actualizado');
+    await cargar();
+  }
+
+  async function reiniciarIntento(i) {
+    if (!(await Panel.confirmar(
+      `Se borrará el resultado de ${Panel.nombre(i)} en ${i.codigo_examen} y podrá presentar el examen de nuevo.`,
+      { titulo: 'Reiniciar intento', texto: 'Reiniciar', peligro: true }))) return;
+    await Panel.json(`/api/docente/intentos/${i.id}`, { method: 'DELETE' });
+    Panel.toast('Intento reiniciado');
     await cargar();
   }
 
@@ -164,6 +175,7 @@
         <div class="doc-toolbar">
           <label>Examen <select id="f-examen"></select></label>
           <label>Sección <select id="f-seccion"></select></label>
+          <label>Buscar <input type="search" id="f-buscar" placeholder="Nombre del estudiante" autocomplete="off"></label>
           <label>Estado <select id="f-estado">
             <option value="">Todos</option><option value="abierto">En curso</option><option value="enviado">Enviados</option>
             <option value="anulado">Anulados</option><option value="sospechoso">Sospechosos</option></select></label>
@@ -181,20 +193,22 @@
             </tr></thead>
             <tbody></tbody>
           </table>
-        </div>`;
+        </div>
+        <nav id="pag-intentos" class="doc-paginacion" hidden></nav>`;
+      paginas = Panel.paginador($('pag-intentos'), POR_PAGINA, render);
       ordenar = Panel.ordenable($('tabla-intentos'), {
         nombre: i => Panel.nombre(i), seccion: i => i.seccion, examen: i => i.codigo_examen,
         nota: i => (i.fecha_fin ? porcentaje(i) : null), salidas: i => i.incidencias, fecha: i => i.fecha_inicio,
       }, orden, render);
-      $('f-examen').addEventListener('change', render);
-      $('f-seccion').addEventListener('change', render);
-      $('f-estado').addEventListener('change', render);
+      // Cambiar un filtro o la búsqueda vuelve a la primera página
+      const filtrar = () => { paginas.reiniciar(); render(); };
+      ['f-examen', 'f-seccion', 'f-estado'].forEach(id => $(id).addEventListener('change', filtrar));
+      $('f-buscar').addEventListener('input', filtrar);
       $('btn-refrescar').addEventListener('click', () => cargar().catch(e => Panel.toast(e.message, 'error')));
       $('btn-exportar-intentos').addEventListener('click', () => Panel.descargar('/api/docente/intentos-exportar', 'intentos.csv'));
       $('tabla-intentos').addEventListener('click', e => {
         const run = (fn) => fn().catch(err => Panel.toast(err.message, 'error'));
         if (e.target.dataset.ver) run(() => verDetalle(Number(e.target.dataset.ver)));
-        if (e.target.dataset.acciones) run(() => acciones(Number(e.target.dataset.acciones)));
       });
     },
     mostrar: cargar,
