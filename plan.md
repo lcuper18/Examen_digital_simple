@@ -2,7 +2,7 @@
 
 Lectiva (antes «Examen Digital») es una plataforma de gestión educativa para el aula: exámenes en línea, asistencia,
 actividades con rúbrica, notas por componente, reportes e informes, con panel docente y app del estudiante.
-Versión actual: **4.5.0** (definida en `backend/version.py`).
+Versión actual: **4.6.0** (definida en `backend/version.py`).
 
 ---
 
@@ -34,6 +34,7 @@ El servidor corre en la computadora del docente, dentro de la red del aula; los 
 | v1 | abr-may 2026 | Examen estático cargado desde JSON, con diseño propio y banco de preguntas por especialidad. |
 | v2 | jun 2026 | Backend FastAPI + SQLite, login de estudiantes, códigos de examen, PDF de resultados, scripts de inicio para Mac, Linux y Windows. |
 | v3 | oct-nov 2026 | Calificación en el servidor con sesión firmada; seguridad (bcrypt, límite de intentos, barajado por estudiante); **panel docente** modular (resultados, notas, estudiantes, exámenes, reportes, boleta, Excel); exámenes ADM02, GCS02, EMP02 y SQA02 y la skill `crear-examen-digital`; **fases 0-5** (ajustes y ponderación por materia, asistencia por lección, actividades con rúbrica, acta e informes, «Mis notas» con publicación controlada, ficha de seguimiento y cierre del curso lectivo); **etapas de diseño 1-5** (sistema de diseño claro/oscuro, menú lateral y selector global, pasar lista táctil, inicio útil, app del estudiante accesible); respaldos automáticos; app de Mac. |
+| v4.6.0 | nov 2026 | App del estudiante: se puede añadir a la pantalla de inicio del celular (ícono, manifiesto y barra del color de la página); el reloj del examen se calcula contra la hora de fin y se corrige al desbloquear el teléfono; avisos y resultados como diálogos reales (foco atrapado, Escape, `aria-modal`); preguntas contestadas y opción elegida con visto, no solo color; «Mis notas» vuelve a la entrada si la sesión venció. |
 | v4.5.0 | nov 2026 | Uso diario del docente: Ajustes disponible aunque no haya materias; Resultados con búsqueda, paginación y menú de acciones; Bitácora con búsqueda, filtro por acción y etiquetas legibles; confirmaciones al desactivar una cuenta y al eliminar una observación; cambio de sección con lista; aviso al cambiar de pestaña o cerrar con cambios sin guardar. |
 | v4.4.0 | nov 2026 | Copia de respaldo externa: en Ajustes se elige una carpeta (iCloud, disco o USB) donde Lectiva guarda cada hora una copia verificada de la base, con las últimas 30; aviso en el Inicio si falla o se atrasa. |
 | v4.3.0 | nov 2026 | Vínculo examen-materia: un examen se vincula a una o varias materias (por ejemplo EMP02 a Emprendimiento de 11-1 y de 11-2) con su componente; la pantalla Exámenes muestra a qué notas va cada uno; «Un examen como prueba…» elige de una lista; la boleta toma el período del vínculo. |
@@ -59,6 +60,10 @@ ponderaciones configurables, reportes con Excel y una suite de pruebas.
 - [x] **Reintento sin conexión:** si se cae la red o el servidor no responde, la app reintenta sola cada 5 s y apenas vuelve el wifi; un «ya enviado» tras reintentar se toma como éxito.
 - [x] **Continuar el examen tras recargar:** la pantalla del código muestra «Tienes un examen en curso… Continuar mi examen» sin volver a escribirlo.
 - [x] **Exámenes en curso:** botón «Cerrar y calificar los N en curso…» en Exámenes (deshabilitar un examen sigue sin detener a quienes ya lo iniciaron).
+- [x] **Instalable en el celular:** manifiesto, íconos y metadatos para «Añadir a pantalla de inicio» (abre sin la barra del navegador). Sin modo sin conexión: eso exige HTTPS y Lectiva corre en la red del aula con `http://`.
+- [x] **Reloj basado en la hora de fin:** no se atrasa al bloquear el teléfono; al desbloquear se recalcula y se sincroniza con el servidor al instante.
+- [x] **Accesibilidad del estudiante:** aviso de preguntas sin contestar y resultados como diálogos (foco, Tab atrapado, Escape, `aria-modal`); visto en la pregunta contestada y en la opción elegida; flecha en las notas bajo el mínimo del panel docente.
+- [x] **«Mis notas» con la sesión vencida:** cierra y vuelve a la entrada con un aviso.
 - [x] **Ajustes sin materias, Resultados y Bitácora:** Ajustes (institución, contraseña, copia de respaldo) ya no se oculta si no hay materias; Resultados tiene búsqueda por estudiante, paginación (25 por página) y el mismo menú «⋯» de las demás pestañas; Bitácora con búsqueda, filtro por acción, paginación y las mismas etiquetas legibles del Inicio.
 - [x] **Confirmaciones:** desactivar una cuenta y eliminar una observación piden confirmar; «Cambiar sección» ofrece la lista de secciones; al cambiar de pestaña o cerrar con cambios sin guardar se avisa antes de perderlos.
 - [x] **Respaldo fuera del equipo:** carpeta externa elegida en Ajustes (sugiere iCloud Drive y discos conectados), copia horaria verificada y atómica, últimas 30, «Respaldar ahora», aviso en el Inicio y paso en «Primeros pasos».
@@ -78,12 +83,6 @@ ponderaciones configurables, reportes con Excel y una suite de pruebas.
 - [ ] **Secciones permitidas del examen** con casillas en vez de texto separado por comas.
 - [ ] **Cierre del curso:** reiniciar también la configuración de exámenes para que no se repitan códigos viejos.
 - [ ] Revisar con el docente la **nota anual** (hoy promedio simple de los períodos).
-
-### Prioridad media: app del estudiante
-- [ ] **PWA:** manifest, ícono y `theme-color` para instalarla en el celular.
-- [ ] **Reloj basado en la hora de fin** en lugar de un contador, para que no se desfase si el teléfono se bloquea.
-- [ ] **Accesibilidad:** avisos y resultados como diálogos reales (foco, `aria-modal`) y estados que no dependan solo del color.
-- [ ] **«Mis notas»:** cerrar sesión si el token venció.
 
 ### Diseño pendiente
 - [ ] Resumen compacto del selector de contexto en el celular (una línea que abre una hoja).

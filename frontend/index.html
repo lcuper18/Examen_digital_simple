@@ -5,6 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lectiva</title>
   <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+  <!-- Para añadir Lectiva a la pantalla de inicio del celular y abrirla como una app -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/static/icons/apple-touch-icon.png">
+  <meta name="theme-color" content="#0A0A0F" id="meta-tema">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Lectiva">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <!-- Self-hosted fonts (no external dependencies) -->
   <link rel="stylesheet" href="/fonts/fonts.css">
   <!-- External styles -->
@@ -169,10 +177,10 @@
 
   <!-- Results Overlay -->
   <div class="results-overlay" id="results-overlay">
-    <div class="results-modal">
+    <div class="results-modal" role="dialog" aria-modal="true" aria-labelledby="results-title">
       <div class="results-header">
         <div class="results-icon" id="results-icon" aria-hidden="true"></div>
-        <h2 class="results-title" id="results-title">¡Excelente!</h2>
+        <h2 class="results-title" id="results-title" tabindex="-1">¡Excelente!</h2>
         <p class="results-subtitle" id="results-subtitle">Has completado el examen</p>
       </div>
       <div class="results-stats">
@@ -207,16 +215,16 @@
 
   <!-- Warning Modal -->
   <div class="warning-overlay" id="warning-overlay">
-    <div class="warning-modal">
+    <div class="warning-modal" role="alertdialog" aria-modal="true" aria-labelledby="warning-title" aria-describedby="warning-message">
       <div class="warning-icon">
         <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
           <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
         </svg>
       </div>
-      <h3 class="warning-title">Preguntas Sin Contestar</h3>
+      <h3 class="warning-title" id="warning-title">Preguntas Sin Contestar</h3>
       <p class="warning-message" id="warning-message">Tienes preguntas sin contestar. ¿Deseas enviar el examen de todas formas?</p>
       <div class="warning-actions">
-        <button class="btn btn-secondary" onclick="closeWarningModal()">Cancelar</button>
+        <button class="btn btn-secondary" id="warning-cancelar" onclick="closeWarningModal()">Cancelar</button>
         <button class="btn btn-primary" onclick="confirmSubmit()">Enviar de todas formas</button>
       </div>
     </div>

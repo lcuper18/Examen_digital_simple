@@ -11,6 +11,8 @@
 
   function pintarBotones() {
     const oscuro = efectivo() === 'dark';
+    const meta = document.getElementById('meta-tema');   // barra del navegador del celular del mismo color que la página
+    if (meta) meta.content = oscuro ? '#0A0A0F' : '#F5F6F8';
     document.querySelectorAll('.tema-btn').forEach(b => {
       b.innerHTML = oscuro ? SOL : LUNA;
       b.setAttribute('aria-label', oscuro ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro');

@@ -101,6 +101,12 @@ app.include_router(seguimiento_router)
 app.include_router(config_router)
 
 
+@app.get("/manifest.webmanifest")
+async def manifiesto():
+    """Manifiesto para añadir Lectiva a la pantalla de inicio del celular (tiene que estar en la raíz para cubrir toda la app)."""
+    return FileResponse(str(STATIC_DIR / "manifest.webmanifest"), media_type="application/manifest+json")
+
+
 @app.get("/docente")
 async def panel_docente():
     """Sirve el panel del docente (resultados y notas)."""

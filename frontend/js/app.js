@@ -7,6 +7,8 @@ let estudianteActual = null;
 let codigoExamenActual = null;
 let duracionMinutos = null;
 let tiempoRestanteSegundos = 0;
+let finExamenMs = null; // hora (en ms) en que termina el examen: el reloj se calcula contra ella, no contando segundos
+let avisoCincoMin = false;
 let timerInterval = null;
 let estudianteNombre = '';
 let estudianteSeccion = '';
@@ -43,6 +45,48 @@ function authFetch(url, options = {}, token = authToken) {
   const headers = Object.assign({}, options.headers, { Authorization: `Bearer ${token}` });
   return fetch(url, Object.assign({}, options, { headers }));
 }
+
+// ========== DIÁLOGOS ACCESIBLES (aviso de preguntas sin contestar, resultados, mis notas) ==========
+// Al abrir, el foco pasa al diálogo y queda atrapado dentro (Tab no sale a la página de atrás); al cerrar, vuelve al botón
+// que lo abrió. Sin esto, un lector de pantalla o el teclado siguen «dentro» del examen mientras el aviso está encima.
+let dialogoAbierto = null; // { overlay, previo }
+
+function abrirDialogo(id, enfocarId) {
+  const overlay = document.getElementById(id);
+  dialogoAbierto = { overlay, previo: document.activeElement };
+  overlay.classList.add('active');
+  const destino = (enfocarId && document.getElementById(enfocarId)) || overlay.querySelector('button, [href], input, [tabindex]:not([tabindex="-1"])');
+  // El diálogo aparece con una transición y mientras empieza sigue «oculto» para el navegador, que no deja enfocarlo:
+  // se reintenta unos instantes hasta que el foco entra.
+  let intentos = 0;
+  const enfocar = () => {
+    if (!destino || dialogoAbierto === null || dialogoAbierto.overlay !== overlay) return;
+    destino.focus();
+    if (document.activeElement !== destino && ++intentos < 10) setTimeout(enfocar, 60);
+  };
+  setTimeout(enfocar, 30);
+}
+
+function cerrarDialogo(id) {
+  const overlay = document.getElementById(id);
+  overlay.classList.remove('active');
+  if (dialogoAbierto && dialogoAbierto.overlay === overlay) {
+    const { previo } = dialogoAbierto;
+    dialogoAbierto = null;
+    if (previo && previo.isConnected && previo.focus) previo.focus();
+  }
+}
+
+document.addEventListener('keydown', (e) => {
+  if (!dialogoAbierto || e.key !== 'Tab') return;
+  const foco = [...dialogoAbierto.overlay.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')]
+    .filter(el => !el.disabled && el.offsetParent !== null);
+  if (!foco.length) { e.preventDefault(); return; }
+  const primero = foco[0], ultimo = foco[foco.length - 1];
+  if (!dialogoAbierto.overlay.contains(document.activeElement)) { e.preventDefault(); primero.focus(); }
+  else if (e.shiftKey && document.activeElement === primero) { e.preventDefault(); ultimo.focus(); }
+  else if (!e.shiftKey && document.activeElement === ultimo) { e.preventDefault(); primero.focus(); }
+});
 
 // ========== SCREEN MANAGEMENT ==========
 function showLoginScreen() {
@@ -164,6 +208,7 @@ function clearSession() {
   codigoExamenActual = null;
   duracionMinutos = null;
   tiempoRestanteSegundos = 0;
+  finExamenMs = null;
   if (timerInterval) {
     clearInterval(timerInterval);
     timerInterval = null;
@@ -336,7 +381,7 @@ function loadExamFromData(examenData) {
             el.classList.remove('selected');
             if (j === ans) el.classList.add('selected');
           });
-          document.getElementById('nav-' + idx).classList.add('answered');
+          marcarContestada(idx);
         }
       }
     });
@@ -429,15 +474,20 @@ function submitExam() {
   if (unanswered > 0) {
     document.getElementById('warning-message').textContent =
       `Tienes ${unanswered} preguntas sin contestar. ¿Deseas enviar el examen de todas formas?`;
-    document.getElementById('warning-overlay').classList.add('active');
+    abrirDialogo('warning-overlay', 'warning-cancelar');
   } else {
     sendExam();
   }
 }
 
 function closeWarningModal() {
-  document.getElementById('warning-overlay').classList.remove('active');
+  cerrarDialogo('warning-overlay');
 }
+
+// Escape cierra el aviso (equivale a «Cancelar»)
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && document.getElementById('warning-overlay').classList.contains('active')) closeWarningModal();
+});
 
 function confirmSubmit() {
   closeWarningModal();
@@ -566,7 +616,7 @@ function showDetailedResults() {
   if (!hasCorrectAnswers) {
     document.getElementById('detailed-results').style.display = 'none';
     document.getElementById('download-pdf-btn').style.display = 'none';
-    document.getElementById('results-overlay').classList.add('active');
+    abrirDialogo('results-overlay', 'results-title');
     return;
   }
   document.getElementById('detailed-results').style.display = 'block';
@@ -679,7 +729,7 @@ function showDetailedResults() {
     resultsList.appendChild(resultItem);
   });
 
-  document.getElementById('results-overlay').classList.add('active');
+  abrirDialogo('results-overlay', 'results-title');
 }
 
 // === TAREA 4.2: Generar desglose por tema ===
@@ -885,8 +935,16 @@ fetch('/api/config').then(r => r.json()).then(c => {
 }).catch(() => {});
 
 function closeResults() {
-  document.getElementById('results-overlay').classList.remove('active');
+  cerrarDialogo('results-overlay');
   if (intentoId !== null) logout(); // el examen ya fue enviado
+}
+
+// La pregunta contestada se marca con un visto (no solo con color) y se anuncia como «contestada» a los lectores de pantalla
+function marcarContestada(idx) {
+  const nav = document.getElementById('nav-' + idx);
+  if (!nav) return;
+  nav.classList.add('answered');
+  nav.setAttribute('aria-label', `Ir a la pregunta ${questions[idx].numeroOriginal}, contestada`);
 }
 
 function scrollToQuestion(idx) {
@@ -908,7 +966,7 @@ function renderExam() {
     const navItem = document.createElement('button');
     navItem.type = 'button';
     navItem.className = 'q-nav-item';
-    navItem.setAttribute('aria-label', `Ir a la pregunta ${q.numeroOriginal}`);
+    navItem.setAttribute('aria-label', `Ir a la pregunta ${q.numeroOriginal}, sin contestar`);
     navItem.id = 'nav-' + i;
     navItem.textContent = q.numeroOriginal;
     navItem.onclick = () => scrollToQuestion(i);
@@ -986,7 +1044,7 @@ function answer(qIdx, optIdx) {
     }
   });
 
-  navItem.classList.add('answered');
+  marcarContestada(qIdx);
 
   updateSimpleStats();
   saveToLocalStorage();
@@ -1069,7 +1127,7 @@ async function guardarProgreso() {
     const data = await response.json().catch(() => ({}));
     if (response.ok) {
       if (typeof data.segundos_restantes === 'number') {
-        tiempoRestanteSegundos = data.segundos_restantes;
+        fijarFinExamen(data.segundos_restantes); // el servidor manda (incluye el tiempo extra que dé el docente)
         updateTimerDisplay();
       }
     } else if (response.status === 409 || response.status === 403) {
@@ -1086,26 +1144,37 @@ function programarProgreso() {
   progresoTimeout = setTimeout(guardarProgreso, 2000);
 }
 
+// El reloj se calcula siempre contra la hora de fin. Un contador que resta 1 cada segundo se atrasa cuando el teléfono
+// se bloquea o la pestaña pasa a segundo plano (el navegador pausa los temporizadores); la hora de fin no.
+function fijarFinExamen(segundos) {
+  finExamenMs = Date.now() + Math.max(0, segundos) * 1000;
+  tiempoRestanteSegundos = Math.max(0, Math.ceil((finExamenMs - Date.now()) / 1000));
+}
+
+function actualizarReloj() {
+  if (finExamenMs === null) return;
+  tiempoRestanteSegundos = Math.max(0, Math.ceil((finExamenMs - Date.now()) / 1000));
+  updateTimerDisplay();
+  if (!avisoCincoMin && tiempoRestanteSegundos > 0 && tiempoRestanteSegundos <= 5 * 60) {
+    avisoCincoMin = true;
+    document.getElementById('timer-display').classList.add('warning');
+    document.getElementById('timer-alerta').textContent = 'Quedan 5 minutos para terminar el examen.';
+    mostrarAviso('Quedan 5 minutos para terminar el examen.');
+  }
+}
+
 function startTimer() {
   duracionMinutos = examData.duracion_minutos || 60;
-  tiempoRestanteSegundos = examData.segundos_restantes ?? duracionMinutos * 60;
+  avisoCincoMin = false;
+  fijarFinExamen(examData.segundos_restantes ?? duracionMinutos * 60);
 
   updateTimerDisplay();
 
   timerInterval = setInterval(() => {
-    tiempoRestanteSegundos--;
-    updateTimerDisplay();
-
+    actualizarReloj();
     if (tiempoRestanteSegundos <= 0) {
       clearInterval(timerInterval);
       forceSubmit();
-    }
-
-    // Advertencia a los últimos 5 minutos
-    if (tiempoRestanteSegundos === 5 * 60) {
-      document.getElementById('timer-display').classList.add('warning');
-      document.getElementById('timer-alerta').textContent = 'Quedan 5 minutos para terminar el examen.';
-      mostrarAviso('Quedan 5 minutos para terminar el examen.');
     }
   }, 1000);
 
@@ -1142,6 +1211,11 @@ function forceSubmit() {
 // Init
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && timerInterval) incidencias++;
+  if (!document.hidden && timerInterval) {
+    // Al desbloquear el teléfono: reloj al día y sincronización con el servidor sin esperar los 30 segundos
+    actualizarReloj();
+    if (tiempoRestanteSegundos <= 0) { clearInterval(timerInterval); forceSubmit(); } else { guardarProgreso(); }
+  }
 });
 
 // Al volver la conexión, si había un envío esperando, se intenta de inmediato

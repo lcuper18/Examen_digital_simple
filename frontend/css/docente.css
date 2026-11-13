@@ -367,3 +367,6 @@
 .doc-paginacion { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; margin-top: 12px; }
 .doc-paginacion[hidden] { display: none; }
 .doc-toolbar input[type="search"] { min-width: 220px; }
+
+/* Lo que está bajo el mínimo no depende solo del rojo: lleva una flecha (y un texto alternativo para lectores de pantalla) */
+td.low::before, .doc-final.low::before { content: "▼\00a0"; content: "▼\00a0" / "Bajo el mínimo: "; font-size: 0.75em; }

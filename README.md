@@ -137,6 +137,14 @@ Panel docente: menú lateral agrupado (en tablet y celular es un cajón con el b
 
 La plataforma sigue el tema claro u oscuro del dispositivo y tiene un botón (sol o luna) para cambiarlo; la preferencia se recuerda en el navegador. Los colores, espacios y tipografía viven en `frontend/css/base.css`.
 
+## Instalar Lectiva en el celular
+
+La app del estudiante se puede añadir a la pantalla de inicio para abrirla como una app, sin la barra del navegador:
+- **iPhone (Safari):** abre la dirección de Lectiva, toca Compartir → **Añadir a pantalla de inicio**.
+- **Android (Chrome):** menú ⋮ → **Añadir a pantalla de inicio** (o «Instalar app»).
+
+Lectiva funciona dentro de la red del aula con `http://`, y los navegadores solo permiten el modo sin conexión (service worker) con `https://`; por eso necesita wifi para presentar el examen. Si se cae la conexión a mitad del examen, las respuestas quedan guardadas en el teléfono y se envían solas cuando vuelve.
+
 ## Solución de problemas
 
 - **La interfaz se ve sin colores o con botones sin estilo:** recarga sin caché (⌘⇧R en Mac, Ctrl+Shift+R en Windows). El servidor ya indica al navegador que revalide los archivos, pero una copia vieja puede quedar la primera vez.

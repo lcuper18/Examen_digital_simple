@@ -1830,3 +1830,16 @@
     .grades-card h3 { font-size: 15px; }
 
     .login-version { font-size: 12px; color: var(--text-muted); margin: -8px 0 12px; }
+
+    /* Estados que no dependen solo del color: la pregunta contestada lleva un visto y la opción elegida también */
+    .q-nav-item { position: relative; }
+    .q-nav-item.answered::after {
+      content: '✓'; position: absolute; top: -5px; right: -5px; width: 16px; height: 16px; display: flex; align-items: center; justify-content: center;
+      border-radius: 50%; background: var(--bg-primary); color: var(--accent-primary); border: 1.5px solid var(--accent-primary);
+      font-size: 10px; font-weight: 700; line-height: 1;
+    }
+    .option-item.selected::after {
+      content: '✓'; margin-left: auto; flex: none; display: flex; align-items: center; justify-content: center; width: 24px; height: 24px;
+      border-radius: 50%; background: var(--accent-primary); color: var(--on-accent); font-size: 14px; font-weight: 700;
+    }
+    .results-title:focus, #grades-title:focus { outline: none; }

@@ -1,8 +1,10 @@
 // Dibuja el icono de Lectiva (1024 x 1024) y lo guarda como PNG: swift icono.swift salida.png
+// Con --sangrado el color llena todo el cuadrado (sin esquinas ni sombra): sirve para los iconos del celular, que el sistema recorta.
 import Cocoa
 
 let lado: CGFloat = 1024
-let salida = CommandLine.arguments.count > 1 ? CommandLine.arguments[1] : "icono.png"
+let sangrado = CommandLine.arguments.contains("--sangrado")
+let salida = CommandLine.arguments.dropFirst().first(where: { !$0.hasPrefix("--") }) ?? "icono.png"
 
 guard let rep = NSBitmapImageRep(bitmapDataPlanes: nil, pixelsWide: Int(lado), pixelsHigh: Int(lado), bitsPerSample: 8,
                                  samplesPerPixel: 4, hasAlpha: true, isPlanar: false, colorSpaceName: .deviceRGB,
@@ -12,14 +14,16 @@ NSGraphicsContext.current = NSGraphicsContext(bitmapImageRep: rep)
 let g = NSGraphicsContext.current!.cgContext
 
 // Cuadrado redondeado con el margen de los iconos de macOS
-let caja = CGRect(x: 100, y: 100, width: 824, height: 824)
-let forma = CGPath(roundedRect: caja, cornerWidth: 185, cornerHeight: 185, transform: nil)
-g.saveGState()
-g.setShadow(offset: CGSize(width: 0, height: -14), blur: 28, color: NSColor.black.withAlphaComponent(0.35).cgColor)
-g.addPath(forma)
-g.setFillColor(NSColor(srgbRed: 0.04, green: 0.48, blue: 0.28, alpha: 1).cgColor)
-g.fillPath()
-g.restoreGState()
+let caja = sangrado ? CGRect(x: 0, y: 0, width: lado, height: lado) : CGRect(x: 100, y: 100, width: 824, height: 824)
+let forma = sangrado ? CGPath(rect: caja, transform: nil) : CGPath(roundedRect: caja, cornerWidth: 185, cornerHeight: 185, transform: nil)
+if !sangrado {
+    g.saveGState()
+    g.setShadow(offset: CGSize(width: 0, height: -14), blur: 28, color: NSColor.black.withAlphaComponent(0.35).cgColor)
+    g.addPath(forma)
+    g.setFillColor(NSColor(srgbRed: 0.04, green: 0.48, blue: 0.28, alpha: 1).cgColor)
+    g.fillPath()
+    g.restoreGState()
+}
 
 g.saveGState()
 g.addPath(forma)
@@ -28,7 +32,7 @@ let degradado = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(), colors: [
     NSColor(srgbRed: 0.00, green: 0.78, blue: 0.55, alpha: 1).cgColor,
     NSColor(srgbRed: 0.03, green: 0.40, blue: 0.27, alpha: 1).cgColor,
 ] as CFArray, locations: [0, 1])!
-g.drawLinearGradient(degradado, start: CGPoint(x: 512, y: 924), end: CGPoint(x: 512, y: 100), options: [])
+g.drawLinearGradient(degradado, start: CGPoint(x: 512, y: sangrado ? 1024 : 924), end: CGPoint(x: 512, y: sangrado ? 0 : 100), options: [])
 g.restoreGState()
 
 // Portapapeles blanco con visto

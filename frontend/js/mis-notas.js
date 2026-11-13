@@ -49,10 +49,16 @@ async function abrirMisNotas() {
   const overlay = document.getElementById('grades-overlay');
   const cont = document.getElementById('grades-content');
   cont.innerHTML = '<p class="grades-empty">Cargando…</p>';
-  overlay.classList.add('active');
-  requestAnimationFrame(() => document.getElementById('grades-title').focus());
+  abrirDialogo('grades-overlay', 'grades-title');
   try {
     const r = await authFetch('/api/mis-notas');
+    if (r.status === 401) {
+      // La sesión venció (dura 12 horas): se cierra todo y se vuelve a la pantalla de entrada con un aviso
+      cerrarDialogo('grades-overlay');
+      logout();
+      mostrarAviso('Tu sesión terminó. Vuelve a entrar con tu usuario y tu contraseña.');
+      return;
+    }
     const d = await r.json();
     if (!r.ok) throw new Error(d.detail || 'No se pudieron cargar tus notas');
     cont.innerHTML = `<p class="grades-sub">${escapeHtml(d.nombre)} · Sección ${escapeHtml(d.seccion)} · ${escapeHtml(d.institucion)} ${escapeHtml(d.curso_lectivo)}</p>` +
@@ -64,9 +70,7 @@ async function abrirMisNotas() {
 }
 
 function cerrarMisNotas() {
-  document.getElementById('grades-overlay').classList.remove('active');
-  const volver = document.getElementById('my-grades-btn');
-  if (volver) volver.focus();
+  cerrarDialogo('grades-overlay'); // devuelve el foco al botón «Ver mis notas»
 }
 
 document.addEventListener('keydown', (e) => {
