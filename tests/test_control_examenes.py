@@ -148,3 +148,72 @@ def test_acciones_del_docente_requieren_sesion_de_docente(client):
     client.post(f"/api/examen/{CODIGO}/iniciar", headers=h)
     for ruta in ("tiempo-extra", "anular", "sospechoso", "cerrar"):
         assert client.post(f"/api/docente/intentos/1/{ruta}", headers=h, json={"minutos": 5}).status_code == 401
+
+
+def _respuestas_correctas(client, h, cuantas):
+    """Responde `cuantas` preguntas con su letra correcta (según cómo las barajó el servidor para este estudiante)."""
+    ex = client.post(f"/api/examen/{CODIGO}/iniciar", headers=h).json()["examen"]
+    info, examen = examenes._get_examen(CODIGO)
+    with database.get_db_context() as conn:
+        semilla = conn.execute("SELECT semilla FROM intentos ORDER BY id DESC LIMIT 1").fetchone()[0]
+    barajadas = barajado.barajar(examen["preguntas"], semilla)
+    return {str(p["numero"]): barajado.letra_correcta_mostrada(p) for p in barajadas[:cuantas]}
+
+
+def test_envio_doble_no_pisa_la_nota_y_se_reconoce_como_ya_enviado(client, monkeypatch):
+    h = login(client)
+    buenas = _respuestas_correctas(client, h, 5)
+    r = client.post(f"/api/examen/{CODIGO}/enviar", headers=h, json={"respuestas": buenas})
+    assert r.status_code == 200
+
+    # Reintento (la respuesta de la primera se perdió en la red): 409 con la cabecera que la app entiende
+    r2 = client.post(f"/api/examen/{CODIGO}/enviar", headers=h, json={"respuestas": {}})
+    assert r2.status_code == 409 and r2.headers["X-Lectiva-Error"] == "ya_enviado"
+
+    # Dos envíos exactamente a la vez: ambos pasan la verificación, pero solo el primero cierra el intento
+    monkeypatch.setattr(examenes, "_verificar_abierto", lambda intento, info: None)
+    r3 = client.post(f"/api/examen/{CODIGO}/enviar", headers=h, json={"respuestas": {}})
+    assert r3.status_code == 409 and r3.headers["X-Lectiva-Error"] == "ya_enviado"
+    with database.get_db_context() as conn:
+        assert conn.execute("SELECT puntuacion FROM intentos").fetchone()[0] == 5
+
+
+def test_dos_inicios_simultaneos_no_dan_error_500(client, monkeypatch):
+    h = login(client)
+    primero = client.post(f"/api/examen/{CODIGO}/iniciar", headers=h).json()["examen"]
+
+    # El segundo inicio no ve el intento del primero (aún no estaba confirmado), intenta insertar y choca con el índice único
+    real = examenes._intento
+    llamadas = []
+
+    def sin_ver_la_primera_vez(cursor, estudiante_id, codigo):
+        llamadas.append(1)
+        return None if len(llamadas) == 1 else real(cursor, estudiante_id, codigo)
+
+    monkeypatch.setattr(examenes, "_intento", sin_ver_la_primera_vez)
+    r = client.post(f"/api/examen/{CODIGO}/iniciar", headers=h)
+    assert r.status_code == 200
+    # retoma el mismo intento (mismo orden de preguntas), no crea otro
+    assert [p["numero"] for p in r.json()["examen"]["preguntas"]] == [p["numero"] for p in primero["preguntas"]]
+    with database.get_db_context() as conn:
+        assert conn.execute("SELECT COUNT(*) FROM intentos").fetchone()[0] == 1
+
+
+def test_cerrar_y_calificar_todos_los_intentos_en_curso(client):
+    hd, h1, h2 = _docente(client), login(client), login(client, "luis.mora", "LUI5678")
+    buenas = _respuestas_correctas(client, h1, 3)
+    client.put(f"/api/examen/{CODIGO}/progreso", headers=h1, json={"respuestas": buenas})
+    client.post(f"/api/examen/{CODIGO}/iniciar", headers=h2)  # Luis empezó y no respondió nada
+    client.put(f"/api/docente/examenes/{CODIGO}", headers=hd, json={"habilitado": False})
+
+    assert client.post(f"/api/docente/examenes/{CODIGO}/cerrar-en-curso").status_code == 401
+    assert client.post("/api/docente/examenes/NOPE/cerrar-en-curso", headers=hd).status_code == 404
+    r = client.post(f"/api/docente/examenes/{CODIGO}/cerrar-en-curso", headers=hd)
+    assert r.status_code == 200 and r.json()["cerrados"] == 2
+
+    intentos = client.get("/api/docente/intentos", headers=hd).json()["intentos"]
+    assert all(i["fecha_fin"] for i in intentos)
+    assert sorted(i["puntuacion"] for i in intentos) == [0, 3]  # califica con lo que tenían guardado
+    assert client.post(f"/api/examen/{CODIGO}/enviar", headers=h1, json={"respuestas": {}}).status_code == 409
+    assert client.post(f"/api/docente/examenes/{CODIGO}/cerrar-en-curso", headers=hd).json()["cerrados"] == 0
+    assert "cerrar_examen_en_curso" in _acciones(client, hd)

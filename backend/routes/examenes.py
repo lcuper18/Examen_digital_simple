@@ -2,6 +2,7 @@
 Examenes routes - Iniciar un examen (sin respuestas correctas) y enviarlo para calificar.
 """
 import json
+import sqlite3
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
@@ -113,6 +114,19 @@ def calificar(preguntas: list[dict[str, Any]], semilla: int, respuestas: dict[st
     return validas, aciertos
 
 
+def cerrar_con_parciales(conn, intento, preguntas: list[dict[str, Any]]) -> int:
+    """Cierra un intento abierto y lo califica con las respuestas guardadas hasta el momento. Devuelve los aciertos."""
+    respuestas, puntuacion = calificar(
+        preguntas, intento["semilla"], json.loads(intento["respuestas_parciales_json"] or "{}")
+    )
+    conn.execute(
+        "UPDATE intentos SET respuestas_json = ?, puntuacion = ?, total = ?, fecha_fin = ? "
+        "WHERE id = ? AND fecha_fin IS NULL",
+        (json.dumps(respuestas), puntuacion, len(preguntas), _now().isoformat(), intento["id"]),
+    )
+    return puntuacion
+
+
 def _config(conn, codigo: str):
     return conn.execute("SELECT * FROM examenes_config WHERE codigo = ?", (codigo,)).fetchone()
 
@@ -142,11 +156,17 @@ def _intento(cursor, estudiante_id: int, codigo: str):
     ).fetchone()
 
 
+# La app del estudiante reintenta el envío si se cae la red; si la primera vez sí llegó, el reintento recibe
+# este 409 con la cabecera y lo toma como «enviado» en vez de mostrar un error.
+def ya_enviado() -> HTTPException:
+    return HTTPException(status_code=409, detail="Ya enviaste este examen", headers={"X-Lectiva-Error": "ya_enviado"})
+
+
 def _verificar_abierto(intento, info: dict[str, Any]) -> None:
     if intento["anulado"]:
         raise HTTPException(status_code=409, detail="Tu intento fue anulado por el docente")
     if intento["fecha_fin"] is not None:
-        raise HTTPException(status_code=409, detail="Ya enviaste este examen")
+        raise ya_enviado()
     if _remaining_seconds(intento["fecha_inicio"], minutos_totales(info, intento)) <= -GRACE_SECONDS:
         raise HTTPException(status_code=403, detail="El tiempo del examen se agotó")
 
@@ -171,15 +191,21 @@ def iniciar_examen(codigo: str, estudiante_id: int = Depends(security.estudiante
             verificar_disponibilidad(conn, codigo, seccion)
             fecha_inicio = _now().isoformat()
             semilla = secrets.randbits(31) + 1
-            cursor.execute(
-                "INSERT INTO intentos (estudiante_id, codigo_examen, respuestas_json, "
-                "puntuacion, total, fecha_inicio, semilla) VALUES (?, ?, '{}', 0, ?, ?, ?)",
-                (estudiante_id, codigo, len(preguntas), fecha_inicio, semilla),
-            )
-            conn.commit()
-            minutos = info.get("duracion_minutos", 60)
-            guardadas = {}
-        else:
+            try:
+                cursor.execute(
+                    "INSERT INTO intentos (estudiante_id, codigo_examen, respuestas_json, "
+                    "puntuacion, total, fecha_inicio, semilla) VALUES (?, ?, '{}', 0, ?, ?, ?)",
+                    (estudiante_id, codigo, len(preguntas), fecha_inicio, semilla),
+                )
+                conn.commit()
+            except sqlite3.IntegrityError:
+                # Dos inicios a la vez (doble toque, dos pestañas): gana el primero y este retoma ese intento
+                conn.rollback()
+                intento = _intento(cursor, estudiante_id, codigo)
+            if intento is None:
+                minutos = info.get("duracion_minutos", 60)
+                guardadas = {}
+        if intento is not None:
             _verificar_abierto(intento, info)
             fecha_inicio, semilla = intento["fecha_inicio"], intento["semilla"]
             minutos = minutos_totales(info, intento)
@@ -253,13 +279,16 @@ def enviar_examen(
         _verificar_abierto(intento, info)
 
         respuestas, puntuacion = calificar(preguntas, intento["semilla"], request.respuestas)
-        cursor.execute(
+        # Solo cierra si sigue abierto: dos envíos a la vez no se pisan (el segundo recibe «ya enviado»)
+        cerrado = cursor.execute(
             "UPDATE intentos SET respuestas_json = ?, puntuacion = ?, total = ?, fecha_fin = ?, "
-            "incidencias = MAX(incidencias, ?) WHERE id = ?",
+            "incidencias = MAX(incidencias, ?) WHERE id = ? AND fecha_fin IS NULL AND anulado = 0",
             (json.dumps(respuestas), puntuacion, len(preguntas), _now().isoformat(),
              max(request.incidencias, 0), intento["id"]),
-        )
+        ).rowcount
         conn.commit()
+        if not cerrado:
+            raise ya_enviado()
 
     return JSONResponse(content={"ok": True, "intento_id": intento["id"]})
 
@@ -303,6 +332,25 @@ def listar_examenes() -> dict[str, Any]:
             "anulados": (n["anulados"] or 0) if n else 0,
         })
     return {"ok": True, "examenes": examenes}
+
+
+@docente_router.post("/examenes/{codigo}/cerrar-en-curso")
+def cerrar_examenes_en_curso(codigo: str) -> dict[str, Any]:
+    """
+    Cierra y califica, con lo que tengan guardado, todos los intentos abiertos de un examen (los estudiantes
+    que siguen presentándolo y los que dejaron el examen a medias). Deshabilitar un examen no los detiene.
+    """
+    codigo = codigo.upper()
+    _, examen = _get_examen(codigo)
+    with database.get_db_context() as conn:
+        abiertos = conn.execute(
+            "SELECT * FROM intentos WHERE codigo_examen = ? AND fecha_fin IS NULL AND anulado = 0", (codigo,)
+        ).fetchall()
+        for intento in abiertos:
+            cerrar_con_parciales(conn, intento, examen["preguntas"])
+        bitacora.registrar(conn, "cerrar_examen_en_curso", f"{codigo}: {len(abiertos)} intentos")
+        conn.commit()
+    return {"ok": True, "cerrados": len(abiertos)}
 
 
 class ConfigExamen(BaseModel):

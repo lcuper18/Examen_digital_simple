@@ -120,6 +120,7 @@ Panel.FRASES = {
   cambiar_seccion: 'Cambiaste a un estudiante de grupo', reiniciar_password: 'Reiniciaste una contraseña', reiniciar_seccion: 'Reiniciaste las contraseñas de un grupo',
   desbloquear_login: 'Desbloqueaste el acceso de un estudiante', reiniciar_intento: 'Permitiste repetir un examen', anular_intento: 'Anulaste un intento de examen',
   restaurar_intento: 'Restauraste un intento de examen', marcar_sospechoso: 'Marcaste un intento como sospechoso', quitar_sospechoso: 'Quitaste la marca de sospechoso',
+  cerrar_examen_en_curso: 'Cerraste y calificaste los intentos abiertos de un examen',
   exigir_cambio_clave: 'Pediste a un grupo que cambie su contraseña', cambiar_clave_docente: 'Cambiaste tu contraseña del panel',
   cerrar_intento: 'Cerraste un examen en curso', tiempo_extra: 'Diste tiempo extra', cierre_curso: 'Cerraste el curso lectivo',
 };

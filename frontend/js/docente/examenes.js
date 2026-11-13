@@ -26,6 +26,7 @@
         <td class="doc-actions">
           <button class="btn btn-secondary" data-alternar="${e.codigo}">${e.habilitado ? 'Deshabilitar' : 'Habilitar'}</button>
           <button class="btn btn-secondary" data-config="${e.codigo}" aria-haspopup="dialog">Configurar…</button>
+          ${e.en_curso ? `<button class="btn btn-secondary" data-cerrar="${e.codigo}" aria-haspopup="dialog">Cerrar y calificar los ${e.en_curso} en curso…</button>` : ''}
         </td>
       </tr>`;
     }).join('');
@@ -43,6 +44,19 @@
     const e = examenes.find(x => x.codigo === codigo);
     await guardar(e, { habilitado: !e.habilitado });
     Panel.toast(e.habilitado ? 'Examen deshabilitado: nadie nuevo puede iniciarlo' : 'Examen habilitado');
+  }
+
+  // Deshabilitar un examen no detiene a quienes ya lo iniciaron; esto los cierra a todos y los califica con lo guardado
+  async function cerrarEnCurso(codigo) {
+    const e = examenes.find(x => x.codigo === codigo);
+    const ok = await Panel.confirmar(
+      `Se cerrarán y calificarán con las respuestas que tengan guardadas los ${e.en_curso} intentos que siguen abiertos de ${e.codigo}. ` +
+      'Los estudiantes que lo estén presentando ahora ya no podrán seguir ni enviarlo. Úsalo cuando termine el tiempo de la clase.',
+      { titulo: `Cerrar ${e.codigo}`, texto: 'Cerrar y calificar', peligro: true });
+    if (!ok) return;
+    const r = await Panel.json(`/api/docente/examenes/${e.codigo}/cerrar-en-curso`, { method: 'POST' });
+    await cargar();
+    Panel.toast(`Se cerraron y calificaron ${r.cerrados} intentos de ${e.codigo}`);
   }
 
   async function configurar(codigo) {
@@ -98,6 +112,7 @@
       $('tabla-examenes').addEventListener('click', ev => {
         if (ev.target.dataset.alternar) run(() => alternar(ev.target.dataset.alternar));
         if (ev.target.dataset.config) run(() => configurar(ev.target.dataset.config));
+        if (ev.target.dataset.cerrar) run(() => cerrarEnCurso(ev.target.dataset.cerrar));
       });
     },
     mostrar: cargar,

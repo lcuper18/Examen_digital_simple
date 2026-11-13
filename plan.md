@@ -2,7 +2,7 @@
 
 Lectiva (antes «Examen Digital») es una plataforma de gestión educativa para el aula: exámenes en línea, asistencia,
 actividades con rúbrica, notas por componente, reportes e informes, con panel docente y app del estudiante.
-Versión actual: **4.1.0** (definida en `backend/version.py`).
+Versión actual: **4.2.0** (definida en `backend/version.py`).
 
 ---
 
@@ -34,6 +34,7 @@ El servidor corre en la computadora del docente, dentro de la red del aula; los 
 | v1 | abr-may 2026 | Examen estático cargado desde JSON, con diseño propio y banco de preguntas por especialidad. |
 | v2 | jun 2026 | Backend FastAPI + SQLite, login de estudiantes, códigos de examen, PDF de resultados, scripts de inicio para Mac, Linux y Windows. |
 | v3 | oct-nov 2026 | Calificación en el servidor con sesión firmada; seguridad (bcrypt, límite de intentos, barajado por estudiante); **panel docente** modular (resultados, notas, estudiantes, exámenes, reportes, boleta, Excel); exámenes ADM02, GCS02, EMP02 y SQA02 y la skill `crear-examen-digital`; **fases 0-5** (ajustes y ponderación por materia, asistencia por lección, actividades con rúbrica, acta e informes, «Mis notas» con publicación controlada, ficha de seguimiento y cierre del curso lectivo); **etapas de diseño 1-5** (sistema de diseño claro/oscuro, menú lateral y selector global, pasar lista táctil, inicio útil, app del estudiante accesible); respaldos automáticos; app de Mac. |
+| v4.2.0 | nov 2026 | Robustez del examen: el envío doble o simultáneo ya no pisa la nota ni da error; si se cae la red el envío se reintenta solo y no se pierden respuestas; el estudiante puede continuar su examen tras recargar sin escribir el código; «Cerrar y calificar» los intentos en curso desde Exámenes. |
 | v4.1.0 | nov 2026 | Contraseña del docente editable desde Ajustes; reloj del examen corregido; cambio de clave obligatorio para estudiantes nuevos y «Pedir cambio de clave» por grupo; plantilla del colegio en Reportes. |
 | **v4.0.0 · Lectiva** | nov 2026 | Cambio de nombre a Lectiva; selector Grupo/Período con botones de un toque y aviso al cambiar la materia; menú **Importar / exportar** agrupado; boleta limitada al grupo elegido, con período 1.º, 2.º o General (nota anual) y componentes en puntos sobre su valor; puerto 8090 (el 8001 chocaba con Packet Tracer); «Detener servidor y salir» libera el puerto; encabezados sin caché para evitar interfaz sin estilos. |
 
@@ -51,6 +52,10 @@ ponderaciones configurables, reportes con Excel y una suite de pruebas.
 - [x] **Contraseña del docente editable desde Ajustes** (guardada con bcrypt). Mientras se use la de fábrica, que es pública, el panel muestra un aviso fijo con «Cambiar ahora».
 - [x] **Reloj del examen:** ya no se congela si el estudiante cancela el aviso de preguntas sin responder; el examen se envía solo al acabarse el tiempo.
 - [x] **Claves de estudiantes:** los estudiantes nuevos deben cambiar su clave al entrar y el docente puede pedirlo a un grupo con «Pedir cambio de clave» en Estudiantes.
+- [x] **Envío doble y arranque simultáneo del examen:** el cierre del intento es atómico (el segundo envío recibe «ya enviado» y no toca la nota) y dos inicios a la vez retoman el mismo intento en vez de dar error 500.
+- [x] **Reintento sin conexión:** si se cae la red o el servidor no responde, la app reintenta sola cada 5 s y apenas vuelve el wifi; un «ya enviado» tras reintentar se toma como éxito.
+- [x] **Continuar el examen tras recargar:** la pantalla del código muestra «Tienes un examen en curso… Continuar mi examen» sin volver a escribirlo.
+- [x] **Exámenes en curso:** botón «Cerrar y calificar los N en curso…» en Exámenes (deshabilitar un examen sigue sin detener a quienes ya lo iniciaron).
 - [x] **Plantilla del colegio:** Reportes rellena el CSV del sistema del colegio (Prueba = Prueba 1 + Prueba 2, puntos con punto decimal).
 
 ---
@@ -58,10 +63,6 @@ ponderaciones configurables, reportes con Excel y una suite de pruebas.
 ## Pendientes priorizados
 
 ### Prioridad alta: robustez del examen y de los datos
-- [ ] **Envío doble y arranque simultáneo del examen:** dos envíos a la vez pueden pasar la verificación y el último sobrescribe la nota; dos inicios simultáneos dan error 500 (`backend/routes/examenes.py`). Bloquear con `UPDATE … WHERE fecha_fin IS NULL` y capturar el índice único.
-- [ ] **Reintento sin conexión:** si falla el envío no hay reintento automático ni escucha de `online`; las respuestas pueden perderse (`frontend/js/app.js`).
-- [ ] **Reanudar el examen tras recargar** sin volver a escribir el código.
-- [ ] **Exámenes en curso:** deshabilitar un examen o pasar su fecha límite no detiene los intentos abiertos; agregar «cerrar y calificar a todos».
 - [ ] **Claves foráneas apagadas:** al borrar un estudiante quedan asistencia, calificaciones y observaciones huérfanas (`backend/routes/estudiantes.py`).
 - [ ] **Respaldo fuera del disco:** elegir en Ajustes una carpeta externa (iCloud, Drive, USB); hoy las copias están en el mismo equipo.
 - [ ] **Límite de tamaño** en las cargas de archivos (CSV y Excel).

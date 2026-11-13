@@ -10,7 +10,7 @@ from fastapi import APIRouter, Depends, HTTPException, Response
 from pydantic import BaseModel, Field
 
 from backend import barajado, bitacora, database, security
-from backend.routes.examenes import _get_examen, _now, calificar
+from backend.routes.examenes import _get_examen, _now, calificar, cerrar_con_parciales
 
 router = APIRouter(
     prefix="/api/docente", tags=["intentos"], dependencies=[Depends(security.require_docente)]
@@ -176,13 +176,7 @@ def cerrar_intento(intento_id: int) -> dict[str, Any]:
         if fila["fecha_fin"] is not None:
             raise HTTPException(status_code=409, detail="El intento ya está cerrado")
         _, examen = _get_examen(fila["codigo_examen"])
-        respuestas, puntuacion = calificar(
-            examen["preguntas"], fila["semilla"], json.loads(fila["respuestas_parciales_json"] or "{}")
-        )
-        conn.execute(
-            "UPDATE intentos SET respuestas_json = ?, puntuacion = ?, total = ?, fecha_fin = ? WHERE id = ?",
-            (json.dumps(respuestas), puntuacion, len(examen["preguntas"]), _now().isoformat(), intento_id),
-        )
+        puntuacion = cerrar_con_parciales(conn, fila, examen["preguntas"])
         bitacora.registrar(
             conn, "cerrar_intento",
             f"{_nombre(fila)} · {fila['codigo_examen']} · {puntuacion}/{len(examen['preguntas'])}",

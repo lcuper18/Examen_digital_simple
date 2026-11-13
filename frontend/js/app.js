@@ -14,6 +14,8 @@ let authToken = null;
 let intentoId = null;
 let incidenciasDocente = null; // solo si algún día se muestra el detalle completo
 let incidencias = 0; // veces que el estudiante salió de la pestaña durante el examen
+let enviando = false; // hay un envío del examen en curso (o reintentándose)
+let reintentoEnvio = null; // temporizador del próximo reintento si se cayó la red
 
 function escapeHtml(value) {
   return String(value ?? '').replace(/[&<>"']/g, c => (
@@ -22,14 +24,19 @@ function escapeHtml(value) {
 }
 
 // Aviso en pantalla (reemplaza a alert): se lee con lectores de pantalla y se cierra solo o con la X
-function mostrarAviso(mensaje) {
+function mostrarAviso(mensaje, persistente = false) {
   const el = document.getElementById('student-aviso');
   el.innerHTML = `<span></span><button type="button" aria-label="Cerrar aviso">×</button>`;
   el.firstElementChild.textContent = mensaje;
   el.lastElementChild.addEventListener('click', () => { el.hidden = true; });
   el.hidden = false;
   clearTimeout(mostrarAviso.espera);
-  mostrarAviso.espera = setTimeout(() => { el.hidden = true; }, 9000);
+  if (!persistente) mostrarAviso.espera = setTimeout(() => { el.hidden = true; }, 9000);
+}
+
+function ocultarAviso() {
+  clearTimeout(mostrarAviso.espera);
+  document.getElementById('student-aviso').hidden = true;
 }
 
 function authFetch(url, options = {}, token = authToken) {
@@ -91,6 +98,35 @@ function showCodeScreen() {
   if (estudianteActual) {
     document.getElementById('code-student-name').textContent = estudianteActual.nombre;
   }
+  mostrarExamenEnCurso();
+}
+
+// ========== EXAMEN EN CURSO (se puede retomar tras recargar o volver a entrar) ==========
+function claveExamenEnCurso() {
+  return estudianteActual ? `examen_en_curso_${estudianteActual.id}` : null;
+}
+
+function recordarExamenEnCurso(codigo) {
+  try { if (claveExamenEnCurso()) localStorage.setItem(claveExamenEnCurso(), codigo); } catch (e) { /* sin almacenamiento */ }
+}
+
+function olvidarExamenEnCurso() {
+  try { if (claveExamenEnCurso()) localStorage.removeItem(claveExamenEnCurso()); } catch (e) { /* sin almacenamiento */ }
+}
+
+function mostrarExamenEnCurso() {
+  let codigo = null;
+  try { codigo = claveExamenEnCurso() && localStorage.getItem(claveExamenEnCurso()); } catch (e) { /* sin almacenamiento */ }
+  const caja = document.getElementById('code-resume');
+  caja.hidden = !codigo;
+  if (codigo) {
+    document.getElementById('code-resume-codigo').textContent = codigo;
+    document.getElementById('exam-code').value = codigo;
+  }
+}
+
+function reanudarExamen() {
+  startExam();
 }
 
 function showExamScreen() {
@@ -134,6 +170,8 @@ function clearSession() {
   }
   clearTimeout(progresoTimeout);
   clearInterval(progresoInterval);
+  clearTimeout(reintentoEnvio);
+  enviando = false;
   authToken = null;
   intentoId = null;
   incidencias = 0;
@@ -225,9 +263,13 @@ async function startExam() {
         errorEl.textContent = 'El código ingresado no existe';
       } else if (response.status === 409) {
         errorEl.textContent = 'Ya enviaste este examen';
+        olvidarExamenEnCurso();
+        mostrarExamenEnCurso();
       } else if (response.status === 403) {
         const info = await response.json().catch(() => ({}));
         errorEl.textContent = info.detail || 'No puedes iniciar este examen ahora';
+        olvidarExamenEnCurso();
+        mostrarExamenEnCurso();
       } else {
         errorEl.textContent = 'Error al cargar el examen';
       }
@@ -241,6 +283,7 @@ async function startExam() {
     if (data.ok && data.examen) {
       codigoExamenActual = codigo;
       duracionMinutos = data.examen.duracion_minutos || null;
+      recordarExamenEnCurso(codigo);
       loadExamFromData(data.examen);
       showExamScreen();
     } else {
@@ -401,16 +444,31 @@ function confirmSubmit() {
   sendExam();
 }
 
+// Deshabilita (o vuelve a habilitar) las opciones para que no se cambie nada mientras se envía
+function bloquearOpciones(bloquear) {
+  document.querySelectorAll('.option-item').forEach(el => {
+    el.style.pointerEvents = bloquear ? 'none' : '';
+    el.style.opacity = bloquear ? '0.5' : '';
+  });
+}
+
 async function sendExam() {
+  if (enviando) return;
+  enviando = true;
   if (timerInterval) {
     clearInterval(timerInterval);
     timerInterval = null;
   }
-
   clearTimeout(progresoTimeout);
   clearInterval(progresoInterval);
-  const respuestas = respuestasPorNumero();
+  bloquearOpciones(true);
+  await intentarEnvio(respuestasPorNumero());
+}
 
+// Envía las respuestas. Si se cae la red o el servidor no contesta, reintenta solo (cada 5 s y apenas vuelva la
+// conexión) sin perder lo respondido; los errores definitivos (examen anulado, tiempo agotado) no se reintentan.
+async function intentarEnvio(respuestas) {
+  clearTimeout(reintentoEnvio);
   try {
     const response = await authFetch(`/api/examen/${encodeURIComponent(codigoExamenActual)}/enviar`, {
       method: 'POST',
@@ -418,15 +476,23 @@ async function sendExam() {
       body: JSON.stringify({ respuestas, incidencias })
     });
     const data = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      mostrarAviso(data.detail || 'No se pudo enviar el examen. Avisa a tu docente.');
+    // «Ya enviado» tras un reintento significa que el primer envío sí llegó: es un éxito
+    if (response.ok || response.headers.get('X-Lectiva-Error') === 'ya_enviado') {
+      intentoId = data.intento_id ?? -1;
+      enviando = false;
+      ocultarAviso();
+      olvidarExamenEnCurso();
+      clearLocalStorage();
+      showDetailedResults();
       return;
     }
-    intentoId = data.intento_id;
-    clearLocalStorage();
-    showDetailedResults();
+    if (response.status >= 500) throw new Error('El servidor no pudo recibir el examen');
+    enviando = false;
+    bloquearOpciones(false);
+    mostrarAviso(data.detail || 'No se pudo enviar el examen. Avisa a tu docente.');
   } catch (error) {
-    mostrarAviso('No hay conexión con el servidor. Tus respuestas siguen aquí; revisa el wifi e inténtalo de nuevo.');
+    mostrarAviso('Sin conexión. Tus respuestas están guardadas y se enviarán solas cuando vuelva el wifi. No cierres esta pantalla.', true);
+    reintentoEnvio = setTimeout(() => intentarEnvio(respuestas), 5000);
   }
 }
 
@@ -1076,6 +1142,14 @@ function forceSubmit() {
 // Init
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && timerInterval) incidencias++;
+});
+
+// Al volver la conexión, si había un envío esperando, se intenta de inmediato
+window.addEventListener('online', () => {
+  if (enviando && reintentoEnvio) {
+    clearTimeout(reintentoEnvio);
+    intentarEnvio(respuestasPorNumero());
+  }
 });
 
 document.addEventListener('DOMContentLoaded', () => {

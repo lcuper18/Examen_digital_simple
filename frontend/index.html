@@ -79,6 +79,10 @@
         </svg>
       </div>
       <p class="login-subtitle">¿Vas a presentar un examen? Escribe el código que te dio tu docente.</p>
+      <div class="code-resume" id="code-resume" hidden>
+        <p>Tienes un examen en curso: <strong id="code-resume-codigo"></strong>. Tus respuestas están guardadas.</p>
+        <button type="button" class="btn btn-primary" onclick="reanudarExamen()">Continuar mi examen</button>
+      </div>
       <form class="code-form" id="code-form" onsubmit="return false;">
         <label class="campo-est" for="exam-code">Código del examen</label>
         <input type="text" id="exam-code" maxlength="20" autocomplete="off" autocapitalize="characters" spellcheck="false">

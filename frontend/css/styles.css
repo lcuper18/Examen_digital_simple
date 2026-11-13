@@ -1188,6 +1188,17 @@
       margin-top: 16px;
     }
 
+    .code-resume {
+      margin: 0 0 16px;
+      padding: 14px 16px;
+      border: 1px solid var(--accent-primary);
+      border-radius: var(--radius-md);
+      background: var(--accent-glow);
+      text-align: center;
+    }
+    .code-resume p { margin: 0 0 10px; font-size: 14px; color: var(--text-primary); }
+    .code-resume[hidden] { display: none; }
+
     .code-logout {
       position: absolute;
       top: 20px;
